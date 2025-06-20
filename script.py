@@ -45,13 +45,17 @@ class App(customtkinter.CTk):
         # --- Frame Superiore per Caricamento Dati ---
         self.frame_caricamento = customtkinter.CTkFrame(self)
         self.frame_caricamento.grid(row=0, column=0, padx=20, pady=20, sticky="ew")
-        self.frame_caricamento.grid_columnconfigure((0, 1, 2), weight=1)
+        self.frame_caricamento.grid_columnconfigure((0, 1, 2, 3), weight=1)
         self.label_file = customtkinter.CTkLabel(self.frame_caricamento, text="Nessun dato caricato.", text_color="gray")
         self.label_file.grid(row=0, column=0, padx=20, pady=20)
         self.bottone_carica_csv = customtkinter.CTkButton(self.frame_caricamento, text="Carica File CSV", command=self.carica_csv)
         self.bottone_carica_csv.grid(row=0, column=1, padx=20, pady=20)
+        
+        self.bottone_carica_istat = customtkinter.CTkButton(self.frame_caricamento, text="Carica Dati ISTAT", command=self.carica_dati_istat, fg_color="#1D6F42", hover_color="#175734")
+        self.bottone_carica_istat.grid(row=0, column=2, padx=20, pady=20)
+
         self.bottone_dati_esempio = customtkinter.CTkButton(self.frame_caricamento, text="Usa Dati Simulati", command=self.carica_dati_esempio)
-        self.bottone_dati_esempio.grid(row=0, column=2, padx=20, pady=20)
+        self.bottone_dati_esempio.grid(row=0, column=3, padx=20, pady=20)
         
         # --- Contenitore a Tab per le Analisi ---
         self.tab_view = customtkinter.CTkTabview(self, width=250)
@@ -94,7 +98,24 @@ class App(customtkinter.CTk):
         try:
             df = pd.read_csv(filepath)
             self.inizializza_dati(df)
-            self.label_file.configure(text=f"Caricato: {filepath.split('/')[-1]}")
+            self.label_file.configure(text=f"Caricato: {filepath.split('/')[-1]}", text_color="white")
+        except Exception as e:
+            self.label_file.configure(text=f"Errore nel caricamento: {e}", text_color="red")
+
+    def carica_dati_istat(self):
+        """
+        Carica il set di dati ISTAT pre-processato ('incidenti_pronti.csv').
+        Se il file non esiste, mostra un messaggio di errore.
+        """
+        filepath = 'incidenti_pronti.csv'
+        try:
+            df = pd.read_csv(filepath)
+            self.inizializza_dati(df)
+            self.label_file.configure(text=f"Caricato: {filepath}", text_color="white")
+        except FileNotFoundError:
+            error_msg = f"File '{filepath}' non trovato.\n\nAssicurati di aver prima eseguito lo script 'prepare_data.py' sul file CSV scaricato da ISTAT."
+            self.label_file.configure(text=f"Errore: File '{filepath}' non trovato.", text_color="red")
+            self.show_info("File non trovato", error_msg)
         except Exception as e:
             self.label_file.configure(text=f"Errore nel caricamento: {e}", text_color="red")
 
