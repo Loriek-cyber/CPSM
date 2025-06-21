@@ -448,19 +448,39 @@ Aiutano a comprendere la forma della distribuzione, a identificare i valori più
   - La visualizzazione degli **outlier** è disattivata per favorire la leggibilità della distribuzione centrale."""
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 2, "Grafici di Distribuzione", info_distribuzione, columnspan=2, testo_guida=guida_distribuzione)
         
-        canvas_hist_frame, canvas_box_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 0), self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 1)
+        # Istogramma migliorato
+        canvas_hist_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 0)
         fig_hist, ax_hist = plt.subplots(figsize=(5, 4))
-        ax_hist.hist(data, bins='auto', color='#3b82f6', alpha=0.7, rwidth=0.85)
-        ax_hist.set_title(f'Istogramma di {variable}'), ax_hist.set_xlabel(variable), ax_hist.set_ylabel('Frequenza'), ax_hist.grid(axis='y', alpha=0.75), fig_hist.tight_layout()
+        n, bins, patches = ax_hist.hist(data, bins='auto', color='#3b82f6', alpha=0.8, rwidth=0.85, edgecolor='black')
+        ax_hist.set_title(f'Istogramma di {variable}', fontsize=15)
+        ax_hist.set_xlabel(variable, fontsize=12)
+        ax_hist.set_ylabel('Frequenza', fontsize=12)
+        ax_hist.grid(axis='y', alpha=0.5)
+        ax_hist.tick_params(axis='both', labelsize=11)
+        # Etichette sopra le barre
+        for i in range(len(n)):
+            ax_hist.text((bins[i]+bins[i+1])/2, n[i], int(n[i]), ha='center', va='bottom', fontsize=10)
+        fig_hist.tight_layout()
         canvas_hist = FigureCanvasTkAgg(fig_hist, master=canvas_hist_frame)
-        canvas_hist.draw(), canvas_hist.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
-        
+        canvas_hist.draw()
+        canvas_hist.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
+
+        # Boxplot migliorato
+        canvas_box_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 1)
         fig_box, ax_box = plt.subplots(figsize=(5, 4))
-        ax_box.boxplot(data, vert=False, patch_artist=True, boxprops=dict(facecolor='#ec4899', alpha=0.7), showfliers=False)
-        ax_box.set_title(f'Box Plot di {variable}'), ax_box.set_yticklabels([variable]), ax_box.grid(axis='x', alpha=0.75), fig_box.tight_layout()
+        ax_box.boxplot(data, vert=False, patch_artist=True,
+                       boxprops=dict(facecolor='#ec4899', alpha=0.7),
+                       medianprops=dict(color='black', linewidth=2),
+                       showfliers=False)
+        ax_box.set_title(f'Box Plot di {variable}', fontsize=15)
+        ax_box.set_yticklabels([variable], fontsize=12)
+        ax_box.grid(axis='x', alpha=0.5)
+        ax_box.tick_params(axis='both', labelsize=11)
+        fig_box.tight_layout()
         canvas_box = FigureCanvasTkAgg(fig_box, master=canvas_box_frame)
-        canvas_box.draw(), canvas_box.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
-        
+        canvas_box.draw()
+        canvas_box.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
+
         plt.close(fig_hist)
         plt.close(fig_box)
 
@@ -522,17 +542,45 @@ Offrono un modo immediato per confrontare le categorie, evidenziando le proporzi
 
         canvas_bar_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 0)
         fig_bar, ax_bar = plt.subplots(figsize=(8, 6))
-        counts.sort_values().plot(kind='barh', ax=ax_bar, color=plt.cm.viridis(np.linspace(0, 1, len(counts))))
-        ax_bar.set_title(f'Grafico a Barre di {variable}'), ax_bar.set_xlabel('Frequenza Assoluta'), fig_bar.tight_layout()
+        colors = plt.get_cmap('tab10').colors
+        counts_sorted = counts.sort_values()
+        bars = ax_bar.barh(counts_sorted.index, counts_sorted.values, color=colors[:len(counts_sorted)])
+        ax_bar.set_title(f'Grafico a Barre di {variable}', fontsize=16)
+        ax_bar.set_xlabel('Frequenza Assoluta', fontsize=13)
+        ax_bar.set_ylabel('Categoria', fontsize=13)
+        ax_bar.tick_params(axis='both', labelsize=12)
+        ax_bar.grid(axis='x', linestyle='--', alpha=0.5)
+        # Etichette sopra le barre
+        for bar in bars:
+            width = bar.get_width()
+            ax_bar.text(width + max(counts_sorted.values)*0.01, bar.get_y() + bar.get_height()/2,
+                        f'{int(width)}', va='center', fontsize=12, color='black')
+        fig_bar.tight_layout()
         canvas_bar = FigureCanvasTkAgg(fig_bar, master=canvas_bar_frame)
-        canvas_bar.draw(), canvas_bar.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
-        
+        canvas_bar.draw()
+        canvas_bar.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
+
+        # --- GRAFICO A TORTA MIGLIORATO ---
         canvas_pie_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 4, 0)
         fig_pie, ax_pie = plt.subplots(figsize=(8, 6))
-        counts.plot(kind='pie', ax=ax_pie, autopct=autopct_conditional, startangle=90, wedgeprops=dict(width=0.4, edgecolor='w'), colors=plt.cm.viridis(np.linspace(0, 1, len(counts))), textprops=text_props)
-        ax_pie.set_ylabel(''), ax_pie.set_title(f'Grafico a Torta di {variable}'), fig_pie.tight_layout()
+        explode = [0.05]*len(counts)
+        wedges, texts, autotexts = ax_pie.pie(
+            counts,
+            labels=counts.index,
+            autopct=lambda pct: f'{pct:.1f}%' if pct > 4 else '',
+            startangle=90,
+            colors=colors[:len(counts)],
+            explode=explode,
+            textprops={'fontsize': 13, 'weight': 'bold'}
+        )
+        for autotext in autotexts:
+            autotext.set_color('black')
+        ax_pie.set_title(f'Grafico a Torta di {variable}', fontsize=16)
+        ax_pie.axis('equal')
+        fig_pie.tight_layout()
         canvas_pie = FigureCanvasTkAgg(fig_pie, master=canvas_pie_frame)
-        canvas_pie.draw(), canvas_pie.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
+        canvas_pie.draw()
+        canvas_pie.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
         
         plt.close(fig_bar)
         plt.close(fig_pie)
