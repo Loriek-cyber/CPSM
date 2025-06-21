@@ -400,20 +400,8 @@ Permette di identificare pattern temporali, come giorni della settimana o period
     def analisi_numerica(self, variable, data):
         self.frame_risultati_descrittiva.grid_columnconfigure((0, 1), weight=1)
         self.frame_risultati_descrittiva.grid_rowconfigure(3, weight=1)
-        
-        info_indici = """**Cosa Sono?**
-Gli indici statistici sono valori numerici che riassumono le caratteristiche principali di un insieme di dati.
 
-**A Cosa Servono?**
-Forniscono una visione sintetica e quantitativa della variabile analizzata, descrivendone la tendenza centrale (dove si concentrano i dati) e la variabilità (quanto sono dispersi).
-
---- Legenda dei Termini ---
-- **Misure Centrali (Media, Mediana, Moda):** Indicano il 'centro' dei dati.
-- **Misure di Dispersione (Varianza, Dev. Standard):** Indicano quanto i dati sono sparsi.
-- **Asimmetria (Skewness):** Misura la simmetria della distribuzione. (>0: coda a destra; <0: coda a sinistra).
-- **Curtosi (Kurtosis):** Misura la 'pesantezza' delle code e la presenza di valori anomali."""
-        self._crea_titolo_sezione(self.frame_risultati_descrittiva, 0, f"Indici Statistici per '{variable}'", info_indici, columnspan=2)
-
+        # Tabella riassuntiva
         frame_valori_indici = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
         frame_valori_indici.grid(row=1, column=0, columnspan=2, sticky="ew", padx=10)
         frame_valori_indici.grid_columnconfigure((0,1,2,3), weight=1)
@@ -424,34 +412,23 @@ Forniscono una visione sintetica e quantitativa della variabile analizzata, desc
         cv = std_dev / mean if mean != 0 else 0
         skew, kurt = data.skew(), data.kurtosis()
         q1, q3 = data.quantile(0.25), data.quantile(0.75)
-        indici = {'Media Camp.': mean, 'Mediana': median, 'Moda': mode, 'Varianza Camp.': variance, 'Dev. Standard': std_dev, 'Scarto Medio Ass.': mad, 'Range': range_val, 'Coeff. Variazione': cv, 'Asimmetria': skew, 'Curtosi': kurt, '1° Quartile (Q1)': q1, '3° Quartile (Q3)': q3}
+        indici = {
+            'Media': mean, 'Mediana': median, 'Moda': mode, 'Varianza': variance,
+            'Dev. Std': std_dev, 'Scarto Medio Ass.': mad, 'Range': range_val,
+            'Coeff. Variazione': cv, 'Asimmetria': skew, 'Curtosi': kurt,
+            'Q1': q1, 'Q3': q3
+        }
         row, col = 0, 0
         for key, value in indici.items():
             text = f"{key}\n{value:.3f}" if isinstance(value, (int, float)) else f"{key}\n{value}"
             customtkinter.CTkLabel(frame_valori_indici, text=text, justify="center").grid(row=row, column=col, padx=5, pady=5, sticky="ew")
             col += 1
             if col > 3: col, row = 0, row + 1
-        
-        info_distribuzione="""**Cosa Sono?**
-Sono rappresentazioni visuali che mostrano come i valori di una variabile sono distribuiti.
 
-**A Cosa Servono?**
-Aiutano a comprendere la forma della distribuzione, a identificare i valori più frequenti, la presenza di anomalie (outlier) e la dispersione dei dati in modo intuitivo."""
-        # MODIFICA: Resa la spiegazione più formale e tecnica.
-        guida_distribuzione="""**Interpretazione dei Grafici:**
-- **Istogramma:** Rappresenta la distribuzione di frequenza di una variabile numerica. L'asse X è suddiviso in intervalli (bin) e l'altezza di ciascuna barra è proporzionale al numero di osservazioni che ricadono in quell'intervallo.
-
-- **Box Plot:** Sintetizza la distribuzione attraverso cinque numeri:
-  - Il **limite inferiore/superiore della scatola** indica il primo (Q1) e il terzo (Q3) quartile.
-  - La **linea interna** rappresenta la mediana (Q2).
-  - I **baffi (whiskers)** si estendono fino ai valori minimi e massimi esclusi gli outlier.
-  - La visualizzazione degli **outlier** è disattivata per favorire la leggibilità della distribuzione centrale."""
-        self._crea_titolo_sezione(self.frame_risultati_descrittiva, 2, "Grafici di Distribuzione", info_distribuzione, columnspan=2, testo_guida=guida_distribuzione)
-        
         # Istogramma migliorato
         canvas_hist_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 0)
-        fig_hist, ax_hist = plt.subplots(figsize=(5, 4))
-        n, bins, patches = ax_hist.hist(data, bins='auto', color='#3b82f6', alpha=0.8, rwidth=0.85, edgecolor='black')
+        fig_hist, ax_hist = plt.subplots(figsize=(6, 4))
+        n, bins, patches = ax_hist.hist(data, bins='auto', color=plt.get_cmap('Set2')(0), alpha=0.85, rwidth=0.85, edgecolor='black')
         ax_hist.set_title(f'Istogramma di {variable}', fontsize=15)
         ax_hist.set_xlabel(variable, fontsize=12)
         ax_hist.set_ylabel('Frequenza', fontsize=12)
@@ -459,7 +436,7 @@ Aiutano a comprendere la forma della distribuzione, a identificare i valori più
         ax_hist.tick_params(axis='both', labelsize=11)
         # Etichette sopra le barre
         for i in range(len(n)):
-            ax_hist.text((bins[i]+bins[i+1])/2, n[i], int(n[i]), ha='center', va='bottom', fontsize=10)
+            ax_hist.text((bins[i]+bins[i+1])/2, n[i], int(n[i]), ha='center', va='bottom', fontsize=11, color='black')
         fig_hist.tight_layout()
         canvas_hist = FigureCanvasTkAgg(fig_hist, master=canvas_hist_frame)
         canvas_hist.draw()
@@ -467,9 +444,9 @@ Aiutano a comprendere la forma della distribuzione, a identificare i valori più
 
         # Boxplot migliorato
         canvas_box_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 1)
-        fig_box, ax_box = plt.subplots(figsize=(5, 4))
+        fig_box, ax_box = plt.subplots(figsize=(6, 4))
         ax_box.boxplot(data, vert=False, patch_artist=True,
-                       boxprops=dict(facecolor='#ec4899', alpha=0.7),
+                       boxprops=dict(facecolor=plt.get_cmap('Set2')(1), alpha=0.7),
                        medianprops=dict(color='black', linewidth=2),
                        showfliers=False)
         ax_box.set_title(f'Box Plot di {variable}', fontsize=15)
@@ -596,45 +573,53 @@ Offrono un modo immediato per confrontare le categorie, evidenziando le proporzi
         if len(df_subset) < 2:
             customtkinter.CTkLabel(self.frame_risultati_bivariata, text="Dati insufficienti per l'analisi.").grid(row=0, column=0)
             return
-            
+
         x_data, y_data = df_subset[var_x], df_subset[var_y]
-        if var_x == var_y: correlation = 1.0
-        else: correlation = df_subset.corr().iloc[0, 1]
+        if var_x == var_y:
+            correlation = 1.0
+        else:
+            correlation = df_subset.corr().iloc[0, 1]
         regression = stats.linregress(x=x_data, y=y_data)
 
-        info_bivariata="""**Cos'è?**
-Un'analisi che studia la relazione tra due variabili numeriche contemporaneamente.
-
-**A Cosa Serve?**
-A capire se esiste un legame tra le due variabili, in che direzione (positivo o negativo) e con quale forza. La regressione permette anche di prevedere il valore di una variabile basandosi sull'altra.
-
---- Legenda dei Termini ---
-- **Coefficiente di Correlazione (r):** Varia da -1 (relazione inversa perfetta) a +1 (relazione diretta perfetta). 0 indica assenza di relazione *lineare*.
-- **Retta di Regressione (y = mx + b):** La linea che meglio approssima i dati.
-- **Pendenza (m):** Indica di quanto aumenta in media Y per ogni aumento di 1 unità in X.
-- **Intercetta (b):** Il valore previsto di Y quando X è 0."""
-        # MODIFICA: Resa la spiegazione più formale e tecnica.
-        guida_bivariata="""**Interpretazione del Diagramma a Dispersione:**
-- **Assi Cartesiani:** Gli assi X e Y rappresentano le due variabili oggetto di analisi.
-- **Punti Dati:** Ciascun punto sul piano cartesiano corrisponde a un'osservazione bivariata.
-- **Distribuzione dei Punti:** La configurazione dei punti (la 'nuvola') indica la natura della relazione. Un andamento crescente/decrescente suggerisce una correlazione positiva/negativa.
-- **Retta di Regressione:** La linea rossa rappresenta il modello di regressione lineare semplice, che interpola la nuvola di punti minimizzando la somma dei quadrati dei residui."""
-        self._crea_titolo_sezione(self.frame_risultati_bivariata, 0, "Analisi di Correlazione e Regressione", info_bivariata, testo_guida=guida_bivariata)
-        
+        # Testuale
+        info = f"Coefficiente di Correlazione (r): {correlation:.4f}\n"
+        info += f"Equazione Retta di Regressione: y = {regression.slope:.4f}x + {regression.intercept:.4f}"
         frame_risultati_testuali = customtkinter.CTkFrame(self.frame_risultati_bivariata)
         frame_risultati_testuali.grid(row=1, column=0, sticky="ew", padx=10)
-        risultati_testuali = f"Coefficiente di Correlazione (r): {correlation:.4f}\nEquazione Retta di Regressione: y = {regression.slope:.4f}x + {regression.intercept:.4f}"
-        customtkinter.CTkLabel(frame_risultati_testuali, text=risultati_testuali, justify="left").pack(pady=5)
-        
+        customtkinter.CTkLabel(frame_risultati_testuali, text=info, justify="left").pack(pady=5)
+
+        # Grafico scatter migliorato
         canvas_frame = self.crea_canvas_matplotlib(self.frame_risultati_bivariata, 2, 0)
         fig, ax = plt.subplots(figsize=(8, 6))
-        ax.scatter(x_data, y_data, alpha=0.6, label='Dati')
+        # Densità colore
+        try:
+            from scipy.stats import gaussian_kde
+            xy = np.vstack([x_data, y_data])
+            z = gaussian_kde(xy)(xy)
+            idx = z.argsort()
+            x_data, y_data, z = x_data.iloc[idx], y_data.iloc[idx], z[idx]
+            sc = ax.scatter(x_data, y_data, c=z, cmap='viridis', s=60, edgecolor='k', alpha=0.7, label='Dati')
+            cbar = fig.colorbar(sc, ax=ax)
+            cbar.set_label('Densità')
+        except Exception:
+            ax.scatter(x_data, y_data, alpha=0.7, label='Dati')
+
+        # Retta di regressione
         line_x = np.array([x_data.min(), x_data.max()])
         line_y = regression.slope * line_x + regression.intercept
-        ax.plot(line_x, line_y, color='red', label='Retta di Regressione')
-        ax.set_title(f'Diagramma a Dispersione: {var_x} vs {var_y}'), ax.set_xlabel(var_x), ax.set_ylabel(var_y), ax.legend(), ax.grid(True), fig.tight_layout()
+        ax.plot(line_x, line_y, color='red', linewidth=2, label='Retta di Regressione')
+        ax.set_title(f'Diagramma a Dispersione: {var_x} vs {var_y}', fontsize=16)
+        ax.set_xlabel(var_x, fontsize=13)
+        ax.set_ylabel(var_y, fontsize=13)
+        ax.legend(fontsize=12)
+        ax.grid(True, linestyle='--', alpha=0.5)
+        # Annotazione coefficiente
+        ax.annotate(f"r = {correlation:.2f}", xy=(0.05, 0.95), xycoords='axes fraction',
+                    fontsize=13, ha='left', va='top', bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", lw=1))
+        fig.tight_layout()
         canvas = FigureCanvasTkAgg(fig, master=canvas_frame)
-        canvas.draw(), canvas.get_tk_widget().pack(fill='both', expand=True)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill='both', expand=True)
         plt.close(fig)
 
     def _update_textbox(self, textbox, text):
