@@ -9,30 +9,11 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.dates as mdates
 
-"""
-Software di Analisi Statistica per Incidenti Stradali
-
-Questo script crea un'applicazione desktop con interfaccia grafica (GUI) per l'analisi
-statistica di dati sugli incidenti stradali.
-
-L'applicazione permette di:
-- Caricare dati da un file CSV o utilizzare un set di dati di esempio.
-- Eseguire analisi statistiche descrittive su singole variabili (numeriche, categoriche e temporali).
-- Condurre analisi bivariate (correlazione e regressione lineare) tra due variabili numeriche.
-- Effettuare analisi inferenziali, tra cui:
-  - Calcolo di probabilità con il modello di Poisson.
-  - Test T per campioni indipendenti per confrontare medie.
-  - Calcolo di intervalli di confidenza per la media.
-
-Le analisi vengono presentate attraverso tabelle, indici statistici e grafici interattivi.
-"""
-
 # Imposta l'aspetto dell'interfaccia grafica
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
 
 class App(customtkinter.CTk):
-    """Classe principale dell'applicazione che gestisce la GUI e le logiche di analisi."""
     def __init__(self):
         super().__init__()
         self.title("Software di Analisi Statistica Incidenti Stradali")
@@ -45,17 +26,13 @@ class App(customtkinter.CTk):
         # --- Frame Superiore per Caricamento Dati ---
         self.frame_caricamento = customtkinter.CTkFrame(self)
         self.frame_caricamento.grid(row=0, column=0, padx=20, pady=20, sticky="ew")
-        self.frame_caricamento.grid_columnconfigure((0, 1, 2, 3), weight=1)
+        self.frame_caricamento.grid_columnconfigure((0, 1, 2), weight=1)
         self.label_file = customtkinter.CTkLabel(self.frame_caricamento, text="Nessun dato caricato.", text_color="gray")
         self.label_file.grid(row=0, column=0, padx=20, pady=20)
         self.bottone_carica_csv = customtkinter.CTkButton(self.frame_caricamento, text="Carica File CSV", command=self.carica_csv)
         self.bottone_carica_csv.grid(row=0, column=1, padx=20, pady=20)
-        
-        self.bottone_carica_istat = customtkinter.CTkButton(self.frame_caricamento, text="Carica Dati ISTAT", command=self.carica_dati_istat, fg_color="#1D6F42", hover_color="#175734")
-        self.bottone_carica_istat.grid(row=0, column=2, padx=20, pady=20)
-
         self.bottone_dati_esempio = customtkinter.CTkButton(self.frame_caricamento, text="Usa Dati Simulati", command=self.carica_dati_esempio)
-        self.bottone_dati_esempio.grid(row=0, column=3, padx=20, pady=20)
+        self.bottone_dati_esempio.grid(row=0, column=2, padx=20, pady=20)
         
         # --- Contenitore a Tab per le Analisi ---
         self.tab_view = customtkinter.CTkTabview(self, width=250)
@@ -69,13 +46,6 @@ class App(customtkinter.CTk):
         self.setup_tab_inferenziale()
 
     def show_info(self, title, message):
-        """
-        Mostra una finestra di dialogo modale con un messaggio informativo.
-
-        Args:
-            title (str): Il titolo della finestra.
-            message (str): Il messaggio da visualizzare all'interno della finestra.
-        """
         info_window = customtkinter.CTkToplevel(self)
         info_window.title(title)
         info_window.geometry("500x300")
@@ -87,43 +57,17 @@ class App(customtkinter.CTk):
         close_button.pack(padx=20, pady=10, side="bottom")
 
     def carica_csv(self):
-        """
-        Apre una finestra di dialogo per selezionare un file CSV.
-        Se un file viene selezionato, lo carica in un DataFrame pandas e
-        inizializza l'applicazione con i nuovi dati.
-        """
         filepath = filedialog.askopenfilename(title="Seleziona un file CSV", filetypes=(("File CSV", "*.csv"), ("Tutti i file", "*.*")))
         if not filepath:
             return
         try:
             df = pd.read_csv(filepath)
             self.inizializza_dati(df)
-            self.label_file.configure(text=f"Caricato: {filepath.split('/')[-1]}", text_color="white")
-        except Exception as e:
-            self.label_file.configure(text=f"Errore nel caricamento: {e}", text_color="red")
-
-    def carica_dati_istat(self):
-        """
-        Carica il set di dati ISTAT pre-processato ('incidenti_pronti.csv').
-        Se il file non esiste, mostra un messaggio di errore.
-        """
-        filepath = 'incidenti_pronti.csv'
-        try:
-            df = pd.read_csv(filepath)
-            self.inizializza_dati(df)
-            self.label_file.configure(text=f"Caricato: {filepath}", text_color="white")
-        except FileNotFoundError:
-            error_msg = f"File '{filepath}' non trovato.\n\nAssicurati di aver prima eseguito lo script 'prepare_data.py' sul file CSV scaricato da ISTAT."
-            self.label_file.configure(text=f"Errore: File '{filepath}' non trovato.", text_color="red")
-            self.show_info("File non trovato", error_msg)
+            self.label_file.configure(text=f"Caricato: {filepath.split('/')[-1]}")
         except Exception as e:
             self.label_file.configure(text=f"Errore nel caricamento: {e}", text_color="red")
 
     def carica_dati_esempio(self):
-        """
-        Carica un set di dati di esempio predefinito per dimostrare
-        le funzionalità dell'applicazione.
-        """
         sample_csv = """Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
 2023-01-15 08:30:00,Milano,Domenica,Urbana,2,0,45
 2023-01-15 18:45:00,Milano,Domenica,Autostrada,3,1,110
@@ -146,15 +90,6 @@ class App(customtkinter.CTk):
         self.label_file.configure(text="Caricati dati di esempio.")
 
     def inizializza_dati(self, df):
-        """
-        Pre-processa il DataFrame caricato.
-
-        Esegue le seguenti operazioni:
-        - Converte le colonne in tipo numerico dove possibile.
-        - Converte la colonna 'Data_Ora_Incidente' in formato datetime.
-        - Estrae 'Ora' e 'Giorno' dalla colonna datetime.
-        - Crea una colonna binaria 'Mortale' se 'Numero_Morti' > 0.
-        """
         self.df = df
         for col in self.df.columns:
             try:
@@ -170,11 +105,6 @@ class App(customtkinter.CTk):
         self.aggiorna_selettori()
 
     def aggiorna_selettori(self):
-        """
-        Aggiorna i valori disponibili nei vari selettori (ComboBox) della GUI.
-        Popola i selettori con i nomi delle colonne del DataFrame, distinguendo
-        tra colonne numeriche e non, e con le province uniche.
-        """
         if self.df is None: return
         numeric_columns = self.df.select_dtypes(include=np.number).columns.tolist()
         # Modifica: Includiamo 'datetime' come tipo non numerico per la lista
@@ -204,36 +134,17 @@ class App(customtkinter.CTk):
             self.selettore_provincia_ci.set(province_uniche[0])
 
     def pulisci_grafici(self):
-        """
-        Rimuove tutti i widget contenenti grafici Matplotlib dall'interfaccia.
-        Questa funzione è essenziale per liberare memoria e pulire la GUI
-        prima di visualizzare nuove analisi.
-        """
         for widget in self.matplotlib_widgets:
             widget.destroy()
         self.matplotlib_widgets = []
 
     def crea_canvas_matplotlib(self, parent, r, c, w=1, h=1):
-        """
-        Crea e posiziona un frame CTkFrame destinato a contenere un grafico Matplotlib.
-
-        Args:
-            parent: Il widget genitore in cui inserire il frame.
-            r (int): La riga della griglia del genitore.
-            c (int): La colonna della griglia del genitore.
-            w (int): Il columnspan del frame nella griglia.
-            h (int): Il rowspan del frame nella griglia.
-
-        Returns:
-            customtkinter.CTkFrame: Il frame creato.
-        """
         frame = customtkinter.CTkFrame(parent)
         frame.grid(row=r, column=c, padx=10, pady=10, sticky="nsew", rowspan=h, columnspan=w)
         self.matplotlib_widgets.append(frame)
         return frame
 
     def setup_tab_descrittiva(self):
-        """Inizializza i widget all'interno della tab 'Analisi Descrittiva'."""
         tab = self.tab_view.tab("Analisi Descrittiva")
         tab.grid_columnconfigure(0, weight=1)
         tab.grid_rowconfigure(1, weight=1)
@@ -247,7 +158,6 @@ class App(customtkinter.CTk):
         self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
     
     def setup_tab_bivariata(self):
-        """Inizializza i widget all'interno della tab 'Analisi Bivariata'."""
         tab = self.tab_view.tab("Analisi Bivariata")
         tab.grid_columnconfigure(0, weight=1)
         tab.grid_rowconfigure(1, weight=1)
@@ -267,7 +177,6 @@ class App(customtkinter.CTk):
         self.frame_risultati_bivariata.grid_rowconfigure(2, weight=1)
 
     def setup_tab_inferenziale(self):
-        """Inizializza i widget all'interno della tab 'Analisi Inferenziale'."""
         tab = self.tab_view.tab("Analisi Inferenziale")
         tab.grid_columnconfigure(0, weight=1)
         tab.grid_rowconfigure((0,1,2), weight=1)
@@ -322,12 +231,6 @@ class App(customtkinter.CTk):
         self.label_risultato_ci.grid(row=3, column=1, padx=10, pady=10, sticky="w")
 
     def esegui_analisi_descrittiva(self):
-        """
-        Funzione principale per l'analisi descrittiva.
-        Pulisce i risultati precedenti, ottiene la variabile selezionata dall'utente
-        e chiama la funzione di analisi appropriata in base al tipo di dati
-        (temporale, numerico o categorico).
-        """
         if self.df is None: return
         variable = self.selettore_var_descrittiva.get()
         if not variable: return
@@ -355,11 +258,7 @@ class App(customtkinter.CTk):
     # NUOVA FUNZIONE: Analisi specifica per dati temporali
     # ==========================================================================================
     def analisi_temporale(self, variable):
-        """
-        Esegue e visualizza un'analisi temporale per la colonna 'Data_Ora_Incidente'.
-        Raggruppa gli incidenti per giorno, calcola le statistiche di base e
-        mostra un grafico a linee dell'andamento del numero di incidenti nel tempo.
-        """
+        """Esegue un'analisi temporale raggruppando gli incidenti per giorno."""
         
         # Titolo della sezione
         frame_titolo = customtkinter.CTkFrame(self.frame_risultati_descrittiva, fg_color="transparent")
@@ -409,16 +308,6 @@ class App(customtkinter.CTk):
 
 
     def analisi_numerica(self, variable, data):
-        """
-        Esegue e visualizza un'analisi descrittiva per una variabile numerica.
-        Calcola e mostra una serie completa di indici statistici (media, mediana,
-        deviazione standard, etc.), intervalli rappresentativi (IQR, Chebyshev)
-        e genera un istogramma e un box plot per visualizzare la distribuzione dei dati.
-
-        Args:
-            variable (str): Il nome della variabile da analizzare.
-            data (pd.Series): La serie di dati numerici da analizzare.
-        """
         self.frame_risultati_descrittiva.grid_columnconfigure((0, 1), weight=1)
         frame_indici_main = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
         frame_indici_main.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
@@ -479,16 +368,6 @@ class App(customtkinter.CTk):
         canvas_box.draw(), canvas_box.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
 
     def analisi_categorica(self, variable, data):
-        """
-        Esegue e visualizza un'analisi descrittiva per una variabile categorica.
-        Crea una tabella di frequenza (assoluta, relativa, cumulata) e
-        genera un grafico a barre orizzontali e un grafico a torta per
-        visualizzare la distribuzione delle categorie.
-
-        Args:
-            variable (str): Il nome della variabile da analizzare.
-            data (pd.Series): La serie di dati categorici da analizzare.
-        """
         counts = data.value_counts()
         relative_freq = data.value_counts(normalize=True)
         cumulative_freq = counts.cumsum()
@@ -531,12 +410,6 @@ class App(customtkinter.CTk):
         canvas_pie.draw(), canvas_pie.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
 
     def esegui_analisi_bivariata(self):
-        """
-        Esegue un'analisi bivariata tra due variabili numeriche selezionate.
-        Calcola il coefficiente di correlazione di Pearson e i parametri della
-        retta di regressione lineare. Visualizza i risultati in un diagramma
-        a dispersione (scatter plot) con la retta di regressione sovrapposta.
-        """
         if self.df is None: return
         var_x, var_y = self.selettore_var_biv_x.get(), self.selettore_var_biv_y.get()
         if not var_x or not var_y: return
@@ -567,13 +440,6 @@ class App(customtkinter.CTk):
         canvas.draw(), canvas.get_tk_widget().pack(fill='both', expand=True)
 
     def esegui_poisson(self):
-        """
-        Calcola la probabilità di Poisson.
-        Stima il tasso medio di incidenti (lambda) per una data provincia e fascia oraria,
-        quindi utilizza la distribuzione di Poisson per calcolare la probabilità che
-        si verifichi un numero specifico di incidenti (k) in quell'ora.
-        Gestisce gli input dell'utente e visualizza il risultato.
-        """
         if self.df is None: return
         try:
             provincia, ora, k = self.selettore_provincia_poisson.get(), int(self.entry_ora_poisson.get()), int(self.entry_k_poisson.get())
@@ -590,12 +456,6 @@ class App(customtkinter.CTk):
             self.label_risultato_poisson.configure(text=f"Errore: Inserire valori validi.\n({e})")
 
     def esegui_ttest(self):
-        """
-        Esegue un test T per campioni indipendenti (test di Welch).
-        Confronta le medie del 'Numero_Feriti' tra incidenti diurni (7-19) e notturni.
-        Visualizza le medie dei due gruppi, la statistica t e il p-value,
-        indicando se la differenza osservata è statisticamente significativa (p < 0.05).
-        """
         if self.df is None: return
         data_diurno = self.df[(self.df['Ora'] >= 7) & (self.df['Ora'] < 20)]['Numero_Feriti'].dropna()
         data_notturno = self.df[(self.df['Ora'] < 7) | (self.df['Ora'] >= 20)]['Numero_Feriti'].dropna()
@@ -608,13 +468,6 @@ class App(customtkinter.CTk):
         self.label_risultato_ttest.configure(text=risultato)
 
     def esegui_ci(self):
-        """
-        Calcola l'intervallo di confidenza per la media del numero di incidenti giornalieri.
-        Per una data provincia e un livello di confidenza specificato dall'utente,
-        calcola e visualizza l'intervallo entro cui si stima che si trovi la vera
-        media della popolazione di incidenti giornalieri.
-        Utilizza la distribuzione t di Student, adatta per campioni di piccole dimensioni.
-        """
         if self.df is None: return
         try:
             provincia, livello = self.selettore_provincia_ci.get(), int(self.entry_livello_ci.get())
