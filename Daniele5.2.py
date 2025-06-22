@@ -2,27 +2,15 @@
 # CHANGELOG ULTIME MODIFICHE
 # =============================================================================
 # ... (changelog precedente omesso per brevità)
-# 17. [FIX] Generatore Dati Simulati Randomici: Implementata una versione robusta e sicura che non dipende
-#     dal 'locale' del sistema, eliminando la causa del blocco precedente. Ora genera 200 record casuali
-#     e coerenti ad ogni click.
-# 18. [FIX] Analisi di Poisson su Fascia Oraria: Reintrodotta la funzionalità con controlli di input
-#     più rigorosi per gestire formati non validi (es. '18-10', 'abc') e mostrare errori chiari.
-# 19. [FIX] Dati di Test Inferenziale Migliorati: Il nuovo generatore robusto assicura dati ampi e vari
-#     per testare efficacemente le analisi inferenziali.
 # =============================================================================
-# ===== MODIFICHE APPORTATE v5.3 (Richiesta Utente) =====
+# ===== MODIFICHE APPORTATE v5.5 (Richiesta Utente) - Versione Stabile e Corretta =====
 # =============================================================================
-# 1.  [MIGLIORIA] Dati Simulati: Ridotto il numero di record generati da 200 a 100 per migliorare
-#     la leggibilità dei grafici categorici (torta, barre).
-# 2.  [MIGLIORIA] Persistenza UI: La variabile selezionata nella tab 'Analisi Descrittiva' viene ora
-#     mantenuta dopo aver ricaricato i dati simulati, evitando di resettare la vista.
-# 3.  [MIGLIORIA] Analisi di Poisson: L'input della fascia oraria ora accetta sia un'ora singola (es. "14")
-#     che un range (es. "8-17"). L'output include il numero totale di ore considerate.
-# 4.  [MIGLIORIA] Adattabilità Grafici Categorici: Se una variabile ha più di 10 categorie, le meno
-#     frequenti vengono raggruppate in una categoria "Altro" per garantire la leggibilità.
-# 5.  [MIGLIORIA] Adattabilità Grafico a Dispersione: Aumentato il margine degli assi e ridotta la
-#     dimensione/opacità dei punti per migliorare la visualizzazione di nuvole di dati dense.
+# 1.  [FEATURE] Nuova Scheda 'Dati Forniti': Aggiunta una tab a sinistra che mostra
+#     i dati caricati/simulati in una tabella scorrevole per un facile controllo.
+# 2.  [FIX] Analisi Descrittiva: La variabile 'Giorno' viene ora correttamente
+#     analizzata come una serie temporale, risolvendo il bug che non mostrava output.
 # =============================================================================
+
 
 # =============================================================================
 # IMPORTAZIONE DELLE LIBRERIE NECESSARIE
@@ -38,7 +26,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.dates as mdates
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 # =============================================================================
 # IMPOSTAZIONI INIZIALI DELL'INTERFACCIA
@@ -58,7 +46,7 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(1, weight=1)
         self.df = None
         self.matplotlib_widgets = []
-        
+
         # --- FRAME SUPERIORE: CARICAMENTO DATI ---
         self.frame_caricamento = customtkinter.CTkFrame(self)
         self.frame_caricamento.grid(row=0, column=0, padx=20, pady=20, sticky="ew")
@@ -73,13 +61,20 @@ class App(customtkinter.CTk):
         # --- WIDGET A SCHEDE (TAB) PER LE DIVERSE ANALISI ---
         self.tab_view = customtkinter.CTkTabview(self, width=250)
         self.tab_view.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
+
+        # MODIFICA 1: Aggiunta la nuova tab "Dati Forniti" come prima
+        self.tab_view.add("Dati Forniti")
         self.tab_view.add("Analisi Descrittiva")
         self.tab_view.add("Analisi Bivariata")
         self.tab_view.add("Analisi Inferenziale")
-        
+
+        # Setup di tutte le schede, inclusa la nuova
+        self.setup_tab_dati_forniti()
         self.setup_tab_descrittiva()
         self.setup_tab_bivariata()
         self.setup_tab_inferenziale()
+
+        self.tab_view.set("Dati Forniti") # Imposta la nuova tab come predefinita all'avvio
 
     # =============================================================================
     # FUNZIONI DI UTILITÀ E GESTIONE DATI
@@ -89,13 +84,13 @@ class App(customtkinter.CTk):
         """Metodo helper per creare una riga di titolo centrata con bottone info e un opzionale bottone guida."""
         frame_titolo = customtkinter.CTkFrame(parent, fg_color="transparent")
         frame_titolo.grid(row=row, column=0, columnspan=columnspan, sticky="ew", pady=(15, 5))
-        
+
         inner_frame = customtkinter.CTkFrame(frame_titolo, fg_color="transparent")
         inner_frame.pack()
-        
+
         customtkinter.CTkLabel(inner_frame, text=testo_titolo, font=customtkinter.CTkFont(size=16, weight="bold")).pack(side="left", padx=10)
         customtkinter.CTkButton(inner_frame, text="i", command=lambda: self.show_info(f"Info: {testo_titolo}", testo_info), width=28, height=28, corner_radius=14).pack(side="left", padx=(0, 5))
-        
+
         if testo_guida:
             customtkinter.CTkButton(inner_frame, text="?", command=lambda: self.show_info("Come Leggere il Grafico", testo_guida), width=28, height=28, corner_radius=14).pack(side="left")
 
@@ -119,104 +114,64 @@ class App(customtkinter.CTk):
             df = pd.read_csv(filepath)
             self.inizializza_dati(df)
             self.label_file.configure(text=f"Caricato: {filepath.split('/')[-1]}")
+            self.tab_view.set("Dati Forniti")
         except Exception as e:
             self.label_file.configure(text=f"Errore nel caricamento: {e}", text_color="red")
 
     def carica_dati_esempio(self):
-        """
-        Genera un DataFrame di dati simulati randomici e coerenti.
-        Questo metodo è stato reso robusto per evitare dipendenze dal sistema (es. 'locale').
-        """
-        # MODIFICA 4: Mantiene la variabile selezionata nella tab descrittiva
         variabile_selezionata = self.selettore_var_descrittiva.get()
-
         records = []
         province = ['Milano', 'Roma', 'Napoli', 'Torino', 'Firenze', 'Catania', 'Salerno', 'Bologna', 'Venezia', 'Bari']
         tipi_strada = ['Urbana', 'Statale', 'Autostrada']
-        # Mappatura manuale per evitare dipendenze da 'locale'
         giorni_map = {0: 'Lunedì', 1: 'Martedì', 2: 'Mercoledì', 3: 'Giovedì', 4: 'Venerdì', 5: 'Sabato', 6: 'Domenica'}
-        
         end_date = datetime.now()
         start_date = end_date - timedelta(days=365)
-        
-        # MODIFICA 2: Ridotto il numero di record generati per migliorare leggibilità grafici
-        for _ in range(100): # Genera 100 record
+        for _ in range(100):
             random_seconds = random.randint(0, int((end_date - start_date).total_seconds()))
             random_date = start_date + timedelta(seconds=random_seconds)
-            
             prov = random.choice(province)
             strada = random.choice(tipi_strada)
-            
-            if strada == 'Urbana':
-                velocita = random.randint(30, 65)
-            elif strada == 'Statale':
-                velocita = random.randint(60, 95)
-            else: # Autostrada
-                velocita = random.randint(100, 140)
-            
+            if strada == 'Urbana': velocita = random.randint(30, 65)
+            elif strada == 'Statale': velocita = random.randint(60, 95)
+            else: velocita = random.randint(100, 140)
             numero_morti = random.choices([0, 1, 2], weights=[95, 4, 1], k=1)[0]
-            if numero_morti > 0:
-                numero_feriti = random.randint(numero_morti, 8)
-            else:
-                numero_feriti = random.choices([0, 1, 2, 3, 4], weights=[20, 40, 25, 10, 5], k=1)[0]
-                
-            records.append({
-                'Data_Ora_Incidente': random_date,
-                'Provincia': prov,
-                'Giorno_Settimana': giorni_map[random_date.weekday()],
-                'Tipo_Strada': strada,
-                'Numero_Feriti': numero_feriti,
-                'Numero_Morti': numero_morti,
-                'Velocita_Media_Stimata': velocita
-            })
-            
+            if numero_morti > 0: numero_feriti = random.randint(numero_morti, 8)
+            else: numero_feriti = random.choices([0, 1, 2, 3, 4], weights=[20, 40, 25, 10, 5], k=1)[0]
+            records.append({'Data_Ora_Incidente': random_date, 'Provincia': prov, 'Giorno_Settimana': giorni_map[random_date.weekday()], 'Tipo_Strada': strada, 'Numero_Feriti': numero_feriti, 'Numero_Morti': numero_morti, 'Velocita_Media_Stimata': velocita})
         df = pd.DataFrame(records)
-        self.inizializza_dati(df, variabile_da_mantenere=variabile_selezionata) # Passa la variabile
+        self.inizializza_dati(df, variabile_da_mantenere=variabile_selezionata)
         self.label_file.configure(text="Caricati 100 record simulati randomici.")
-
+        self.tab_view.set("Dati Forniti")
 
     def inizializza_dati(self, df, variabile_da_mantenere=None):
         self.df = df.copy()
-        
-        # Converte le colonne numeriche, trasformando errori in NaN
         for col in ['Numero_Feriti', 'Numero_Morti', 'Velocita_Media_Stimata']:
             if col in self.df.columns:
                 self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
-
-        # Converte la colonna data/ora, trasformando errori in NaT
         if 'Data_Ora_Incidente' in self.df.columns:
             self.df['Data_Ora_Incidente'] = pd.to_datetime(self.df['Data_Ora_Incidente'], errors='coerce')
-        
-        # Rimuove le righe dove la conversione ha fallito
         self.df.dropna(subset=['Data_Ora_Incidente', 'Provincia'], inplace=True)
-        
-        # Crea colonne derivate
         self.df['Ora'] = self.df['Data_Ora_Incidente'].dt.hour
         self.df['Giorno'] = self.df['Data_Ora_Incidente'].dt.date
         if 'Numero_Morti' in self.df.columns:
             self.df['Mortale'] = (self.df['Numero_Morti'] > 0).astype(int)
         
+        self.popola_tabella_dati() # Popola la nuova tabella con i dati
         self.aggiorna_selettori(variabile_da_mantenere)
-
 
     def aggiorna_selettori(self, variabile_da_mantenere=None):
         if self.df is None: return
         numeric_columns = self.df.select_dtypes(include=np.number).columns.tolist()
         object_columns = self.df.select_dtypes(include=['object', 'category']).columns.tolist()
         datetime_cols = self.df.select_dtypes(include=['datetime64[ns]']).columns.tolist()
-
         all_columns = datetime_cols + object_columns + numeric_columns
-        
         province_uniche = sorted(self.df['Provincia'].unique().tolist()) if 'Provincia' in self.df.columns else []
         self.selettore_var_descrittiva.configure(values=all_columns)
-        
-        # MODIFICA 4: Logica per mantenere la selezione della variabile
         if variabile_da_mantenere and variabile_da_mantenere in all_columns:
             self.selettore_var_descrittiva.set(variabile_da_mantenere)
         elif all_columns:
             self.selettore_var_descrittiva.set(all_columns[0])
-        self.esegui_analisi_descrittiva() # Esegue l'analisi con la variabile giusta
-            
+        self.esegui_analisi_descrittiva()
         self.selettore_var_biv_x.configure(values=numeric_columns)
         self.selettore_var_biv_y.configure(values=numeric_columns)
         if numeric_columns and len(numeric_columns) > 1:
@@ -225,7 +180,6 @@ class App(customtkinter.CTk):
         elif numeric_columns:
             self.selettore_var_biv_x.set(numeric_columns[0])
             self.selettore_var_biv_y.set(numeric_columns[0])
-            
         self.selettore_provincia_poisson.configure(values=province_uniche)
         self.selettore_provincia_ci.configure(values=province_uniche)
         if province_uniche:
@@ -246,6 +200,41 @@ class App(customtkinter.CTk):
     # =============================================================================
     # SETUP DELLE SCHEDE (TAB)
     # =============================================================================
+    
+    # MODIFICA 1: Funzione per creare la tab "Dati Forniti"
+    def setup_tab_dati_forniti(self):
+        tab = self.tab_view.tab("Dati Forniti")
+        tab.grid_columnconfigure(0, weight=1)
+        tab.grid_rowconfigure(0, weight=1)
+
+        data_frame = customtkinter.CTkFrame(tab)
+        data_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        data_frame.grid_columnconfigure(0, weight=1)
+        data_frame.grid_rowconfigure(0, weight=1)
+
+        style = ttk.Style()
+        style.configure("Treeview", rowheight=25, font=('Calibri', 11))
+        style.configure("Treeview.Heading", font=('Calibri', 12,'bold'))
+        
+        columns = ('Data_Ora_Incidente', 'Provincia', 'Giorno_Settimana', 'Tipo_Strada', 'Numero_Feriti', 'Numero_Morti', 'Velocita_Media_Stimata')
+        self.data_table = ttk.Treeview(data_frame, columns=columns, show='headings')
+
+        for col in columns:
+            self.data_table.heading(col, text=col)
+            if col == 'Data_Ora_Incidente':
+                self.data_table.column(col, width=160, anchor='w')
+            elif col in ['Numero_Feriti', 'Numero_Morti', 'Velocita_Media_Stimata']:
+                self.data_table.column(col, width=140, anchor='center')
+            else:
+                 self.data_table.column(col, width=120, anchor='w')
+
+        vsb = ttk.Scrollbar(data_frame, orient="vertical", command=self.data_table.yview)
+        hsb = ttk.Scrollbar(data_frame, orient="horizontal", command=self.data_table.xview)
+        self.data_table.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+
+        self.data_table.grid(row=0, column=0, sticky='nsew')
+        vsb.grid(row=0, column=1, sticky='ns')
+        hsb.grid(row=1, column=0, sticky='ew')
 
     def setup_tab_descrittiva(self):
         tab = self.tab_view.tab("Analisi Descrittiva")
@@ -293,23 +282,13 @@ class App(customtkinter.CTk):
         frame_poisson.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         frame_poisson.grid_columnconfigure(1, weight=1)
         
-        info_poisson = """**Cos'è?**
-Il Modello di Poisson è uno strumento statistico usato per calcolare la probabilità che un certo numero di eventi (k) accada in un intervallo di tempo o spazio, dato un tasso medio di accadimento (λ).
-
-**A Cosa Serve?**
-In questo contesto, serve a stimare la probabilità di osservare un numero specifico di incidenti (es. 2 incidenti) in una data ora, o fascia oraria, e provincia, basandosi sulla frequenza storica.
-
---- Legenda dei Termini ---
-- **λ (Lambda):** Tasso medio di accadimento. È il numero medio di incidenti stimato per la provincia e l'ora/fascia selezionata.
-- **k:** Il numero esatto di eventi (incidenti) di cui si vuole calcolare la probabilità.
-- **P(X=k):** La probabilità calcolata che il numero di incidenti sia esattamente 'k'."""
+        info_poisson = """**Cos'è?**\nIl Modello di Poisson è uno strumento statistico usato per calcolare la probabilità che un certo numero di eventi (k) accada in un intervallo di tempo o spazio, dato un tasso medio di accadimento (λ).\n\n**A Cosa Serve?**\nIn questo contesto, serve a stimare la probabilità di osservare un numero specifico di incidenti (es. 2 incidenti) in una data ora, o fascia oraria, e provincia, basandosi sulla frequenza storica.\n\n--- Legenda dei Termini ---\n- **λ (Lambda):** Tasso medio di accadimento. È il numero medio di incidenti stimato per la provincia e l'ora/fascia selezionata.\n- **k:** Il numero esatto di eventi (incidenti) di cui si vuole calcolare la probabilità.\n- **P(X=k):** La probabilità calcolata che il numero di incidenti sia esattamente 'k'."""
         self._crea_titolo_sezione(frame_poisson, 0, "Modello di Poisson", info_poisson, columnspan=3)
 
         customtkinter.CTkLabel(frame_poisson, text="Provincia:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
         self.selettore_provincia_poisson = customtkinter.CTkComboBox(frame_poisson, values=[])
         self.selettore_provincia_poisson.grid(row=1, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
         
-        # MODIFICA 1: Cambiata etichetta per riflettere la nuova flessibilità
         customtkinter.CTkLabel(frame_poisson, text="Ora o Fascia Oraria (es. 14 o 8-17):").grid(row=2, column=0, padx=10, pady=5, sticky="w")
         self.entry_ora_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Inserisci un'ora singola (0-23) o un range")
         self.entry_ora_poisson.grid(row=2, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
@@ -328,16 +307,7 @@ In questo contesto, serve a stimare la probabilità di osservare un numero speci
         frame_ttest.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         frame_ttest.grid_columnconfigure(1, weight=1)
         
-        info_ttest="""**Cos'è?**
-Il Test T per Campioni Indipendenti è un test di ipotesi che confronta le medie di due gruppi di dati separati e indipendenti (es. feriti di giorno vs feriti di notte).
-
-**A Cosa Serve?**
-Determina se la differenza osservata tra le due medie è statisticamente significativa o se potrebbe essere semplicemente dovuta al caso.
-
---- Legenda dei Termini ---
-- **Ipotesi Nulla (H₀):** L'ipotesi di partenza che non esista una vera differenza tra le medie dei due gruppi.
-- **p-value:** La probabilità di osservare i dati attuali (o dati ancora più estremi) se l'Ipotesi Nulla fosse vera. Un p-value basso (tipicamente < 0.05) suggerisce di rigettare H₀.
-- **Statistica t:** Misura la dimensione della differenza tra le medie relativa alla variabilità dei dati. Più è lontana da zero, più la differenza è marcata."""
+        info_ttest="""**Cos'è?**\nIl Test T per Campioni Indipendenti è un test di ipotesi che confronta le medie di due gruppi di dati separati e indipendenti (es. feriti di giorno vs feriti di notte).\n\n**A Cosa Serve?**\nDetermina se la differenza osservata tra le due medie è statisticamente significativa o se potrebbe essere semplicemente dovuta al caso.\n\n--- Legenda dei Termini ---\n- **Ipotesi Nulla (H₀):** L'ipotesi di partenza che non esista una vera differenza tra le medie dei due gruppi.\n- **p-value:** La probabilità di osservare i dati attuali (o dati ancora più estremi) se l'Ipotesi Nulla fosse vera. Un p-value basso (tipicamente < 0.05) suggerisce di rigettare H₀.\n- **Statistica t:** Misura la dimensione della differenza tra le medie relativa alla variabilità dei dati. Più è lontana da zero, più la differenza è marcata."""
         self._crea_titolo_sezione(frame_ttest, 0, "Test T per Campioni Indipendenti", info_ttest, columnspan=2)
 
         customtkinter.CTkLabel(frame_ttest, text="Confronto 'Numero_Feriti' tra Diurno (7-19) e Notturno").grid(row=1, column=0, columnspan=2, padx=10, pady=(10,0))
@@ -352,16 +322,7 @@ Determina se la differenza osservata tra le due medie è statisticamente signifi
         frame_ci.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
         frame_ci.grid_columnconfigure(1, weight=1)
         
-        info_ci="""**Cos'è?**
-Un Intervallo di Confidenza (IC) è un range di valori, calcolato a partire da dati campionari, che si stima possa contenere il vero valore di un parametro della popolazione (es. la 'vera' media di incidenti giornalieri).
-
-**A Cosa Serve?**
-Fornisce una misura della precisione della stima. Invece di avere un singolo valore (la media del campione), si ottiene un intervallo di valori plausibili.
-
---- Legenda dei Termini ---
-- **Livello di Confidenza:** La probabilità (es. 95%) che, ripetendo l'esperimento più volte, l'intervallo calcolato contenga il vero parametro della popolazione.
-- **Media Campionaria:** La media calcolata sui dati a disposizione.
-- **Range (IC):** L'intervallo [valore inferiore, valore superiore]. Un intervallo stretto indica una stima più precisa."""
+        info_ci="""**Cos'è?**\nUn Intervallo di Confidenza (IC) è un range di valori, calcolato a partire da dati campionari, che si stima possa contenere il vero valore di un parametro della popolazione (es. la 'vera' media di incidenti giornalieri).\n\n**A Cosa Serve?**\nFornisce una misura della precisione della stima. Invece di avere un singolo valore (la media del campione), si ottiene un intervallo di valori plausibili.\n\n--- Legenda dei Termini ---\n- **Livello di Confidenza:** La probabilità (es. 95%) che, ripetendo l'esperimento più volte, l'intervallo calcolato contenga il vero parametro della popolazione.\n- **Media Campionaria:** La media calcolata sui dati a disposizione.\n- **Range (IC):** L'intervallo [valore inferiore, valore superiore]. Un intervallo stretto indica una stima più precisa."""
         self._crea_titolo_sezione(frame_ci, 0, "Intervallo di Confidenza", info_ci, columnspan=2)
 
         customtkinter.CTkLabel(frame_ci, text="Provincia:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
@@ -379,6 +340,29 @@ Fornisce una misura della precisione della stima. Invece di avere un singolo val
     # =============================================================================
     # FUNZIONI DI ESECUZIONE DELLE ANALISI
     # =============================================================================
+    
+    def popola_tabella_dati(self):
+        """Popola la tabella nella scheda 'Dati Forniti'."""
+        # Pulisce la tabella prima di inserirne di nuovi
+        for item in self.data_table.get_children():
+            self.data_table.delete(item)
+
+        if self.df is None or self.df.empty:
+            return
+
+        # Seleziona, ordina e formatta i dati per la visualizzazione
+        display_df = self.df.copy()
+        columns_to_display = ['Data_Ora_Incidente', 'Provincia', 'Giorno_Settimana', 'Tipo_Strada', 'Numero_Feriti', 'Numero_Morti', 'Velocita_Media_Stimata']
+        
+        # Assicura che tutte le colonne esistano prima di provare a selezionarle
+        columns_to_display = [col for col in columns_to_display if col in display_df.columns]
+        if not columns_to_display: return
+        
+        display_df = display_df[columns_to_display]
+        display_df['Data_Ora_Incidente'] = display_df['Data_Ora_Incidente'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+        for index, row in display_df.iterrows():
+            self.data_table.insert("", "end", values=list(row))
     
     def esegui_analisi_descrittiva(self):
         if self.df is None: 
@@ -402,7 +386,8 @@ Fornisce una misura della precisione della stima. Invece di avere un singolo val
             customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato disponibile per questa variabile.").pack()
             return
 
-        if pd.api.types.is_datetime64_any_dtype(data):
+        # MODIFICA 2: Aggiunto un controllo per trattare la colonna 'Giorno' come temporale
+        if pd.api.types.is_datetime64_any_dtype(data) or variable == 'Giorno':
             self.analisi_temporale(variable)
         elif pd.api.types.is_numeric_dtype(data):
             self.analisi_numerica(variable, data)
@@ -414,28 +399,30 @@ Fornisce una misura della precisione della stima. Invece di avere un singolo val
         self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
         self.frame_risultati_descrittiva.grid_rowconfigure(2, weight=1)
         
-        info_temporale = """**Cos'è?**
-Questa sezione analizza la distribuzione degli incidenti nel tempo.
-
-**A Cosa Serve?**
-Permette di identificare pattern temporali, come giorni della settimana o periodi dell'anno con picchi di incidentalità, fornendo indicazioni utili per la pianificazione di interventi preventivi."""
-        guida_temporale = """**Interpretazione del Grafico a Linee:**
-- **Asse delle ascisse (X):** Rappresenta la variabile temporale (date).
-- **Asse delle ordinate (Y):** Mostra la frequenza assoluta degli incidenti per unità di tempo.
-- **Linea di tendenza:** La polilinea congiunge i punti-dati, ciascuno rappresentante la frequenza di incidenti per un dato giorno. La pendenza dei segmenti indica la variazione della frequenza tra giorni consecutivi."""
+        info_temporale = """**Cos'è?**\nQuesta sezione analizza la distribuzione degli incidenti nel tempo.\n\n**A Cosa Serve?**\nPermette di identificare pattern temporali, come giorni della settimana o periodi dell'anno con picchi di incidentalità, fornendo indicazioni utili per la pianificazione di interventi preventivi."""
+        guida_temporale = """**Interpretazione del Grafico a Linee:**\n- **Asse delle ascisse (X):** Rappresenta la variabile temporale (date).\n- **Asse delle ordinate (Y):** Mostra la frequenza assoluta degli incidenti per unità di tempo.\n- **Linea di tendenza:** La polilinea congiunge i punti-dati, ciascuno rappresentante la frequenza di incidenti per un dato giorno. La pendenza dei segmenti indica la variazione della frequenza tra giorni consecutivi."""
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 0, "Andamento Temporale Incidenti", info_temporale, testo_guida=guida_temporale)
         
-        daily_counts = self.df.groupby(self.df['Data_Ora_Incidente'].dt.date).size()
+        # MODIFICA 2: Logica adattata per gestire sia 'Data_Ora_Incidente' sia 'Giorno'
+        if variable == 'Data_Ora_Incidente':
+            daily_counts = self.df.groupby(self.df[variable].dt.date).size()
+        else: # Gestisce 'Giorno'
+            daily_counts = self.df.groupby(variable).size()
+
         if daily_counts.empty:
             customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato giornaliero da analizzare.").grid(row=1, column=0)
             return
+        
+        # Standardizza l'indice a datetime per il plotting, garantendo il funzionamento corretto
+        daily_counts.index = pd.to_datetime(daily_counts.index)
+            
         frame_stats = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
         frame_stats.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
         giorno_max = daily_counts.idxmax()
         count_max = daily_counts.max()
-        stats_text = (f"Periodo analizzato: dal {pd.to_datetime(daily_counts.index.min()).strftime('%d/%m/%Y')} al {pd.to_datetime(daily_counts.index.max()).strftime('%d/%m/%Y')}\n"
+        stats_text = (f"Periodo analizzato: dal {daily_counts.index.min().strftime('%d/%m/%Y')} al {daily_counts.index.max().strftime('%d/%m/%Y')}\n"
                       f"Totale giorni con incidenti: {len(daily_counts)}\n"
-                      f"Giorno con più incidenti: {pd.to_datetime(giorno_max).strftime('%d/%m/%Y')} (con {count_max} incidenti)")
+                      f"Giorno con più incidenti: {giorno_max.strftime('%d/%m/%Y')} (con {count_max} incidenti)")
         customtkinter.CTkLabel(frame_stats, text=stats_text, justify="left").pack(padx=10, pady=10)
         
         canvas_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 2, 0)
@@ -458,17 +445,7 @@ Permette di identificare pattern temporali, come giorni della settimana o period
         self.frame_risultati_descrittiva.grid_columnconfigure((0, 1), weight=1)
         self.frame_risultati_descrittiva.grid_rowconfigure(3, weight=1)
         
-        info_indici = """**Cosa Sono?**
-Gli indici statistici sono valori numerici che riassumono le caratteristiche principali di un insieme di dati.
-
-**A Cosa Servono?**
-Forniscono una visione sintetica e quantitativa della variabile analizzata, descrivendone la tendenza centrale (dove si concentrano i dati) e la variabilità (quanto sono dispersi).
-
---- Legenda dei Termini ---
-- **Misure Centrali (Media, Mediana, Moda):** Indicano il 'centro' dei dati.
-- **Misure di Dispersione (Varianza, Dev. Standard):** Indicano quanto i dati sono sparsi.
-- **Asimmetria (Skewness):** Misura la simmetria della distribuzione. (>0: coda a destra; <0: coda a sinistra).
-- **Curtosi (Kurtosis):** Misura la 'pesantezza' delle code e la presenza di valori anomali."""
+        info_indici = """**Cosa Sono?**\nGli indici statistici sono valori numerici che riassumono le caratteristiche principali di un insieme di dati.\n\n**A Cosa Servono?**\nForniscono una visione sintetica e quantitativa della variabile analizzata, descrivendone la tendenza centrale (dove si concentrano i dati) e la variabilità (quanto sono dispersi).\n\n--- Legenda dei Termini ---\n- **Misure Centrali (Media, Mediana, Moda):** Indicano il 'centro' dei dati.\n- **Misure di Dispersione (Varianza, Dev. Standard):** Indicano quanto i dati sono sparsi.\n- **Asimmetria (Skewness):** Misura la simmetria della distribuzione. (>0: coda a destra; <0: coda a sinistra).\n- **Curtosi (Kurtosis):** Misura la 'pesantezza' delle code e la presenza di valori anomali."""
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 0, f"Indici Statistici per '{variable}'", info_indici, columnspan=2)
 
         frame_valori_indici = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
@@ -489,19 +466,8 @@ Forniscono una visione sintetica e quantitativa della variabile analizzata, desc
             col += 1
             if col > 3: col, row = 0, row + 1
         
-        info_distribuzione="""**Cosa Sono?**
-Sono rappresentazioni visuali che mostrano come i valori di una variabile sono distribuiti.
-
-**A Cosa Servono?**
-Aiutano a comprendere la forma della distribuzione, a identificare i valori più frequenti, la presenza di anomalie (outlier) e la dispersione dei dati in modo intuitivo."""
-        guida_distribuzione="""**Interpretazione dei Grafici:**
-- **Istogramma:** Rappresenta la distribuzione di frequenza di una variabile numerica. L'asse X è suddiviso in intervalli (bin) e l'altezza di ciascuna barra è proporzionale al numero di osservazioni che ricadono in quell'intervallo.
-
-- **Box Plot:** Sintetizza la distribuzione attraverso cinque numeri:
-  - Il **limite inferiore/superiore della scatola** indica il primo (Q1) e il terzo (Q3) quartile.
-  - La **linea interna** rappresenta la mediana (Q2).
-  - I **baffi (whiskers)** si estendono fino ai valori minimi e massimi esclusi gli outlier.
-  - La visualizzazione degli **outlier** è disattivata per favorire la leggibilità della distribuzione centrale."""
+        info_distribuzione="""**Cosa Sono?**\nSono rappresentazioni visuali che mostrano come i valori di una variabile sono distribuiti.\n\n**A Cosa Servono?**\nAiutano a comprendere la forma della distribuzione, a identificare i valori più frequenti, la presenza di anomalie (outlier) e la dispersione dei dati in modo intuitivo."""
+        guida_distribuzione="""**Interpretazione dei Grafici:**\n- **Istogramma:** Rappresenta la distribuzione di frequenza di una variabile numerica. L'asse X è suddiviso in intervalli (bin) e l'altezza di ciascuna barra è proporzionale al numero di osservazioni che ricadono in quell'intervallo.\n\n- **Box Plot:** Sintetizza la distribuzione attraverso cinque numeri:\n  - Il **limite inferiore/superiore della scatola** indica il primo (Q1) e il terzo (Q3) quartile.\n  - La **linea interna** rappresenta la mediana (Q2).\n  - I **baffi (whiskers)** si estendono fino ai valori minimi e massimi esclusi gli outlier.\n  - La visualizzazione degli **outlier** è disattivata per favorire la leggibilità della distribuzione centrale."""
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 2, "Grafici di Distribuzione", info_distribuzione, columnspan=2, testo_guida=guida_distribuzione)
         
         canvas_hist_frame, canvas_box_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 0), self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 1)
@@ -526,16 +492,7 @@ Aiutano a comprendere la forma della distribuzione, a identificare i valori più
         self.frame_risultati_descrittiva.grid_rowconfigure(3, weight=1)
         self.frame_risultati_descrittiva.grid_rowconfigure(4, weight=1)
 
-        info_frequenze="""**Cos'è?**
-Una tabella che mostra quante volte appare ogni categoria (modalità) di una variabile.
-
-**A Cosa Serve?**
-Permette di quantificare la distribuzione delle osservazioni tra le diverse categorie, identificando quelle più e meno comuni.
-
---- Legenda dei Termini ---
-- **Freq. Assoluta:** Il conteggio esatto di ogni categoria.
-- **Freq. Relativa (%):** La percentuale di ogni categoria sul totale.
-- **Freq. Cumulata:** La somma progressiva delle frequenze."""
+        info_frequenze="""**Cos'è?**\nUna tabella che mostra quante volte appare ogni categoria (modalità) di una variabile.\n\n**A Cosa Serve?**\nPermette di quantificare la distribuzione delle osservazioni tra le diverse categorie, identificando quelle più e meno comuni.\n\n--- Legenda dei Termini ---\n- **Freq. Assoluta:** Il conteggio esatto di ogni categoria.\n- **Freq. Relativa (%):** La percentuale di ogni categoria sul totale.\n- **Freq. Cumulata:** La somma progressiva delle frequenze."""
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 0, f"Tabella Frequenze per '{variable}'", info_frequenze)
         
         frame_tabella_main = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
@@ -544,13 +501,12 @@ Permette di quantificare la distribuzione delle osservazioni tra le diverse cate
         
         counts = data.value_counts()
 
-        # MODIFICA 3: Raggruppa categorie piccole se sono troppe, per leggibilità
         if len(counts) > 10:
             top_counts = counts.nlargest(9)
             other_sum = counts.iloc[9:].sum()
-            counts = top_counts.append(pd.Series({'Altro': other_sum}))
+            counts = pd.concat([top_counts, pd.Series({'Altro': other_sum})])
 
-        relative_freq = counts / counts.sum() # Ricalcola sul nuovo totale
+        relative_freq = counts / counts.sum()
         cumulative_freq = counts.cumsum()
         
         style = ttk.Style()
@@ -565,17 +521,8 @@ Permette di quantificare la distribuzione delle osservazioni tra le diverse cate
         tree.pack(fill="x", expand=True)
         self.matplotlib_widgets.append(frame_tabella_main)
 
-        info_grafici_freq="""**Cosa Sono?**
-Sono rappresentazioni visuali che mostrano la frequenza o la proporzione delle diverse categorie di una variabile.
-
-**A Cosa Servono?**
-Offrono un modo immediato per confrontare le categorie, evidenziando le proporzioni e le differenze tra di esse."""
-        guida_grafici_freq="""**Interpretazione dei Grafici:**
-- **Grafico a Barre:**
-  Visualizza le frequenze delle categorie. La lunghezza di ciascuna barra è direttamente proporzionale alla frequenza della categoria che rappresenta, permettendo un confronto quantitativo diretto.
-
-- **Grafico a Torta (o Ciambella):**
-  Rappresenta la composizione proporzionale del totale. L'area di ciascuno spicchio è proporzionale alla frequenza relativa della categoria, illustrando il contributo di ogni parte al tutto (100%)."""
+        info_grafici_freq="""**Cosa Sono?**\nSono rappresentazioni visuali che mostrano la frequenza o la proporzione delle diverse categorie di una variabile.\n\n**A Cosa Servono?**\nOffrono un modo immediato per confrontare le categorie, evidenziando le proporzioni e le differenze tra di esse."""
+        guida_grafici_freq="""**Interpretazione dei Grafici:**\n- **Grafico a Barre:**\n  Visualizza le frequenze delle categorie. La lunghezza di ciascuna barra è direttamente proporzionale alla frequenza della categoria che rappresenta, permettendo un confronto quantitativo diretto.\n\n- **Grafico a Torta (o Ciambella):**\n  Rappresenta la composizione proporzionale del totale. L'area di ciascuno spicchio è proporzionale alla frequenza relativa della categoria, illustrando il contributo di ogni parte al tutto (100%)."""
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 2, "Grafici di Frequenza", info_grafici_freq, testo_guida=guida_grafici_freq)
         
         def autopct_conditional(pct):
@@ -617,22 +564,8 @@ Offrono un modo immediato per confrontare le categorie, evidenziando le proporzi
         else: correlation = df_subset.corr().iloc[0, 1]
         regression = stats.linregress(x=x_data, y=y_data)
 
-        info_bivariata="""**Cos'è?**
-Un'analisi che studia la relazione tra due variabili numeriche contemporaneamente.
-
-**A Cosa Serve?**
-A capire se esiste un legame tra le due variabili, in che direzione (positivo o negativo) e con quale forza. La regressione permette anche di prevedere il valore di una variabile basandosi sull'altra.
-
---- Legenda dei Termini ---
-- **Coefficiente di Correlazione (r):** Varia da -1 (relazione inversa perfetta) a +1 (relazione diretta perfetta). 0 indica assenza di relazione *lineare*.
-- **Retta di Regressione (y = mx + b):** La linea che meglio approssima i dati.
-- **Pendenza (m):** Indica di quanto aumenta in media Y per ogni aumento di 1 unità in X.
-- **Intercetta (b):** Il valore previsto di Y quando X è 0."""
-        guida_bivariata="""**Interpretazione del Diagramma a Dispersione:**
-- **Assi Cartesiani:** Gli assi X e Y rappresentano le due variabili oggetto di analisi.
-- **Punti Dati:** Ciascun punto sul piano cartesiano corrisponde a un'osservazione bivariata.
-- **Distribuzione dei Punti:** La configurazione dei punti (la 'nuvola') indica la natura della relazione. Un andamento crescente/decrescente suggerisce una correlazione positiva/negativa.
-- **Retta di Regressione:** La linea rossa rappresenta il modello di regressione lineare semplice, che interpola la nuvola di punti minimizzando la somma dei quadrati dei residui."""
+        info_bivariata="""**Cos'è?**\nUn'analisi che studia la relazione tra due variabili numeriche contemporaneamente.\n\n**A Cosa Serve?**\nA capire se esiste un legame tra le due variabili, in che direzione (positivo o negativo) e con quale forza. La regressione permette anche di prevedere il valore di una variabile basandosi sull'altra.\n\n--- Legenda dei Termini ---\n- **Coefficiente di Correlazione (r):** Varia da -1 (relazione inversa perfetta) a +1 (relazione diretta perfetta). 0 indica assenza di relazione *lineare*.\n- **Retta di Regressione (y = mx + b):** La linea che meglio approssima i dati.\n- **Pendenza (m):** Indica di quanto aumenta in media Y per ogni aumento di 1 unità in X.\n- **Intercetta (b):** Il valore previsto di Y quando X è 0."""
+        guida_bivariata="""**Interpretazione del Diagramma a Dispersione:**\n- **Assi Cartesiani:** Gli assi X e Y rappresentano le due variabili oggetto di analisi.\n- **Punti Dati:** Ciascun punto sul piano cartesiano corrisponde a un'osservazione bivariata.\n- **Distribuzione dei Punti:** La configurazione dei punti (la 'nuvola') indica la natura della relazione. Un andamento crescente/decrescente suggerisce una correlazione positiva/negativa.\n- **Retta di Regressione:** La linea rossa rappresenta il modello di regressione lineare semplice, che interpola la nuvola di punti minimizzando la somma dei quadrati dei residui."""
         self._crea_titolo_sezione(self.frame_risultati_bivariata, 0, "Analisi di Correlazione e Regressione", info_bivariata, testo_guida=guida_bivariata)
         
         frame_risultati_testuali = customtkinter.CTkFrame(self.frame_risultati_bivariata)
@@ -643,16 +576,15 @@ A capire se esiste un legame tra le due variabili, in che direzione (positivo o 
         canvas_frame = self.crea_canvas_matplotlib(self.frame_risultati_bivariata, 2, 0)
         fig, ax = plt.subplots(figsize=(8, 6))
         
-        # MODIFICA 5: Migliorata la leggibilità del grafico a dispersione
-        ax.scatter(x_data, y_data, alpha=0.5, s=20, label='Dati') # Opacità e dimensione ridotte
+        ax.scatter(x_data, y_data, alpha=0.5, s=20, label='Dati')
 
-        # Aggiunge un margine del 5% ai limiti degli assi per una migliore visuale
-        x_pad = (x_data.max() - x_data.min()) * 0.05
-        y_pad = (y_data.max() - y_data.min()) * 0.05
+        x_range = x_data.max() - x_data.min()
+        y_range = y_data.max() - y_data.min()
+        x_pad = x_range * 0.05 if x_range > 0 else 1
+        y_pad = y_range * 0.05 if y_range > 0 else 1
         ax.set_xlim(x_data.min() - x_pad, x_data.max() + x_pad)
         ax.set_ylim(y_data.min() - y_pad, y_data.max() + y_pad)
         
-        # Disegna la retta di regressione lungo i nuovi limiti dell'asse x
         line_x = np.array(ax.get_xlim())
         line_y = regression.slope * line_x + regression.intercept
         ax.plot(line_x, line_y, color='red', label='Retta di Regressione')
@@ -684,7 +616,6 @@ A capire se esiste un legame tra le due variabili, in che direzione (positivo o 
             k = int(self.entry_k_poisson.get())
             fascia_oraria_str = self.entry_ora_poisson.get().strip()
 
-            # MODIFICA 1: Logica di parsing per ora singola o range
             if '-' in fascia_oraria_str:
                 parts = fascia_oraria_str.split('-')
                 if len(parts) != 2 or not parts[0] or not parts[1]:
