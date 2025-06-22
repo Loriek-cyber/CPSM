@@ -10,6 +10,19 @@
 # 19. [FIX] Dati di Test Inferenziale Migliorati: Il nuovo generatore robusto assicura dati ampi e vari
 #     per testare efficacemente le analisi inferenziali.
 # =============================================================================
+# ===== MODIFICHE APPORTATE v5.3 (Richiesta Utente) =====
+# =============================================================================
+# 1.  [MIGLIORIA] Dati Simulati: Ridotto il numero di record generati da 200 a 100 per migliorare
+#     la leggibilità dei grafici categorici (torta, barre).
+# 2.  [MIGLIORIA] Persistenza UI: La variabile selezionata nella tab 'Analisi Descrittiva' viene ora
+#     mantenuta dopo aver ricaricato i dati simulati, evitando di resettare la vista.
+# 3.  [MIGLIORIA] Analisi di Poisson: L'input della fascia oraria ora accetta sia un'ora singola (es. "14")
+#     che un range (es. "8-17"). L'output include il numero totale di ore considerate.
+# 4.  [MIGLIORIA] Adattabilità Grafici Categorici: Se una variabile ha più di 10 categorie, le meno
+#     frequenti vengono raggruppate in una categoria "Altro" per garantire la leggibilità.
+# 5.  [MIGLIORIA] Adattabilità Grafico a Dispersione: Aumentato il margine degli assi e ridotta la
+#     dimensione/opacità dei punti per migliorare la visualizzazione di nuvole di dati dense.
+# =============================================================================
 
 # =============================================================================
 # IMPORTAZIONE DELLE LIBRERIE NECESSARIE
@@ -114,16 +127,20 @@ class App(customtkinter.CTk):
         Genera un DataFrame di dati simulati randomici e coerenti.
         Questo metodo è stato reso robusto per evitare dipendenze dal sistema (es. 'locale').
         """
+        # MODIFICA 4: Mantiene la variabile selezionata nella tab descrittiva
+        variabile_selezionata = self.selettore_var_descrittiva.get()
+
         records = []
-        province = ['Milano', 'Roma', 'Napoli', 'Torino', 'Firenze', 'Catania', 'Salerno', 'Bologna']
+        province = ['Milano', 'Roma', 'Napoli', 'Torino', 'Firenze', 'Catania', 'Salerno', 'Bologna', 'Venezia', 'Bari']
         tipi_strada = ['Urbana', 'Statale', 'Autostrada']
         # Mappatura manuale per evitare dipendenze da 'locale'
         giorni_map = {0: 'Lunedì', 1: 'Martedì', 2: 'Mercoledì', 3: 'Giovedì', 4: 'Venerdì', 5: 'Sabato', 6: 'Domenica'}
         
         end_date = datetime.now()
-        start_date = end_date - timedelta(days=180)
+        start_date = end_date - timedelta(days=365)
         
-        for _ in range(200): # Genera 200 record
+        # MODIFICA 2: Ridotto il numero di record generati per migliorare leggibilità grafici
+        for _ in range(100): # Genera 100 record
             random_seconds = random.randint(0, int((end_date - start_date).total_seconds()))
             random_date = start_date + timedelta(seconds=random_seconds)
             
@@ -144,7 +161,7 @@ class App(customtkinter.CTk):
                 numero_feriti = random.choices([0, 1, 2, 3, 4], weights=[20, 40, 25, 10, 5], k=1)[0]
                 
             records.append({
-                'Data_Ora_Incidente': random_date, # Mantenuto come oggetto datetime
+                'Data_Ora_Incidente': random_date,
                 'Provincia': prov,
                 'Giorno_Settimana': giorni_map[random_date.weekday()],
                 'Tipo_Strada': strada,
@@ -154,23 +171,23 @@ class App(customtkinter.CTk):
             })
             
         df = pd.DataFrame(records)
-        self.inizializza_dati(df)
-        self.label_file.configure(text="Caricati 200 record simulati randomici.")
+        self.inizializza_dati(df, variabile_da_mantenere=variabile_selezionata) # Passa la variabile
+        self.label_file.configure(text="Caricati 100 record simulati randomici.")
 
 
-    def inizializza_dati(self, df):
+    def inizializza_dati(self, df, variabile_da_mantenere=None):
         self.df = df.copy()
         
-        # Converte le colonne numeriche, trasformando errori in NaN (Not a Number)
+        # Converte le colonne numeriche, trasformando errori in NaN
         for col in ['Numero_Feriti', 'Numero_Morti', 'Velocita_Media_Stimata']:
             if col in self.df.columns:
                 self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
 
-        # Converte la colonna data/ora, trasformando errori in NaT (Not a Time)
+        # Converte la colonna data/ora, trasformando errori in NaT
         if 'Data_Ora_Incidente' in self.df.columns:
             self.df['Data_Ora_Incidente'] = pd.to_datetime(self.df['Data_Ora_Incidente'], errors='coerce')
         
-        # Rimuove le righe dove la conversione ha fallito per colonne essenziali
+        # Rimuove le righe dove la conversione ha fallito
         self.df.dropna(subset=['Data_Ora_Incidente', 'Provincia'], inplace=True)
         
         # Crea colonne derivate
@@ -179,23 +196,26 @@ class App(customtkinter.CTk):
         if 'Numero_Morti' in self.df.columns:
             self.df['Mortale'] = (self.df['Numero_Morti'] > 0).astype(int)
         
-        self.aggiorna_selettori()
+        self.aggiorna_selettori(variabile_da_mantenere)
 
 
-    def aggiorna_selettori(self):
+    def aggiorna_selettori(self, variabile_da_mantenere=None):
         if self.df is None: return
         numeric_columns = self.df.select_dtypes(include=np.number).columns.tolist()
         object_columns = self.df.select_dtypes(include=['object', 'category']).columns.tolist()
-        # Aggiungiamo esplicitamente 'Data_Ora_Incidente' se esiste, per il selettore
         datetime_cols = self.df.select_dtypes(include=['datetime64[ns]']).columns.tolist()
 
         all_columns = datetime_cols + object_columns + numeric_columns
         
         province_uniche = sorted(self.df['Provincia'].unique().tolist()) if 'Provincia' in self.df.columns else []
         self.selettore_var_descrittiva.configure(values=all_columns)
-        if all_columns:
+        
+        # MODIFICA 4: Logica per mantenere la selezione della variabile
+        if variabile_da_mantenere and variabile_da_mantenere in all_columns:
+            self.selettore_var_descrittiva.set(variabile_da_mantenere)
+        elif all_columns:
             self.selettore_var_descrittiva.set(all_columns[0])
-            self.esegui_analisi_descrittiva()
+        self.esegui_analisi_descrittiva() # Esegue l'analisi con la variabile giusta
             
         self.selettore_var_biv_x.configure(values=numeric_columns)
         self.selettore_var_biv_y.configure(values=numeric_columns)
@@ -277,10 +297,10 @@ class App(customtkinter.CTk):
 Il Modello di Poisson è uno strumento statistico usato per calcolare la probabilità che un certo numero di eventi (k) accada in un intervallo di tempo o spazio, dato un tasso medio di accadimento (λ).
 
 **A Cosa Serve?**
-In questo contesto, serve a stimare la probabilità di osservare un numero specifico di incidenti (es. 2 incidenti) in una data ora e provincia, basandosi sulla frequenza storica.
+In questo contesto, serve a stimare la probabilità di osservare un numero specifico di incidenti (es. 2 incidenti) in una data ora, o fascia oraria, e provincia, basandosi sulla frequenza storica.
 
 --- Legenda dei Termini ---
-- **λ (Lambda):** Tasso medio di accadimento. È il numero medio di incidenti stimato per la provincia e l'ora selezionate.
+- **λ (Lambda):** Tasso medio di accadimento. È il numero medio di incidenti stimato per la provincia e l'ora/fascia selezionata.
 - **k:** Il numero esatto di eventi (incidenti) di cui si vuole calcolare la probabilità.
 - **P(X=k):** La probabilità calcolata che il numero di incidenti sia esattamente 'k'."""
         self._crea_titolo_sezione(frame_poisson, 0, "Modello di Poisson", info_poisson, columnspan=3)
@@ -289,8 +309,9 @@ In questo contesto, serve a stimare la probabilità di osservare un numero speci
         self.selettore_provincia_poisson = customtkinter.CTkComboBox(frame_poisson, values=[])
         self.selettore_provincia_poisson.grid(row=1, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
         
-        customtkinter.CTkLabel(frame_poisson, text="Fascia Oraria (es. 7-13):").grid(row=2, column=0, padx=10, pady=5, sticky="w")
-        self.entry_ora_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Inserisci un range orario, es. 8-12")
+        # MODIFICA 1: Cambiata etichetta per riflettere la nuova flessibilità
+        customtkinter.CTkLabel(frame_poisson, text="Ora o Fascia Oraria (es. 14 o 8-17):").grid(row=2, column=0, padx=10, pady=5, sticky="w")
+        self.entry_ora_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Inserisci un'ora singola (0-23) o un range")
         self.entry_ora_poisson.grid(row=2, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
         
         customtkinter.CTkLabel(frame_poisson, text="Numero incidenti (k):").grid(row=3, column=0, padx=10, pady=5, sticky="w")
@@ -361,7 +382,6 @@ Fornisce una misura della precisione della stima. Invece di avere un singolo val
     
     def esegui_analisi_descrittiva(self):
         if self.df is None: 
-            # Pulisce i risultati se non ci sono dati
             for widget in self.frame_risultati_descrittiva.winfo_children():
                 widget.destroy()
             return
@@ -521,9 +541,18 @@ Permette di quantificare la distribuzione delle osservazioni tra le diverse cate
         frame_tabella_main = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
         frame_tabella_main.grid(row=1, column=0, padx=10, pady=5, sticky="ew")
         frame_tabella_main.grid_columnconfigure(0, weight=1)
+        
         counts = data.value_counts()
-        relative_freq = data.value_counts(normalize=True)
+
+        # MODIFICA 3: Raggruppa categorie piccole se sono troppe, per leggibilità
+        if len(counts) > 10:
+            top_counts = counts.nlargest(9)
+            other_sum = counts.iloc[9:].sum()
+            counts = top_counts.append(pd.Series({'Altro': other_sum}))
+
+        relative_freq = counts / counts.sum() # Ricalcola sul nuovo totale
         cumulative_freq = counts.cumsum()
+        
         style = ttk.Style()
         style.configure("Treeview", rowheight=28, font=('Calibri', 12))
         style.configure("Treeview.Heading", font=('Calibri', 13,'bold'), anchor="center")
@@ -613,10 +642,21 @@ A capire se esiste un legame tra le due variabili, in che direzione (positivo o 
         
         canvas_frame = self.crea_canvas_matplotlib(self.frame_risultati_bivariata, 2, 0)
         fig, ax = plt.subplots(figsize=(8, 6))
-        ax.scatter(x_data, y_data, alpha=0.6, label='Dati')
-        line_x = np.array([x_data.min(), x_data.max()])
+        
+        # MODIFICA 5: Migliorata la leggibilità del grafico a dispersione
+        ax.scatter(x_data, y_data, alpha=0.5, s=20, label='Dati') # Opacità e dimensione ridotte
+
+        # Aggiunge un margine del 5% ai limiti degli assi per una migliore visuale
+        x_pad = (x_data.max() - x_data.min()) * 0.05
+        y_pad = (y_data.max() - y_data.min()) * 0.05
+        ax.set_xlim(x_data.min() - x_pad, x_data.max() + x_pad)
+        ax.set_ylim(y_data.min() - y_pad, y_data.max() + y_pad)
+        
+        # Disegna la retta di regressione lungo i nuovi limiti dell'asse x
+        line_x = np.array(ax.get_xlim())
         line_y = regression.slope * line_x + regression.intercept
         ax.plot(line_x, line_y, color='red', label='Retta di Regressione')
+        
         ax.set_title(f'Diagramma a Dispersione: {var_x} vs {var_y}'), ax.set_xlabel(var_x), ax.set_ylabel(var_y), ax.legend(), ax.grid(True), fig.tight_layout()
         canvas = FigureCanvasTkAgg(fig, master=canvas_frame)
         canvas.draw(), canvas.get_tk_widget().pack(fill='both', expand=True)
@@ -642,14 +682,17 @@ A capire se esiste un legame tra le due variabili, in che direzione (positivo o 
         try:
             provincia = self.selettore_provincia_poisson.get()
             k = int(self.entry_k_poisson.get())
-            fascia_oraria_str = self.entry_ora_poisson.get()
-            
-            parts = fascia_oraria_str.replace(" ", "").split('-')
-            if len(parts) != 2 or not parts[0] or not parts[1]:
-                raise ValueError("Formato non valido. Usare un range come '8-17'.")
+            fascia_oraria_str = self.entry_ora_poisson.get().strip()
 
-            ora_inizio, ora_fine = int(parts[0]), int(parts[1])
-            
+            # MODIFICA 1: Logica di parsing per ora singola o range
+            if '-' in fascia_oraria_str:
+                parts = fascia_oraria_str.split('-')
+                if len(parts) != 2 or not parts[0] or not parts[1]:
+                    raise ValueError("Formato range non valido. Usare 'ora_inizio-ora_fine'.")
+                ora_inizio, ora_fine = int(parts[0]), int(parts[1])
+            else:
+                ora_inizio = ora_fine = int(fascia_oraria_str)
+
             if not (0 <= ora_inizio <= 23 and 0 <= ora_fine <= 23):
                 raise ValueError("Le ore devono essere comprese tra 0 e 23.")
             if ora_inizio > ora_fine:
@@ -672,7 +715,10 @@ A capire se esiste un legame tra le due variabili, in che direzione (positivo o 
                 
                 risultato = f"ANALISI PER {provincia.upper()}\n"
                 risultato += "--------------------------------------------------\n"
-                risultato += f"Fascia oraria: {ora_inizio}:00 - {ora_fine}:00 (Durata: {durata_ore} ore)\n\n"
+                if durata_ore == 1:
+                    risultato += f"Ora specifica: {ora_inizio}:00 (Durata: {durata_ore} ora)\n\n"
+                else:
+                    risultato += f"Fascia oraria: {ora_inizio}:00 - {ora_fine}:00 (Durata: {durata_ore} ore)\n\n"
                 risultato += f"Tasso medio stimato (λ) per la fascia oraria:\n{lambda_val:.4f} incidenti (calcolato su {giorni_osservati} giorni)\n\n"
                 risultato += f"Probabilità di osservare esattamente {k} incidenti:\n{prob:.4%}"
 
