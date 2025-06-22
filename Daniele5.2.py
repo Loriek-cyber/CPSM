@@ -1,13 +1,21 @@
 # =============================================================================
 # CHANGELOG ULTIME MODIFICHE
 # =============================================================================
-# ... (changelog precedente omesso per brevità)
-# 17. [NUOVO] Generatore Dati Simulati Randomici: La funzione "Usa Dati Simulati" ora crea un dataset
-#     completamente casuale e realistico ad ogni click, per test più dinamici.
-# 18. [NUOVO] Analisi di Poisson su Fascia Oraria: È ora possibile inserire una fascia oraria (es. 7-13)
-#     per calcolare la probabilità di incidenti in un intervallo di tempo.
-# 19. [NUOVO] Dati di Test Inferenziale Migliorati: Il generatore casuale produce dataset più ampi
-#     e variegati, ideali per testare a fondo le analisi inferenziali.
+# 1. Finestra Info Adattiva: Rimosso il dimensionamento fisso da `show_info` per adattarsi al contenuto.
+# 2. Titoli Centrati: Creato un metodo helper `_crea_titolo_sezione` per centrare tutti i titoli di sezione in modo uniforme.
+# 3. Spiegazioni Migliorate: Arricchite tutte le stringhe `info_..._msg` con dettagli e una legenda dei termini.
+# 4. UI Inferenziale Corretta: Configurato il layout della griglia per permettere ai riquadri dei risultati di espandersi verticalmente.
+# 5. Testi Informativi Riformattati: I testi delle finestre informative sono stati riscritti e strutturati con intestazioni (Cos'è?, A Cosa Serve?, Legenda) per massima chiarezza.
+# 6. Guida alla Lettura Grafici: Aggiunto un pulsante "?" accanto ai titoli delle sezioni con grafici per spiegare come interpretare le visualizzazioni.
+# 7. Layout Inferenziale Scrollabile: La scheda "Analisi Inferenziale" ora contiene uno ScrollableFrame, rendendo i risultati dei test sempre ben visibili e l'intera sezione navigabile verticalmente.
+# 8. Spiegazione Grafici Semplificata: Riscritte le guide alla lettura per grafici a barre e a torta per renderle più intuitive.
+# 9. Leggibilità Box Plot: I box plot ora nascondono i valori anomali estremi (outlier) per garantire che la visualizzazione della distribuzione principale sia sempre chiara.
+# 10. Altezza Risultati Dinamica: L'altezza dei box di testo nella sezione Inferenziale si adatta automaticamente al contenuto, eliminando le scrollbar interne.
+# 11. Dati di Esempio Ampliati: Aggiunte le città di Salerno, Firenze e Catania al dataset simulato.
+# 12. [NUOVO] Spiegazioni Grafici Formali: Le guide alla lettura dei grafici sono state riscritte in uno stile formale e tecnico.
+# 13. [NUOVO] Correzione Layout Test T: Perfezionato il calcolo dell'altezza dinamica dei riquadri di testo per eliminare spazi vuoti.
+# 14. [NUOVO] Dati Simulati Diversificati: I dati per Salerno, Firenze e Catania sono stati resi più unici e vari.
+# 15. [NUOVO] Leggibilità Etichette Grafico a Torta: Le etichette delle percentuali ora sono condizionali e hanno uno sfondo per una migliore leggibilità.
 # =============================================================================
 
 # =============================================================================
@@ -23,9 +31,6 @@ from scipy import stats
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.dates as mdates
-import random
-from datetime import datetime, timedelta
-import locale
 
 # =============================================================================
 # IMPOSTAZIONI INIZIALI DELL'INTERFACCIA
@@ -110,74 +115,44 @@ class App(customtkinter.CTk):
             self.label_file.configure(text=f"Errore nel caricamento: {e}", text_color="red")
 
     def carica_dati_esempio(self):
-        """
-        Genera un DataFrame di dati simulati randomici e coerenti.
-        """
-        try:
-            # Imposta la lingua italiana per i nomi dei giorni
-            locale.setlocale(locale.LC_TIME, 'it_IT.UTF-8')
-        except locale.Error:
-            print("Locale 'it_IT.UTF-8' non trovato. I nomi dei giorni potrebbero essere in inglese.")
-        
-        records = []
-        province = ['Milano', 'Roma', 'Napoli', 'Torino', 'Firenze', 'Catania', 'Salerno', 'Bologna']
-        tipi_strada = ['Urbana', 'Statale', 'Autostrada']
-        
-        end_date = datetime.now()
-        start_date = end_date - timedelta(days=180)
-        
-        for _ in range(200): # Genera 200 record
-            # Data e ora random
-            random_date = start_date + (end_date - start_date) * random.random()
-            
-            # Provincia e tipo di strada
-            prov = random.choice(province)
-            strada = random.choice(tipi_strada)
-            
-            # Velocità coerente con tipo di strada
-            if strada == 'Urbana':
-                velocita = random.randint(30, 65)
-            elif strada == 'Statale':
-                velocita = random.randint(60, 95)
-            else: # Autostrada
-                velocita = random.randint(100, 140)
-            
-            # Feriti e morti con distribuzione realistica
-            numero_morti = random.choices([0, 1, 2], weights=[95, 4, 1], k=1)[0]
-            if numero_morti > 0:
-                numero_feriti = random.randint(numero_morti, 8) # Se c'è un morto, c'è almeno un ferito
-            else:
-                numero_feriti = random.choices([0, 1, 2, 3, 4], weights=[20, 40, 25, 10, 5], k=1)[0]
-                
-            records.append({
-                'Data_Ora_Incidente': random_date.strftime("%Y-%m-%d %H:%M:%S"),
-                'Provincia': prov,
-                'Giorno_Settimana': random_date.strftime('%A').capitalize(),
-                'Tipo_Strada': strada,
-                'Numero_Feriti': numero_feriti,
-                'Numero_Morti': numero_morti,
-                'Velocita_Media_Stimata': velocita
-            })
-            
-        df = pd.DataFrame(records)
+        # MODIFICA: Dati per Salerno, Firenze e Catania resi più vari e unici.
+        sample_csv = """Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2023-01-15 08:30:00,Milano,Domenica,Urbana,2,0,45
+2023-01-15 18:45:00,Milano,Domenica,Autostrada,3,1,110
+2023-01-16 12:10:00,Roma,Lunedì,Statale,1,0,75
+2023-01-16 19:00:00,Napoli,Lunedì,Urbana,1,0,50
+2023-01-17 09:05:00,Milano,Martedì,Urbana,0,0,30
+2023-01-17 22:30:00,Roma,Martedì,Autostrada,5,0,130
+2023-01-18 17:50:00,Torino,Mercoledì,Urbana,2,0,55
+2023-01-18 03:15:00,Napoli,Mercoledì,Statale,4,1,90
+2023-01-19 11:20:00,Milano,Giovedì,Statale,1,0,80
+2023-01-20 23:55:00,Roma,Venerdì,Urbana,3,0,60
+2023-01-21 15:00:00,Torino,Sabato,Autostrada,2,0,120
+2023-01-21 18:20:00,Firenze,Sabato,Urbana,3,0,55
+2023-01-22 01:00:00,Milano,Domenica,Urbana,1,0,65
+2023-01-22 08:15:00,Napoli,Domenica,Urbana,2,0,40
+2023-01-22 20:00:00,Salerno,Domenica,Statale,2,1,95
+2023-01-23 18:00:00,Milano,Lunedì,Urbana,1,0,50
+2023-01-23 18:30:00,Milano,Lunedì,Urbana,3,0,45
+2023-01-24 09:00:00,Catania,Martedì,Urbana,1,0,40
+2023-01-24 13:00:00,Firenze,Martedì,Autostrada,4,0,120
+2023-01-25 07:45:00,Salerno,Mercoledì,Urbana,1,0,35
+2023-01-25 22:15:00,Catania,Mercoledì,Autostrada,3,1,135
+"""
+        df = pd.read_csv(io.StringIO(sample_csv))
         self.inizializza_dati(df)
-        self.label_file.configure(text="Caricati 200 record di dati simulati randomici.")
-
+        self.label_file.configure(text="Caricati dati di esempio.")
 
     def inizializza_dati(self, df):
         self.df = df
         for col in self.df.columns:
             try:
-                # Usa errors='coerce' per trasformare i valori non numerici in NaT/NaN
-                self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
+                self.df[col] = pd.to_numeric(self.df[col])
             except (ValueError, TypeError):
                 pass
         if 'Data_Ora_Incidente' in self.df.columns:
             try:
-                # Usa errors='coerce' per gestire eventuali formati data non validi
-                self.df['Data_Ora_Incidente'] = pd.to_datetime(self.df['Data_Ora_Incidente'], errors='coerce')
-                # Rimuove le righe dove la data non è stata convertita correttamente
-                self.df.dropna(subset=['Data_Ora_Incidente'], inplace=True)
+                self.df['Data_Ora_Incidente'] = pd.to_datetime(self.df['Data_Ora_Incidente'])
                 self.df['Ora'] = self.df['Data_Ora_Incidente'].dt.hour
                 self.df['Giorno'] = self.df['Data_Ora_Incidente'].dt.date
             except Exception as e:
@@ -289,12 +264,9 @@ In questo contesto, serve a stimare la probabilità di osservare un numero speci
         customtkinter.CTkLabel(frame_poisson, text="Provincia:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
         self.selettore_provincia_poisson = customtkinter.CTkComboBox(frame_poisson, values=[])
         self.selettore_provincia_poisson.grid(row=1, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
-        
-        # MODIFICA: Label e placeholder per fascia oraria
-        customtkinter.CTkLabel(frame_poisson, text="Fascia Oraria (es. 7-13):").grid(row=2, column=0, padx=10, pady=5, sticky="w")
-        self.entry_ora_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Inserisci un range orario, es. 8-12")
+        customtkinter.CTkLabel(frame_poisson, text="Fascia Oraria (0-23):").grid(row=2, column=0, padx=10, pady=5, sticky="w")
+        self.entry_ora_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Es. 18")
         self.entry_ora_poisson.grid(row=2, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
-        
         customtkinter.CTkLabel(frame_poisson, text="Numero incidenti (k):").grid(row=3, column=0, padx=10, pady=5, sticky="w")
         self.entry_k_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Es. 2")
         self.entry_k_poisson.grid(row=3, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
@@ -389,6 +361,7 @@ Questa sezione analizza la distribuzione degli incidenti nel tempo.
 
 **A Cosa Serve?**
 Permette di identificare pattern temporali, come giorni della settimana o periodi dell'anno con picchi di incidentalità, fornendo indicazioni utili per la pianificazione di interventi preventivi."""
+        # MODIFICA: Resa la spiegazione più formale e tecnica.
         guida_temporale = """**Interpretazione del Grafico a Linee:**
 - **Asse delle ascisse (X):** Rappresenta la variabile temporale (date).
 - **Asse delle ordinate (Y):** Mostra la frequenza assoluta degli incidenti per unità di tempo.
@@ -464,6 +437,7 @@ Sono rappresentazioni visuali che mostrano come i valori di una variabile sono d
 
 **A Cosa Servono?**
 Aiutano a comprendere la forma della distribuzione, a identificare i valori più frequenti, la presenza di anomalie (outlier) e la dispersione dei dati in modo intuitivo."""
+        # MODIFICA: Resa la spiegazione più formale e tecnica.
         guida_distribuzione="""**Interpretazione dei Grafici:**
 - **Istogramma:** Rappresenta la distribuzione di frequenza di una variabile numerica. L'asse X è suddiviso in intervalli (bin) e l'altezza di ciascuna barra è proporzionale al numero di osservazioni che ricadono in quell'intervallo.
 
@@ -531,6 +505,7 @@ Sono rappresentazioni visuali che mostrano la frequenza o la proporzione delle d
 
 **A Cosa Servono?**
 Offrono un modo immediato per confrontare le categorie, evidenziando le proporzioni e le differenze tra di esse."""
+        # MODIFICA: Resa la spiegazione più formale e tecnica.
         guida_grafici_freq="""**Interpretazione dei Grafici:**
 - **Grafico a Barre:**
   Visualizza le frequenze delle categorie. La lunghezza di ciascuna barra è direttamente proporzionale alla frequenza della categoria che rappresenta, permettendo un confronto quantitativo diretto.
@@ -539,6 +514,7 @@ Offrono un modo immediato per confrontare le categorie, evidenziando le proporzi
   Rappresenta la composizione proporzionale del totale. L'area di ciascuno spicchio è proporzionale alla frequenza relativa della categoria, illustrando il contributo di ogni parte al tutto (100%)."""
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 2, "Grafici di Frequenza", info_grafici_freq, testo_guida=guida_grafici_freq)
         
+        # MODIFICA: Aggiunta funzione per autopct e textprops per migliore leggibilità
         def autopct_conditional(pct):
             return f'{pct:.1f}%' if pct > 4 else ''
 
@@ -589,6 +565,7 @@ A capire se esiste un legame tra le due variabili, in che direzione (positivo o 
 - **Retta di Regressione (y = mx + b):** La linea che meglio approssima i dati.
 - **Pendenza (m):** Indica di quanto aumenta in media Y per ogni aumento di 1 unità in X.
 - **Intercetta (b):** Il valore previsto di Y quando X è 0."""
+        # MODIFICA: Resa la spiegazione più formale e tecnica.
         guida_bivariata="""**Interpretazione del Diagramma a Dispersione:**
 - **Assi Cartesiani:** Gli assi X e Y rappresentano le due variabili oggetto di analisi.
 - **Punti Dati:** Ciascun punto sul piano cartesiano corrisponde a un'osservazione bivariata.
@@ -620,6 +597,7 @@ A capire se esiste un legame tra le due variabili, in che direzione (positivo o 
         
         textbox.update_idletasks()
         font = textbox.cget("font")
+        # MODIFICA: Ridotto il padding per un'altezza più precisa.
         line_height = font.cget("size") + 6 
         num_lines = int(textbox.index('end-1c').split('.')[0])
         new_height = num_lines * line_height
@@ -630,44 +608,21 @@ A capire se esiste un legame tra le due variabili, in che direzione (positivo o 
     def esegui_poisson(self):
         if self.df is None: return
         try:
-            provincia = self.selettore_provincia_poisson.get()
-            k = int(self.entry_k_poisson.get())
-            fascia_oraria_str = self.entry_ora_poisson.get()
-            
-            # Parsing della fascia oraria
-            parts = fascia_oraria_str.split('-')
-            if len(parts) != 2:
-                raise ValueError("Formato fascia oraria non valido. Usare 'inizio-fine'.")
-            
-            ora_inizio = int(parts[0])
-            ora_fine = int(parts[1])
-            
-            if not (0 <= ora_inizio <= 23 and 0 <= ora_fine <= 23 and ora_inizio <= ora_fine):
-                raise ValueError("Valori orari non validi. Devono essere tra 0-23 e inizio <= fine.")
-
-            durata_ore = ora_fine - ora_inizio + 1
-            
-            # Calcolo
+            provincia, ora, k = self.selettore_provincia_poisson.get(), int(self.entry_ora_poisson.get()), int(self.entry_k_poisson.get())
             df_prov = self.df[self.df['Provincia'] == provincia]
             giorni_osservati = df_prov['Giorno'].nunique()
             if giorni_osservati == 0:
                 risultato = "Nessun dato disponibile per questa provincia."
             else:
-                incidenti_nella_fascia = df_prov[
-                    (df_prov['Ora'] >= ora_inizio) & (df_prov['Ora'] <= ora_fine)
-                ].shape[0]
-                
-                lambda_val = incidenti_nella_fascia / giorni_osservati
+                incidenti_nell_ora = df_prov[df_prov['Ora'] == ora].shape[0]
+                lambda_val = incidenti_nell_ora / giorni_osservati
                 prob = stats.poisson.pmf(k, lambda_val)
-                
-                risultato = f"ANALISI PER {provincia.upper()}\n"
+                risultato = f"ANALISI PER {provincia.upper()}, ORE {ora}:00\n"
                 risultato += "--------------------------------------------------\n"
-                risultato += f"Fascia oraria: {ora_inizio}:00 - {ora_fine}:00 (Durata: {durata_ore} ore)\n\n"
-                risultato += f"Tasso medio stimato (λ) per la fascia oraria:\n{lambda_val:.4f} incidenti (calcolato su {giorni_osservati} giorni)\n\n"
-                risultato += f"Probabilità di osservare esattamente {k} incidenti:\n{prob:.4%}"
-
+                risultato += f"Tasso medio stimato (λ):\n{lambda_val:.4f} incidenti/ora (calcolato su {giorni_osservati} giorni)\n\n"
+                risultato += f"Probabilità di osservare esattamente {k} incidenti (P(X={k})):\n{prob:.4%}"
         except (ValueError, TypeError) as e:
-            risultato = f"Errore: Dati inseriti non validi.\n{e}"
+            risultato = f"Errore: Inserire valori numerici validi per 'Ora' e 'k'.\nDettagli: {e}"
         self._update_textbox(self.risultato_poisson_textbox, risultato)
 
     def esegui_ttest(self):
