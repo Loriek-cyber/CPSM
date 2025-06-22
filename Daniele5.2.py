@@ -3,20 +3,17 @@
 # =============================================================================
 # ... (changelog precedente omesso per brevità)
 # =============================================================================
-# ===== MODIFICHE APPORTATE v5.7 (Bug Fixing & Final Touches) =====
+# ===== MODIFICHE APPORTATE v5.9 (Stability & UX Focus) =====
 # =============================================================================
-# 1.  [BUG FIX] L'analisi descrittiva non risulta più vuota dopo aver generato
-#     nuovi dati simulati. Risolto un problema di sincronizzazione UI usando
-#     il metodo 'after' per ritardare l'esecuzione dell'analisi.
-# 2.  [FEATURE] Aggiunto un piccolo tasto 'Refresh' (🔄) alle sezioni
-#     Descrittiva e Bivariata per rieseguire manualmente l'analisi della
-#     scheda corrente.
-# 3.  [UX] Bilanciata la quantità di dati simulati a 400 record su 2 anni,
-#     per un'analisi significativa ma più leggibile.
-# 4.  [UX] Migliorata drasticamente la leggibilità delle scale dei grafici.
-#     Gli assi ora usano un numero ottimale di etichette (MaxNLocator)
-#     adattandosi a qualsiasi range di dati e usando i decimali solo se
-#     strettamente necessario.
+# 1.  [FEATURE] Le analisi ora si eseguono automaticamente quando si seleziona
+#     la relativa scheda (Tab), garantendo contenuti sempre aggiornati.
+# 2.  [UX] Mantenuti i tasti 'Refresh' (🔄) come richiesto, per un utilizzo
+#     esclusivamente in caso di emergenza.
+# 3.  [BUG FIX] Rafforzato il codice dell'analisi bivariata per prevenire in
+#     modo definitivo il 'ValueError' quando le variabili X e Y coincidono.
+# 4.  [ROLLBACK] Ripristinato il comportamento della v5.7 per l'analisi di
+#     'Data_Ora_Incidente', mostrando l'andamento giornaliero.
+# 5.  [UX] Mantenuta la feature del conteggio record per i file CSV caricati.
 # =============================================================================
 
 
@@ -33,9 +30,10 @@ from scipy import stats
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.dates as mdates
-import matplotlib.ticker as mticker # FIX 4: Importato per la gestione delle scale
+import matplotlib.ticker as mticker
 import random
 from datetime import datetime, timedelta, date
+import collections
 
 # =============================================================================
 # IMPOSTAZIONI INIZIALI DELL'INTERFACCIA
@@ -68,7 +66,8 @@ class App(customtkinter.CTk):
         self.bottone_dati_esempio.grid(row=0, column=2, padx=20, pady=20)
 
         # --- WIDGET A SCHEDE (TAB) PER LE DIVERSE ANALISI ---
-        self.tab_view = customtkinter.CTkTabview(self, width=250)
+        # FIX 1: Aggiunto il comando on_tab_change per l'aggiornamento automatico
+        self.tab_view = customtkinter.CTkTabview(self, width=250, command=self.on_tab_change)
         self.tab_view.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
 
         self.tab_view.add("Dati Forniti")
@@ -87,6 +86,20 @@ class App(customtkinter.CTk):
     # =============================================================================
     # FUNZIONI DI UTILITÀ E GESTIONE DATI
     # =============================================================================
+    
+    def on_tab_change(self):
+        """Esegue l'analisi appropriata quando l'utente cambia scheda."""
+        current_tab = self.tab_view.get()
+        if self.df is None:
+            return
+            
+        if current_tab == "Analisi Descrittiva":
+            self.esegui_analisi_descrittiva()
+        elif current_tab == "Analisi Bivariata":
+            self.esegui_analisi_bivariata()
+        elif current_tab == "Dati Forniti":
+            self.popola_tabella_dati()
+
 
     def _crea_titolo_sezione(self, parent, row, testo_titolo, testo_info, columnspan=1, testo_guida=None):
         """Metodo helper per creare una riga di titolo centrata con bottone info e un opzionale bottone guida."""
@@ -120,8 +133,9 @@ class App(customtkinter.CTk):
         if not filepath: return
         try:
             df = pd.read_csv(filepath)
+            filename = filepath.split('/')[-1]
+            self.label_file.configure(text=f"Caricato: {filename} ({len(df)} record)")
             self.inizializza_dati(df)
-            self.label_file.configure(text=f"Caricato: {filepath.split('/')[-1]}")
             self.tab_view.set("Dati Forniti")
         except Exception as e:
             self.label_file.configure(text=f"Errore nel caricamento: {e}", text_color="red")
@@ -133,9 +147,8 @@ class App(customtkinter.CTk):
         tipi_strada = ['Urbana', 'Statale', 'Autostrada']
         giorni_map = {0: 'Lunedì', 1: 'Martedì', 2: 'Mercoledì', 3: 'Giovedì', 4: 'Venerdì', 5: 'Sabato', 6: 'Domenica'}
         end_date = datetime.now()
-        # FIX 3: Ridotti i dati simulati a un numero più gestibile
-        start_date = end_date - timedelta(days=730) # 2 anni di dati
-        for _ in range(400): # 400 record
+        start_date = end_date - timedelta(days=730)
+        for _ in range(400):
             random_seconds = random.randint(0, int((end_date - start_date).total_seconds()))
             random_date = start_date + timedelta(seconds=random_seconds)
             prov = random.choice(province)
@@ -148,8 +161,8 @@ class App(customtkinter.CTk):
             else: numero_feriti = random.choices([0, 1, 2, 3, 4], weights=[20, 40, 25, 10, 5], k=1)[0]
             records.append({'Data_Ora_Incidente': random_date, 'Provincia': prov, 'Giorno_Settimana': giorni_map[random_date.weekday()], 'Tipo_Strada': strada, 'Numero_Feriti': numero_feriti, 'Numero_Morti': numero_morti, 'Velocita_Media_Stimata': velocita})
         df = pd.DataFrame(records)
-        self.inizializza_dati(df, variabile_da_mantenere=variabile_selezionata)
         self.label_file.configure(text=f"Caricati {len(df)} record simulati.")
+        self.inizializza_dati(df, variabile_da_mantenere=variabile_selezionata)
         
 
     def inizializza_dati(self, df, variabile_da_mantenere=None):
@@ -159,7 +172,13 @@ class App(customtkinter.CTk):
                 self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
         if 'Data_Ora_Incidente' in self.df.columns:
             self.df['Data_Ora_Incidente'] = pd.to_datetime(self.df['Data_Ora_Incidente'], errors='coerce')
+        
         self.df.dropna(subset=['Data_Ora_Incidente', 'Provincia'], inplace=True)
+        if self.df.empty:
+            self.label_file.configure(text="Errore: Nessun dato valido trovato dopo la pulizia.", text_color="orange")
+            self.df = None
+            return
+
         self.df['Ora'] = self.df['Data_Ora_Incidente'].dt.hour
         self.df['Giorno'] = self.df['Data_Ora_Incidente'].dt.date
         if 'Numero_Morti' in self.df.columns:
@@ -191,10 +210,8 @@ class App(customtkinter.CTk):
             self.selettore_var_biv_x.set(numeric_columns[0])
             self.selettore_var_biv_y.set(numeric_columns[0])
         
-        # FIX 1: Usa 'after' per eseguire le analisi dopo che l'UI si è aggiornata,
-        # prevenendo la visualizzazione di una scheda vuota.
-        self.after(50, self.esegui_analisi_descrittiva)
-        self.after(50, self.esegui_analisi_bivariata)
+        # Usa 'after' per eseguire le analisi DOPO che l'UI si è aggiornata
+        self.after(50, self.on_tab_change)
 
         self.selettore_provincia_poisson.configure(values=province_uniche)
         self.selettore_provincia_ci.configure(values=province_uniche)
@@ -261,7 +278,7 @@ class App(customtkinter.CTk):
         self.selettore_var_descrittiva = customtkinter.CTkComboBox(frame_controlli, values=[], command=lambda _: self.esegui_analisi_descrittiva())
         self.selettore_var_descrittiva.pack(side="left", padx=5, expand=True, fill="x")
         
-        # FIX 2: Aggiunto tasto refresh
+        # FIX 2: Tasto refresh di emergenza
         self.bottone_refresh_descrittiva = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
         self.bottone_refresh_descrittiva.pack(side="left", padx=(5,10))
 
@@ -283,7 +300,7 @@ class App(customtkinter.CTk):
         self.selettore_var_biv_y = customtkinter.CTkComboBox(frame_controlli, values=[], command=lambda _: self.esegui_analisi_bivariata())
         self.selettore_var_biv_y.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
         
-        # FIX 2: Sostituito il vecchio bottone con un tasto refresh più compatto
+        # FIX 2: Tasto refresh di emergenza
         self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
         self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
 
@@ -415,7 +432,6 @@ class App(customtkinter.CTk):
             self.analisi_categorica(variable, data)
 
     def analisi_temporale(self, variable):
-        self.frame_risultati_descrittiva.grid_columnconfigure(1, weight=0, minsize=0)
         self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
         self.frame_risultati_descrittiva.grid_rowconfigure(2, weight=1)
         
@@ -449,7 +465,6 @@ class App(customtkinter.CTk):
         marker_style = 'o' if len(daily_counts) <= 100 else ''
         ax.plot(daily_counts.index, daily_counts.values, marker=marker_style, linestyle='-', color='#3b82f6')
 
-        # FIX 4: Migliorata la gestione delle scale
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%Y'))
         ax.xaxis.set_major_locator(mdates.AutoDateLocator())
         ax.yaxis.set_major_locator(mticker.MaxNLocator(integer=True, nbins='auto'))
@@ -498,7 +513,6 @@ class App(customtkinter.CTk):
         fig_hist, ax_hist = plt.subplots(figsize=(5, 4))
         ax_hist.hist(data, bins='auto', color='#3b82f6', alpha=0.7, rwidth=0.85)
         ax_hist.set_title(f'Istogramma di {variable}'), ax_hist.set_xlabel(variable), ax_hist.set_ylabel('Frequenza'), ax_hist.grid(axis='y', alpha=0.75)
-        # FIX 4: Migliorata la gestione delle scale
         ax_hist.xaxis.set_major_locator(mticker.MaxNLocator(nbins=8, prune='both'))
         fig_hist.tight_layout()
         canvas_hist = FigureCanvasTkAgg(fig_hist, master=canvas_hist_frame)
@@ -507,7 +521,6 @@ class App(customtkinter.CTk):
         fig_box, ax_box = plt.subplots(figsize=(5, 4))
         ax_box.boxplot(data, vert=False, patch_artist=True, boxprops=dict(facecolor='#ec4899', alpha=0.7), showfliers=False)
         ax_box.set_title(f'Box Plot di {variable}'), ax_box.set_yticklabels([variable]), ax_box.grid(axis='x', alpha=0.75)
-        # FIX 4: Migliorata la gestione delle scale
         ax_box.xaxis.set_major_locator(mticker.MaxNLocator(nbins=8, prune='both'))
         fig_box.tight_layout()
         canvas_box = FigureCanvasTkAgg(fig_box, master=canvas_box_frame)
@@ -590,9 +603,15 @@ class App(customtkinter.CTk):
             return
             
         x_data, y_data = df_subset[var_x], df_subset[var_y]
-        if var_x == var_y: correlation = 1.0
-        else: correlation = df_subset.corr().iloc[0, 1]
-        regression = stats.linregress(x=x_data, y=y_data)
+        
+        # FIX 3: Gestisce il caso x == y per prevenire l'errore e dare un output corretto
+        LinregressResult = collections.namedtuple('LinregressResult', ['slope', 'intercept', 'rvalue', 'pvalue', 'stderr'])
+        if var_x == var_y:
+            correlation = 1.0
+            regression = LinregressResult(slope=1.0, intercept=0.0, rvalue=1.0, pvalue=0.0, stderr=0.0)
+        else:
+            correlation = df_subset.corr().iloc[0, 1]
+            regression = stats.linregress(x=x_data, y=y_data)
 
         info_bivariata="""**Cos'è?**\nUn'analisi che studia la relazione tra due variabili numeriche contemporaneamente.\n\n**A Cosa Serve?**\nA capire se esiste un legame tra le due variabili, in che direzione (positivo o negativo) e con quale forza. La regressione permette anche di prevedere il valore di una variabile basandosi sull'altra.\n\n--- Legenda dei Termini ---\n- **Coefficiente di Correlazione (r):** Varia da -1 (relazione inversa perfetta) a +1 (relazione diretta perfetta). 0 indica assenza di relazione *lineare*.\n- **Retta di Regressione (y = mx + b):** La linea che meglio approssima i dati.\n- **Pendenza (m):** Indica di quanto aumenta in media Y per ogni aumento di 1 unità in X.\n- **Intercetta (b):** Il valore previsto di Y quando X è 0."""
         guida_bivariata="""**Interpretazione del Diagramma a Dispersione:**\n- **Assi Cartesiani:** Gli assi X e Y rappresentano le due variabili oggetto di analisi.\n- **Punti Dati:** Ciascun punto sul piano cartesiano corrisponde a un'osservazione bivariata.\n- **Distribuzione dei Punti:** La configurazione dei punti (la 'nuvola') indica la natura della relazione. Un andamento crescente/decrescente suggerisce una correlazione positiva/negativa.\n- **Retta di Regressione:** La linea rossa rappresenta il modello di regressione lineare semplice, che interpola la nuvola di punti minimizzando la somma dei quadrati dei residui."""
@@ -622,7 +641,6 @@ class App(customtkinter.CTk):
         line_y = regression.slope * line_x + regression.intercept
         ax.plot(line_x, line_y, color='red', label='Retta di Regressione')
         
-        # FIX 4: Migliorata la gestione delle scale
         ax.xaxis.set_major_locator(mticker.MaxNLocator(nbins=7, prune='both'))
         ax.yaxis.set_major_locator(mticker.MaxNLocator(nbins=7, prune='both'))
 
