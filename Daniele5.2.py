@@ -3,12 +3,20 @@
 # =============================================================================
 # ... (changelog precedente omesso per brevità)
 # =============================================================================
-# ===== MODIFICHE APPORTATE v5.5 (Richiesta Utente) - Versione Stabile e Corretta =====
+# ===== MODIFICHE APPORTATE v5.7 (Bug Fixing & Final Touches) =====
 # =============================================================================
-# 1.  [FEATURE] Nuova Scheda 'Dati Forniti': Aggiunta una tab a sinistra che mostra
-#     i dati caricati/simulati in una tabella scorrevole per un facile controllo.
-# 2.  [FIX] Analisi Descrittiva: La variabile 'Giorno' viene ora correttamente
-#     analizzata come una serie temporale, risolvendo il bug che non mostrava output.
+# 1.  [BUG FIX] L'analisi descrittiva non risulta più vuota dopo aver generato
+#     nuovi dati simulati. Risolto un problema di sincronizzazione UI usando
+#     il metodo 'after' per ritardare l'esecuzione dell'analisi.
+# 2.  [FEATURE] Aggiunto un piccolo tasto 'Refresh' (🔄) alle sezioni
+#     Descrittiva e Bivariata per rieseguire manualmente l'analisi della
+#     scheda corrente.
+# 3.  [UX] Bilanciata la quantità di dati simulati a 400 record su 2 anni,
+#     per un'analisi significativa ma più leggibile.
+# 4.  [UX] Migliorata drasticamente la leggibilità delle scale dei grafici.
+#     Gli assi ora usano un numero ottimale di etichette (MaxNLocator)
+#     adattandosi a qualsiasi range di dati e usando i decimali solo se
+#     strettamente necessario.
 # =============================================================================
 
 
@@ -25,6 +33,7 @@ from scipy import stats
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.dates as mdates
+import matplotlib.ticker as mticker # FIX 4: Importato per la gestione delle scale
 import random
 from datetime import datetime, timedelta, date
 
@@ -62,19 +71,18 @@ class App(customtkinter.CTk):
         self.tab_view = customtkinter.CTkTabview(self, width=250)
         self.tab_view.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
 
-        # MODIFICA 1: Aggiunta la nuova tab "Dati Forniti" come prima
         self.tab_view.add("Dati Forniti")
         self.tab_view.add("Analisi Descrittiva")
         self.tab_view.add("Analisi Bivariata")
         self.tab_view.add("Analisi Inferenziale")
 
-        # Setup di tutte le schede, inclusa la nuova
+        # Setup di tutte le schede
         self.setup_tab_dati_forniti()
         self.setup_tab_descrittiva()
         self.setup_tab_bivariata()
         self.setup_tab_inferenziale()
 
-        self.tab_view.set("Dati Forniti") # Imposta la nuova tab come predefinita all'avvio
+        self.tab_view.set("Dati Forniti")
 
     # =============================================================================
     # FUNZIONI DI UTILITÀ E GESTIONE DATI
@@ -99,13 +107,13 @@ class App(customtkinter.CTk):
         info_window = customtkinter.CTkToplevel(self)
         info_window.title(title)
         info_window.transient(self)
-        info_window.grab_set()
-
-        label = customtkinter.CTkLabel(info_window, text=message, wraplength=550, justify="left", font=customtkinter.CTkFont(size=14))
-        label.pack(padx=20, pady=20, expand=True, fill="both")
+        
+        label = customtkinter.CTkLabel(info_window, text=message, wraplength=450, justify="left", font=customtkinter.CTkFont(size=14))
+        label.pack(padx=20, pady=20)
 
         close_button = customtkinter.CTkButton(info_window, text="Chiudi", command=info_window.destroy)
         close_button.pack(padx=20, pady=10, side="bottom")
+
 
     def carica_csv(self):
         filepath = filedialog.askopenfilename(title="Seleziona un file CSV", filetypes=(("File CSV", "*.csv"), ("Tutti i file", "*.*")))
@@ -125,8 +133,9 @@ class App(customtkinter.CTk):
         tipi_strada = ['Urbana', 'Statale', 'Autostrada']
         giorni_map = {0: 'Lunedì', 1: 'Martedì', 2: 'Mercoledì', 3: 'Giovedì', 4: 'Venerdì', 5: 'Sabato', 6: 'Domenica'}
         end_date = datetime.now()
-        start_date = end_date - timedelta(days=365)
-        for _ in range(100):
+        # FIX 3: Ridotti i dati simulati a un numero più gestibile
+        start_date = end_date - timedelta(days=730) # 2 anni di dati
+        for _ in range(400): # 400 record
             random_seconds = random.randint(0, int((end_date - start_date).total_seconds()))
             random_date = start_date + timedelta(seconds=random_seconds)
             prov = random.choice(province)
@@ -140,8 +149,8 @@ class App(customtkinter.CTk):
             records.append({'Data_Ora_Incidente': random_date, 'Provincia': prov, 'Giorno_Settimana': giorni_map[random_date.weekday()], 'Tipo_Strada': strada, 'Numero_Feriti': numero_feriti, 'Numero_Morti': numero_morti, 'Velocita_Media_Stimata': velocita})
         df = pd.DataFrame(records)
         self.inizializza_dati(df, variabile_da_mantenere=variabile_selezionata)
-        self.label_file.configure(text="Caricati 100 record simulati randomici.")
-        self.tab_view.set("Dati Forniti")
+        self.label_file.configure(text=f"Caricati {len(df)} record simulati.")
+        
 
     def inizializza_dati(self, df, variabile_da_mantenere=None):
         self.df = df.copy()
@@ -156,7 +165,7 @@ class App(customtkinter.CTk):
         if 'Numero_Morti' in self.df.columns:
             self.df['Mortale'] = (self.df['Numero_Morti'] > 0).astype(int)
         
-        self.popola_tabella_dati() # Popola la nuova tabella con i dati
+        self.popola_tabella_dati()
         self.aggiorna_selettori(variabile_da_mantenere)
 
     def aggiorna_selettori(self, variabile_da_mantenere=None):
@@ -166,12 +175,13 @@ class App(customtkinter.CTk):
         datetime_cols = self.df.select_dtypes(include=['datetime64[ns]']).columns.tolist()
         all_columns = datetime_cols + object_columns + numeric_columns
         province_uniche = sorted(self.df['Provincia'].unique().tolist()) if 'Provincia' in self.df.columns else []
+        
         self.selettore_var_descrittiva.configure(values=all_columns)
         if variabile_da_mantenere and variabile_da_mantenere in all_columns:
             self.selettore_var_descrittiva.set(variabile_da_mantenere)
         elif all_columns:
             self.selettore_var_descrittiva.set(all_columns[0])
-        self.esegui_analisi_descrittiva()
+        
         self.selettore_var_biv_x.configure(values=numeric_columns)
         self.selettore_var_biv_y.configure(values=numeric_columns)
         if numeric_columns and len(numeric_columns) > 1:
@@ -180,6 +190,12 @@ class App(customtkinter.CTk):
         elif numeric_columns:
             self.selettore_var_biv_x.set(numeric_columns[0])
             self.selettore_var_biv_y.set(numeric_columns[0])
+        
+        # FIX 1: Usa 'after' per eseguire le analisi dopo che l'UI si è aggiornata,
+        # prevenendo la visualizzazione di una scheda vuota.
+        self.after(50, self.esegui_analisi_descrittiva)
+        self.after(50, self.esegui_analisi_bivariata)
+
         self.selettore_provincia_poisson.configure(values=province_uniche)
         self.selettore_provincia_ci.configure(values=province_uniche)
         if province_uniche:
@@ -201,7 +217,6 @@ class App(customtkinter.CTk):
     # SETUP DELLE SCHEDE (TAB)
     # =============================================================================
     
-    # MODIFICA 1: Funzione per creare la tab "Dati Forniti"
     def setup_tab_dati_forniti(self):
         tab = self.tab_view.tab("Dati Forniti")
         tab.grid_columnconfigure(0, weight=1)
@@ -242,9 +257,14 @@ class App(customtkinter.CTk):
         tab.grid_rowconfigure(1, weight=1)
         frame_controlli = customtkinter.CTkFrame(tab)
         frame_controlli.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
-        customtkinter.CTkLabel(frame_controlli, text="Seleziona una variabile:").pack(side="left", padx=10)
+        customtkinter.CTkLabel(frame_controlli, text="Seleziona una variabile:").pack(side="left", padx=(10,5))
         self.selettore_var_descrittiva = customtkinter.CTkComboBox(frame_controlli, values=[], command=lambda _: self.esegui_analisi_descrittiva())
-        self.selettore_var_descrittiva.pack(side="left", padx=10, expand=True, fill="x")
+        self.selettore_var_descrittiva.pack(side="left", padx=5, expand=True, fill="x")
+        
+        # FIX 2: Aggiunto tasto refresh
+        self.bottone_refresh_descrittiva = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
+        self.bottone_refresh_descrittiva.pack(side="left", padx=(5,10))
+
         self.frame_risultati_descrittiva = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Analisi Descrittiva")
         self.frame_risultati_descrittiva.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
@@ -256,13 +276,17 @@ class App(customtkinter.CTk):
         frame_controlli = customtkinter.CTkFrame(tab)
         frame_controlli.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
         frame_controlli.grid_columnconfigure((1, 3), weight=1)
-        customtkinter.CTkLabel(frame_controlli, text="Variabile X:").grid(row=0, column=0, padx=10, pady=5)
-        self.selettore_var_biv_x = customtkinter.CTkComboBox(frame_controlli, values=[])
-        self.selettore_var_biv_x.grid(row=0, column=1, padx=10, pady=5, sticky="ew")
-        customtkinter.CTkLabel(frame_controlli, text="Variabile Y:").grid(row=0, column=2, padx=10, pady=5)
-        self.selettore_var_biv_y = customtkinter.CTkComboBox(frame_controlli, values=[])
-        self.selettore_var_biv_y.grid(row=0, column=3, padx=10, pady=5, sticky="ew")
-        customtkinter.CTkButton(frame_controlli, text="Esegui Analisi", command=self.esegui_analisi_bivariata).grid(row=0, column=4, padx=10, pady=5)
+        customtkinter.CTkLabel(frame_controlli, text="Variabile X:").grid(row=0, column=0, padx=(10,5), pady=5)
+        self.selettore_var_biv_x = customtkinter.CTkComboBox(frame_controlli, values=[], command=lambda _: self.esegui_analisi_bivariata())
+        self.selettore_var_biv_x.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+        customtkinter.CTkLabel(frame_controlli, text="Variabile Y:").grid(row=0, column=2, padx=(10,5), pady=5)
+        self.selettore_var_biv_y = customtkinter.CTkComboBox(frame_controlli, values=[], command=lambda _: self.esegui_analisi_bivariata())
+        self.selettore_var_biv_y.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
+        
+        # FIX 2: Sostituito il vecchio bottone con un tasto refresh più compatto
+        self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
+        self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
+
         self.frame_risultati_bivariata = customtkinter.CTkFrame(tab)
         self.frame_risultati_bivariata.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1)
@@ -343,22 +367,19 @@ class App(customtkinter.CTk):
     
     def popola_tabella_dati(self):
         """Popola la tabella nella scheda 'Dati Forniti'."""
-        # Pulisce la tabella prima di inserirne di nuovi
         for item in self.data_table.get_children():
             self.data_table.delete(item)
 
         if self.df is None or self.df.empty:
             return
 
-        # Seleziona, ordina e formatta i dati per la visualizzazione
         display_df = self.df.copy()
         columns_to_display = ['Data_Ora_Incidente', 'Provincia', 'Giorno_Settimana', 'Tipo_Strada', 'Numero_Feriti', 'Numero_Morti', 'Velocita_Media_Stimata']
         
-        # Assicura che tutte le colonne esistano prima di provare a selezionarle
         columns_to_display = [col for col in columns_to_display if col in display_df.columns]
         if not columns_to_display: return
         
-        display_df = display_df[columns_to_display]
+        display_df = display_df[columns_to_display].sort_values(by='Data_Ora_Incidente', ascending=False)
         display_df['Data_Ora_Incidente'] = display_df['Data_Ora_Incidente'].dt.strftime('%Y-%m-%d %H:%M:%S')
 
         for index, row in display_df.iterrows():
@@ -386,7 +407,6 @@ class App(customtkinter.CTk):
             customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato disponibile per questa variabile.").pack()
             return
 
-        # MODIFICA 2: Aggiunto un controllo per trattare la colonna 'Giorno' come temporale
         if pd.api.types.is_datetime64_any_dtype(data) or variable == 'Giorno':
             self.analisi_temporale(variable)
         elif pd.api.types.is_numeric_dtype(data):
@@ -403,17 +423,15 @@ class App(customtkinter.CTk):
         guida_temporale = """**Interpretazione del Grafico a Linee:**\n- **Asse delle ascisse (X):** Rappresenta la variabile temporale (date).\n- **Asse delle ordinate (Y):** Mostra la frequenza assoluta degli incidenti per unità di tempo.\n- **Linea di tendenza:** La polilinea congiunge i punti-dati, ciascuno rappresentante la frequenza di incidenti per un dato giorno. La pendenza dei segmenti indica la variazione della frequenza tra giorni consecutivi."""
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 0, "Andamento Temporale Incidenti", info_temporale, testo_guida=guida_temporale)
         
-        # MODIFICA 2: Logica adattata per gestire sia 'Data_Ora_Incidente' sia 'Giorno'
         if variable == 'Data_Ora_Incidente':
             daily_counts = self.df.groupby(self.df[variable].dt.date).size()
-        else: # Gestisce 'Giorno'
+        else: 
             daily_counts = self.df.groupby(variable).size()
 
         if daily_counts.empty:
             customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato giornaliero da analizzare.").grid(row=1, column=0)
             return
         
-        # Standardizza l'indice a datetime per il plotting, garantendo il funzionamento corretto
         daily_counts.index = pd.to_datetime(daily_counts.index)
             
         frame_stats = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
@@ -427,9 +445,15 @@ class App(customtkinter.CTk):
         
         canvas_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 2, 0)
         fig, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(daily_counts.index, daily_counts.values, marker='o', linestyle='-', color='#3b82f6')
+        
+        marker_style = 'o' if len(daily_counts) <= 100 else ''
+        ax.plot(daily_counts.index, daily_counts.values, marker=marker_style, linestyle='-', color='#3b82f6')
+
+        # FIX 4: Migliorata la gestione delle scale
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%m-%Y'))
         ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+        ax.yaxis.set_major_locator(mticker.MaxNLocator(integer=True, nbins='auto'))
+
         fig.autofmt_xdate()
         ax.set_title('Numero di Incidenti al Giorno')
         ax.set_xlabel('Data')
@@ -473,13 +497,19 @@ class App(customtkinter.CTk):
         canvas_hist_frame, canvas_box_frame = self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 0), self.crea_canvas_matplotlib(self.frame_risultati_descrittiva, 3, 1)
         fig_hist, ax_hist = plt.subplots(figsize=(5, 4))
         ax_hist.hist(data, bins='auto', color='#3b82f6', alpha=0.7, rwidth=0.85)
-        ax_hist.set_title(f'Istogramma di {variable}'), ax_hist.set_xlabel(variable), ax_hist.set_ylabel('Frequenza'), ax_hist.grid(axis='y', alpha=0.75), fig_hist.tight_layout()
+        ax_hist.set_title(f'Istogramma di {variable}'), ax_hist.set_xlabel(variable), ax_hist.set_ylabel('Frequenza'), ax_hist.grid(axis='y', alpha=0.75)
+        # FIX 4: Migliorata la gestione delle scale
+        ax_hist.xaxis.set_major_locator(mticker.MaxNLocator(nbins=8, prune='both'))
+        fig_hist.tight_layout()
         canvas_hist = FigureCanvasTkAgg(fig_hist, master=canvas_hist_frame)
         canvas_hist.draw(), canvas_hist.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
         
         fig_box, ax_box = plt.subplots(figsize=(5, 4))
         ax_box.boxplot(data, vert=False, patch_artist=True, boxprops=dict(facecolor='#ec4899', alpha=0.7), showfliers=False)
-        ax_box.set_title(f'Box Plot di {variable}'), ax_box.set_yticklabels([variable]), ax_box.grid(axis='x', alpha=0.75), fig_box.tight_layout()
+        ax_box.set_title(f'Box Plot di {variable}'), ax_box.set_yticklabels([variable]), ax_box.grid(axis='x', alpha=0.75)
+        # FIX 4: Migliorata la gestione delle scale
+        ax_box.xaxis.set_major_locator(mticker.MaxNLocator(nbins=8, prune='both'))
+        fig_box.tight_layout()
         canvas_box = FigureCanvasTkAgg(fig_box, master=canvas_box_frame)
         canvas_box.draw(), canvas_box.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
         
@@ -576,7 +606,10 @@ class App(customtkinter.CTk):
         canvas_frame = self.crea_canvas_matplotlib(self.frame_risultati_bivariata, 2, 0)
         fig, ax = plt.subplots(figsize=(8, 6))
         
-        ax.scatter(x_data, y_data, alpha=0.5, s=20, label='Dati')
+        num_points = len(x_data)
+        point_size = 20 if num_points < 1000 else 5
+        alpha_value = 0.6 if num_points < 1000 else 0.3
+        ax.scatter(x_data, y_data, alpha=alpha_value, s=point_size, label='Dati')
 
         x_range = x_data.max() - x_data.min()
         y_range = y_data.max() - y_data.min()
@@ -589,6 +622,10 @@ class App(customtkinter.CTk):
         line_y = regression.slope * line_x + regression.intercept
         ax.plot(line_x, line_y, color='red', label='Retta di Regressione')
         
+        # FIX 4: Migliorata la gestione delle scale
+        ax.xaxis.set_major_locator(mticker.MaxNLocator(nbins=7, prune='both'))
+        ax.yaxis.set_major_locator(mticker.MaxNLocator(nbins=7, prune='both'))
+
         ax.set_title(f'Diagramma a Dispersione: {var_x} vs {var_y}'), ax.set_xlabel(var_x), ax.set_ylabel(var_y), ax.legend(), ax.grid(True), fig.tight_layout()
         canvas = FigureCanvasTkAgg(fig, master=canvas_frame)
         canvas.draw(), canvas.get_tk_widget().pack(fill='both', expand=True)
@@ -613,12 +650,16 @@ class App(customtkinter.CTk):
         if self.df is None: return
         try:
             provincia = self.selettore_provincia_poisson.get()
-            k = int(self.entry_k_poisson.get())
+            k_entry = self.entry_k_poisson.get()
+            if not k_entry: raise ValueError("Il numero di incidenti (k) non può essere vuoto.")
+            k = int(k_entry)
+
             fascia_oraria_str = self.entry_ora_poisson.get().strip()
+            if not fascia_oraria_str: raise ValueError("La fascia oraria non può essere vuota.")
 
             if '-' in fascia_oraria_str:
                 parts = fascia_oraria_str.split('-')
-                if len(parts) != 2 or not parts[0] or not parts[1]:
+                if len(parts) != 2 or not parts[0].strip() or not parts[1].strip():
                     raise ValueError("Formato range non valido. Usare 'ora_inizio-ora_fine'.")
                 ora_inizio, ora_fine = int(parts[0]), int(parts[1])
             else:
@@ -635,7 +676,7 @@ class App(customtkinter.CTk):
             giorni_osservati = df_prov['Giorno'].nunique()
             
             if giorni_osservati == 0:
-                risultato = "Nessun dato disponibile per questa provincia."
+                risultato = f"Nessun dato disponibile per la provincia di {provincia}."
             else:
                 incidenti_nella_fascia = df_prov[
                     (df_prov['Ora'] >= ora_inizio) & (df_prov['Ora'] <= ora_fine)
@@ -681,8 +722,13 @@ class App(customtkinter.CTk):
     def esegui_ci(self):
         if self.df is None: return
         try:
-            provincia, livello = self.selettore_provincia_ci.get(), int(self.entry_livello_ci.get())
+            provincia = self.selettore_provincia_ci.get()
+            livello_entry = self.entry_livello_ci.get()
+            if not livello_entry: raise ValueError("Il livello di confidenza non può essere vuoto.")
+
+            livello = int(livello_entry)
             if not 0 < livello < 100: raise ValueError("Livello confidenza deve essere tra 1 e 99.")
+            
             incidenti_per_giorno = self.df[self.df['Provincia'] == provincia].groupby('Giorno').size()
             if len(incidenti_per_giorno) < 2:
                 risultato = "Dati insufficienti: sono necessari almeno 2 giorni di osservazioni per la provincia selezionata."
