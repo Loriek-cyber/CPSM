@@ -1,0 +1,12 @@
+Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2024-06-01 09:00:00,Pisa,Sabato,Urbana,1,0,45
+2024-06-02 11:00:00,Pisa,Domenica,Urbana,2,0,50
+2024-06-03 08:15:00,Pisa,Lunedì,Urbana,1,0,40
+2024-06-03 14:30:00,Pisa,Lunedì,Urbana,0,0,30
+2024-06-04 18:00:00,Pisa,Martedì,Urbana,3,0,55
+2024-06-05 12:00:00,Pisa,Mercoledì,Urbana,1,0,40
+2024-06-06 22:00:00,Pisa,Giovedì,Autostrada,4,1,130
+2024-06-07 09:30:00,Pisa,Venerdì,Urbana,1,0,50
+2024-06-08 17:00:00,Pisa,Sabato,Urbana,2,0,60
+2024-06-09 20:00:00,Pisa,Domenica,Statale,2,0,85
+2024-06-10 08:00:00,Pisa,Lunedì,Urbana,1,0,45

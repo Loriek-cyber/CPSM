@@ -1,0 +1,10 @@
+Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2024-04-01 08:00:00,Napoli,Lunedì,Urbana,2,0,50
+2024-04-01 14:00:00,Roma,Lunedì,Statale,1,0,80
+2024-04-02 09:30:00,Napoli,Martedì,Urbana,15,0,60
+2024-04-03 18:00:00,Roma,Mercoledì,Autostrada,3,0,210
+2024-04-04 11:00:00,,Giovedì,Urbana,1,0,45
+2024-04-05 21:00:00,Napoli,Venerdì,Statale,2,0,90
+2024-04-06 16:00:00,Roma,Sabato,Urbana,1,0,
+2024-04-07 02:00:00,Napoli,Domenica,Autostrada,4,1,Non disponibile
+2024-04-08 08:30:00,Roma,Lunedì,Urbana,1,0,55

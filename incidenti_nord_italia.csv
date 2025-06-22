@@ -1,0 +1,21 @@
+Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2024-03-01 08:15:00,Milano,Venerdì,Urbana,2,0,50
+2024-03-01 18:30:00,Torino,Venerdì,Urbana,1,0,45
+2024-03-02 12:00:00,Genova,Sabato,Autostrada,3,1,110
+2024-03-02 22:45:00,Bologna,Sabato,Statale,2,0,80
+2024-03-03 17:00:00,Milano,Domenica,Autostrada,4,0,125
+2024-03-04 07:30:00,Torino,Lunedì,Statale,1,0,75
+2024-03-04 15:00:00,Venezia,Lunedì,Urbana,1,0,40
+2024-03-05 09:00:00,Bologna,Martedì,Urbana,0,0,30
+2024-03-05 21:00:00,Milano,Martedì,Urbana,3,0,60
+2024-03-06 13:20:00,Genova,Mercoledì,Statale,1,0,
+2024-03-07 19:00:00,Torino,Giovedì,Autostrada,5,1,130
+2024-03-08 08:45:00,Milano,Venerdì,Urbana,1,0,55
+2024-03-09 11:00:00,Venezia,Sabato,Urbana,2,0,35
+2024-03-10 03:00:00,Bologna,Domenica,Autostrada,2,0,120
+2024-03-11 16:50:00,Genova,Lunedì,Urbana,1,0,50
+2024-03-12 09:30:00,Milano,Martedì,Statale,1,0,85
+2024-03-13 18:00:00,Torino,Mercoledì,Urbana,3,0,40
+2024-03-14 23:10:00,Venezia,Giovedì,Statale,1,1,95
+2024-03-15 08:00:00,Bologna,Venerdì,Urbana,2,0,50
+2024-03-16 14:00:00,Milano,Sabato,Urbana,1,0,45

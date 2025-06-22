@@ -1,0 +1,9 @@
+Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2024-05-10 10:00:00,Avellino,Venerdì,Statale,1,0,70
+2024-05-11 18:00:00,Benevento,Sabato,Urbana,2,0,45
+2024-05-12 12:30:00,Caserta,Domenica,Autostrada,3,0,120
+2024-05-15 09:00:00,Avellino,Mercoledì,Urbana,1,0,40
+2024-05-18 22:00:00,Benevento,Sabato,Statale,2,1,90
+2024-05-20 17:45:00,Caserta,Lunedì,Urbana,1,0,50
+2024-05-21 08:15:00,Avellino,Martedì,Statale,0,0,65
+2024-05-25 11:00:00,Benevento,Sabato,Urbana,1,0,30

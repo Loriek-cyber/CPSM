@@ -1,0 +1,12 @@
+Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2024-01-10 08:30:00,Roma,Mercoledì,Urbana,2,0,50
+2024-01-15 18:00:00,Firenze,Lunedì,Urbana,1,0,45
+2024-01-22 22:00:00,Roma,Lunedì,Autostrada,3,0,130
+2024-02-05 09:00:00,Firenze,Lunedì,Statale,1,0,80
+2024-02-12 17:30:00,Roma,Lunedì,Urbana,0,0,35
+2024-02-19 12:00:00,Firenze,Lunedì,Urbana,2,0,40
+2024-02-28 23:50:00,Roma,Mercoledì,Statale,2,1,90
+2024-03-04 08:00:00,Firenze,Lunedì,Autostrada,4,0,125
+2024-03-11 19:00:00,Roma,Lunedì,Urbana,1,0,60
+2024-03-18 11:30:00,Firenze,Lunedì,Statale,1,0,75
+2024-03-25 21:00:00,Roma,Lunedì,Urbana,3,0,55
