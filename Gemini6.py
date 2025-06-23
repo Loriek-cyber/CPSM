@@ -1,5 +1,5 @@
 # ==================================================================================
-# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v5.0 - Aggiunta Calcolo Dati e Miglioramenti UI)
+# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v6.1 - Correzione Bug Layout)
 # ==================================================================================
 import tkinter
 from tkinter import filedialog, ttk
@@ -57,10 +57,11 @@ class App(customtkinter.CTk):
     def setup_tab_view(self):
         self.tab_view = customtkinter.CTkTabview(self, width=250, command=self.on_tab_change)
         self.tab_view.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
-        tabs = ["Dati Forniti", "Calcolo Dati", "Analisi Descrittiva", "Analisi Bivariata", "Analisi Inferenziale"]
+        tabs = ["Dati Forniti", "Calcolo Dati", "Campionatura", "Analisi Descrittiva", "Analisi Bivariata", "Analisi Inferenziale"]
         for tab in tabs: self.tab_view.add(tab)
         self.setup_tab_dati_forniti()
         self.setup_tab_calcolo_dati()
+        self.setup_tab_campionatura()
         self.setup_tab_descrittiva()
         self.setup_tab_bivariata()
         self.setup_tab_inferenziale()
@@ -159,9 +160,12 @@ class App(customtkinter.CTk):
         if variabile_da_mantenere and variabile_da_mantenere in all_columns: self.selettore_var_descrittiva.set(variabile_da_mantenere)
         elif all_columns: self.selettore_var_descrittiva.set(all_columns[0])
         
-        # Selettori per Calcolo Dati
+        # Selettori per Calcolo Dati e Campionatura
         self.selettore_var_calcolo.configure(values=numeric_columns)
-        if numeric_columns: self.selettore_var_calcolo.set(numeric_columns[0])
+        self.selettore_var_campionatura.configure(values=numeric_columns)
+        if numeric_columns: 
+            self.selettore_var_calcolo.set(numeric_columns[0])
+            self.selettore_var_campionatura.set(numeric_columns[0])
 
         # Selettori per Analisi Bivariata
         self.selettore_var_biv_x.configure(values=numeric_columns)
@@ -184,23 +188,30 @@ class App(customtkinter.CTk):
 
 
     def on_tab_change(self, *args):
-        current_tab = self.tab_view.get()
-        if self.df is None: return
-        if current_tab == "Analisi Descrittiva": self.esegui_analisi_descrittiva()
-        elif current_tab == "Analisi Bivariata": self.esegui_analisi_bivariata()
-        elif current_tab == "Dati Forniti": self.popola_tabella_dati()
-        elif current_tab == "Calcolo Dati": self.esegui_calcolo_dati()
+        # Le analisi ora vengono eseguite solo tramite i rispettivi bottoni
+        # per evitare esecuzioni non necessarie al cambio di scheda.
+        pass
 
-    def _crea_titolo_sezione(self, parent, row, testo_titolo, testo_info, columnspan=1, testo_guida=None):
-        frame_titolo = customtkinter.CTkFrame(parent, fg_color="transparent")
-        frame_titolo.grid(row=row, column=0, columnspan=columnspan, sticky="ew", pady=(15, 5))
+    # BUGFIX: La funzione ora gestisce sia il layout .grid() che .pack()
+    def _crea_titolo_sezione(self, parent, testo_titolo, testo_info, testo_guida=None, row=None, columnspan=1):
+        # Se 'row' è specificato, usa .grid(). Altrimenti, usa .pack().
+        if row is not None:
+            frame_titolo = customtkinter.CTkFrame(parent, fg_color="transparent")
+            frame_titolo.grid(row=row, column=0, columnspan=columnspan, sticky="ew", pady=(15, 5))
+        else:
+            frame_titolo = customtkinter.CTkFrame(parent)
+            frame_titolo.pack(fill="x", expand=True, padx=10, pady=(10,0))
+        
+        # I figli di frame_titolo possono usare .pack() perché hanno un nuovo parente.
         inner_frame = customtkinter.CTkFrame(frame_titolo, fg_color="transparent")
-        inner_frame.pack()
+        inner_frame.pack(pady=5)
+        
         customtkinter.CTkLabel(inner_frame, text=testo_titolo, font=customtkinter.CTkFont(size=16, weight="bold")).pack(side="left", padx=10)
         if testo_info:
             customtkinter.CTkButton(inner_frame, text="i", command=lambda: self.show_info(f"Informazioni: {testo_titolo}", testo_info), width=28, height=28, corner_radius=14).pack(side="left", padx=(0, 5))
         if testo_guida:
             customtkinter.CTkButton(inner_frame, text="?", command=lambda: self.show_info("Guida alla Lettura", testo_guida), width=28, height=28, corner_radius=14).pack(side="left")
+
 
     def _crea_tabella_treeview(self, parent, df, title="Dati"):
         frame = customtkinter.CTkFrame(parent)
@@ -221,7 +232,6 @@ class App(customtkinter.CTk):
         
         for col in columns:
             table.heading(col, text=col)
-            # MODIFICA: Allineamento colonne a 'center'
             table.column(col, anchor='center', width=120, minwidth=100)
 
         for _, row in df.iterrows():
@@ -259,7 +269,8 @@ class App(customtkinter.CTk):
 
     def pulisci_frame(self, frame):
         for widget in self.matplotlib_widgets:
-            widget.get_tk_widget().destroy()
+            if widget.get_tk_widget().winfo_exists():
+                widget.get_tk_widget().destroy()
         self.matplotlib_widgets = []
         for widget in frame.winfo_children():
             widget.destroy()
@@ -286,15 +297,38 @@ class App(customtkinter.CTk):
         self.frame_controlli_calcolo.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
         customtkinter.CTkLabel(self.frame_controlli_calcolo, text="Seleziona una variabile numerica:").pack(side="left", padx=(10,5))
-        self.selettore_var_calcolo = customtkinter.CTkComboBox(self.frame_controlli_calcolo, values=[], command=self.esegui_calcolo_dati)
+        self.selettore_var_calcolo = customtkinter.CTkComboBox(self.frame_controlli_calcolo, values=[])
         self.selettore_var_calcolo.pack(side="left", padx=5, expand=True, fill="x")
         
-        self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="Esegui Calcolo", command=self.esegui_calcolo_dati)
+        self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="Esegui Calcolo su Popolazione", command=self.esegui_calcolo_dati)
         self.bottone_refresh_calcolo.pack(side="left", padx=(10, 10))
 
-        self.frame_risultati_calcolo = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Calcoli Statistici")
+        self.frame_risultati_calcolo = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Calcoli Statistici sulla Popolazione")
         self.frame_risultati_calcolo.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
         self.frame_risultati_calcolo.grid_columnconfigure(0, weight=1)
+
+    def setup_tab_campionatura(self):
+        tab = self.tab_view.tab("Campionatura")
+        tab.grid_columnconfigure(0, weight=1); tab.grid_rowconfigure(1, weight=1)
+        
+        frame_controlli = customtkinter.CTkFrame(tab)
+        frame_controlli.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        frame_controlli.grid_columnconfigure(1, weight=1)
+
+        customtkinter.CTkLabel(frame_controlli, text="Variabile:").grid(row=0, column=0, padx=(10,5))
+        self.selettore_var_campionatura = customtkinter.CTkComboBox(frame_controlli, values=[])
+        self.selettore_var_campionatura.grid(row=0, column=1, padx=5, sticky="ew")
+        
+        customtkinter.CTkLabel(frame_controlli, text="Dim. Campione (n):").grid(row=0, column=2, padx=(10,5))
+        self.entry_dim_campione = customtkinter.CTkEntry(frame_controlli, placeholder_text="es. 100", width=120)
+        self.entry_dim_campione.grid(row=0, column=3, padx=5)
+
+        self.bottone_esegui_campionatura = customtkinter.CTkButton(frame_controlli, text="Estrai Campione e Calcola", command=self.esegui_campionatura)
+        self.bottone_esegui_campionatura.grid(row=0, column=4, padx=(10, 10))
+
+        self.frame_risultati_campionatura = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Calcoli Statistici sul Campione")
+        self.frame_risultati_campionatura.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.frame_risultati_campionatura.grid_columnconfigure(0, weight=1)
 
     def setup_tab_descrittiva(self):
         tab = self.tab_view.tab("Analisi Descrittiva")
@@ -344,54 +378,75 @@ class App(customtkinter.CTk):
 
     def setup_tab_inferenziale(self):
         tab = self.tab_view.tab("Analisi Inferenziale")
-        tab.grid_columnconfigure(0, weight=1); tab.grid_rowconfigure(0, weight=1)
-        scroll_frame = customtkinter.CTkScrollableFrame(tab); scroll_frame.grid(row=0, column=0, sticky="nsew"); scroll_frame.grid_columnconfigure(0, weight=1)
-        self.setup_poisson_section(scroll_frame); self.setup_ttest_section(scroll_frame); self.setup_ci_section(scroll_frame)
+        tab.grid_columnconfigure(0, weight=1)
+        tab.grid_rowconfigure(0, weight=1)
+        scroll_frame = customtkinter.CTkScrollableFrame(tab)
+        scroll_frame.grid(row=0, column=0, sticky="nsew")
+        scroll_frame.grid_columnconfigure(0, weight=1)
 
-    def setup_poisson_section(self, parent):
-        frame_poisson = customtkinter.CTkFrame(parent, border_width=1); frame_poisson.grid(row=0, column=0, padx=10, pady=10, sticky="nsew"); frame_poisson.grid_columnconfigure(1, weight=1)
+        # BUGFIX: La struttura di ogni sezione è basata su .grid() per risolvere il conflitto di layout
+        
+        # --- Sezione Poisson ---
         info_poisson = ("Il Modello di Poisson è un modello di probabilità discreta utilizzato per descrivere il numero di eventi che si verificano in un intervallo fisso di tempo o spazio, data una frequenza media nota e costante (λ, lambda) e assumendo che gli eventi siano indipendenti l'uno dall'altro.\n\n"
                         "**Applicazione Pratica:**\n"
                         "Questo strumento permette di stimare la probabilità di osservare un numero esatto 'k' di incidenti (es. 0, 1, 2...) in un determinato periodo (es. un giorno) e in una specifica area (es. una provincia), basandosi sulla media storica degli incidenti per quella stessa area e periodo. È fondamentale per la valutazione del rischio e l'allocazione predittiva delle risorse.")
-        self._crea_titolo_sezione(frame_poisson, 0, "Modello di Poisson", info_poisson, columnspan=3)
+        
+        frame_poisson = customtkinter.CTkFrame(scroll_frame, border_width=1)
+        frame_poisson.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
+        frame_poisson.grid_columnconfigure(1, weight=1)
+        self._crea_titolo_sezione(frame_poisson, "Modello di Poisson", info_poisson, row=0, columnspan=3)
         customtkinter.CTkLabel(frame_poisson, text="Provincia:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
-        self.selettore_provincia_poisson = customtkinter.CTkComboBox(frame_poisson, values=[]); self.selettore_provincia_poisson.grid(row=1, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
+        self.selettore_provincia_poisson = customtkinter.CTkComboBox(frame_poisson, values=[])
+        self.selettore_provincia_poisson.grid(row=1, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
         customtkinter.CTkLabel(frame_poisson, text="Ora o Fascia Oraria (es. 14 o 8-17):").grid(row=2, column=0, padx=10, pady=5, sticky="w")
-        self.entry_ora_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Inserisci un'ora singola (0-23) o un range"); self.entry_ora_poisson.grid(row=2, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
+        self.entry_ora_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Inserisci un'ora singola (0-23) o un range")
+        self.entry_ora_poisson.grid(row=2, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
         customtkinter.CTkLabel(frame_poisson, text="Numero incidenti (k):").grid(row=3, column=0, padx=10, pady=5, sticky="w")
-        self.entry_k_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Es. 2"); self.entry_k_poisson.grid(row=3, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
+        self.entry_k_poisson = customtkinter.CTkEntry(frame_poisson, placeholder_text="Es. 2")
+        self.entry_k_poisson.grid(row=3, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
         customtkinter.CTkButton(frame_poisson, text="Calcola Probabilità", command=self.esegui_poisson).grid(row=4, column=0, padx=10, pady=10)
-        self.risultato_poisson_textbox = customtkinter.CTkTextbox(frame_poisson, wrap="word", font=customtkinter.CTkFont(size=13)); self.risultato_poisson_textbox.grid(row=4, column=1, columnspan=2, padx=10, pady=10, sticky="ew")
+        self.risultato_poisson_textbox = customtkinter.CTkTextbox(frame_poisson, wrap="word", font=customtkinter.CTkFont(size=13))
+        self.risultato_poisson_textbox.grid(row=4, column=1, columnspan=2, padx=10, pady=10, sticky="ew")
         self.risultato_poisson_textbox.configure(state="disabled")
 
-    def setup_ttest_section(self, parent):
-        frame_ttest = customtkinter.CTkFrame(parent, border_width=1); frame_ttest.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); frame_ttest.grid_columnconfigure(1, weight=1)
+        # --- Sezione T-Test ---
         info_ttest = ("Il Test T per Campioni Indipendenti è un test di ipotesi inferenziale utilizzato per determinare se esiste una differenza statisticamente significativa tra le medie di due gruppi indipendenti e non correlati.\n\n"
                       "**Ipotesi del Test:**\n"
                       "1. **Ipotesi Nulla (H₀):** Non c'è differenza tra le medie dei due gruppi (μ₁ = μ₂). La differenza osservata è dovuta puramente al caso.\n"
                       "2. **Ipotesi Alternativa (H₁):** Esiste una differenza tra le medie (μ₁ ≠ μ₂).\n\n"
                       "**Interpretazione (p-value):**\n"
                       "Il p-value indica la probabilità di osservare una differenza grande come quella campionaria (o più grande) se l'ipotesi nulla fosse vera. Un p-value basso (convenzionalmente < 0.05) fornisce l'evidenza per rigettare H₀, suggerendo che la differenza tra i gruppi è 'statisticamente significativa'.")
-        self._crea_titolo_sezione(frame_ttest, 0, "Test T per Campioni Indipendenti", info_ttest, columnspan=2)
+        
+        frame_ttest = customtkinter.CTkFrame(scroll_frame, border_width=1)
+        frame_ttest.grid(row=1, column=0, sticky="ew", padx=10, pady=10)
+        frame_ttest.grid_columnconfigure(1, weight=1)
+        self._crea_titolo_sezione(frame_ttest, "Test T per Campioni Indipendenti", info_ttest, row=0, columnspan=2)
         customtkinter.CTkLabel(frame_ttest, text="Confronto 'Numero_Feriti' tra Diurno (7-19) e Notturno").grid(row=1, column=0, columnspan=2, padx=10, pady=(10,0))
         customtkinter.CTkButton(frame_ttest, text="Esegui Test T", command=self.esegui_ttest).grid(row=2, column=0, padx=10, pady=10, sticky="n")
-        self.risultato_ttest_textbox = customtkinter.CTkTextbox(frame_ttest, wrap="word", font=customtkinter.CTkFont(size=13)); self.risultato_ttest_textbox.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
+        self.risultato_ttest_textbox = customtkinter.CTkTextbox(frame_ttest, wrap="word", font=customtkinter.CTkFont(size=13))
+        self.risultato_ttest_textbox.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
         self.risultato_ttest_textbox.configure(state="disabled")
 
-    def setup_ci_section(self, parent):
-        frame_ci = customtkinter.CTkFrame(parent, border_width=1); frame_ci.grid(row=2, column=0, padx=10, pady=10, sticky="nsew"); frame_ci.grid_columnconfigure(1, weight=1)
+        # --- Sezione Intervallo di Confidenza ---
         info_ci = ("Un Intervallo di Confidenza (IC) è un range di valori, calcolato a partire da dati campionari, che si stima possa contenere il vero valore di un parametro della popolazione (es. la media reale, μ) con un determinato livello di fiducia.\n\n"
                    "**Cosa significa 'Fiducia al 95%'?**\n"
                    "Non significa che c'è una probabilità del 95% che il vero valore della media cada in *questo specifico* intervallo. Significa che, se ripetessimo l'esperimento di campionamento molte volte, il 95% degli intervalli di confidenza così calcolati conterrebbe il vero parametro della popolazione.\n\n"
                    "**Utilità:**\n"
                    "Fornisce una misura della precisione della stima puntuale (la media campionaria). Un intervallo stretto indica una stima precisa, mentre un intervallo ampio riflette una maggiore incertezza dovuta alla variabilità dei dati o alla ridotta dimensione del campione.")
-        self._crea_titolo_sezione(frame_ci, 0, "Intervallo di Confidenza", info_ci, columnspan=2)
+        
+        frame_ci = customtkinter.CTkFrame(scroll_frame, border_width=1)
+        frame_ci.grid(row=2, column=0, sticky="ew", padx=10, pady=10)
+        frame_ci.grid_columnconfigure(1, weight=1)
+        self._crea_titolo_sezione(frame_ci, "Intervallo di Confidenza", info_ci, row=0, columnspan=2)
         customtkinter.CTkLabel(frame_ci, text="Provincia:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
-        self.selettore_provincia_ci = customtkinter.CTkComboBox(frame_ci, values=[]); self.selettore_provincia_ci.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
+        self.selettore_provincia_ci = customtkinter.CTkComboBox(frame_ci, values=[])
+        self.selettore_provincia_ci.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
         customtkinter.CTkLabel(frame_ci, text="Livello Confidenza (%):").grid(row=2, column=0, padx=10, pady=5, sticky="w")
-        self.entry_livello_ci = customtkinter.CTkEntry(frame_ci, placeholder_text="Es. 95"); self.entry_livello_ci.grid(row=2, column=1, padx=10, pady=5, sticky="ew")
+        self.entry_livello_ci = customtkinter.CTkEntry(frame_ci, placeholder_text="Es. 95")
+        self.entry_livello_ci.grid(row=2, column=1, padx=10, pady=5, sticky="ew")
         customtkinter.CTkButton(frame_ci, text="Calcola Intervallo", command=self.esegui_ci).grid(row=3, column=0, padx=10, pady=10, sticky="n")
-        self.risultato_ci_textbox = customtkinter.CTkTextbox(frame_ci, wrap="word", font=customtkinter.CTkFont(size=13)); self.risultato_ci_textbox.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
+        self.risultato_ci_textbox = customtkinter.CTkTextbox(frame_ci, wrap="word", font=customtkinter.CTkFont(size=13))
+        self.risultato_ci_textbox.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
         self.risultato_ci_textbox.configure(state="disabled")
 
     def popola_tabella_dati(self):
@@ -410,12 +465,57 @@ class App(customtkinter.CTk):
         if not variable: return
 
         data = self.df[variable].dropna()
-        if data.empty or not pd.api.types.is_numeric_dtype(data):
-            customtkinter.CTkLabel(self.frame_risultati_calcolo, text=f"Selezionare una variabile numerica con dati validi.", text_color="orange").pack(pady=20)
+        if data.empty:
+            customtkinter.CTkLabel(self.frame_risultati_calcolo, text="Nessun dato disponibile per la variabile selezionata.", text_color="orange").pack(pady=20)
             return
         
-        # --- Contenitore Principale ---
-        container = self.frame_risultati_calcolo
+        title = "Analisi sulla Popolazione"
+        info = ("Questa sezione esegue un'analisi statistica descrittiva sull'**intera popolazione** dei dati caricati per la variabile selezionata. I valori calcolati (media, varianza, ecc.) sono considerati i **parametri reali** del dataset fornito.")
+        guida = ("**Interpretazione:**\nI risultati mostrati rappresentano le caratteristiche esatte dell'insieme di dati a tua disposizione. Utilizza questi valori per ottenere una comprensione completa e accurata della distribuzione della variabile scelta all'interno del tuo dataset specifico.\n\n"
+                 "- **Tabelle di Frequenza:** Mostrano come si distribuiscono esattamente i valori.\n"
+                 "- **Indici:** Descrivono le proprietà matematiche (tendenza centrale, variabilità, forma) dell'intero set di dati.\n"
+                 "- **Grafici:** Offrono una visualizzazione completa della distribuzione della popolazione.")
+        
+        self._esegui_analisi_numerica_dettagliata(self.frame_risultati_calcolo, data, variable, title, info, guida)
+
+    def esegui_campionatura(self):
+        self.pulisci_frame(self.frame_risultati_campionatura)
+        if self.df is None: return
+        variable = self.selettore_var_campionatura.get()
+        n_str = self.entry_dim_campione.get()
+        
+        if not variable or not n_str:
+            customtkinter.CTkLabel(self.frame_risultati_campionatura, text="Selezionare una variabile e inserire la dimensione del campione.", text_color="orange").pack(pady=20)
+            return
+
+        try:
+            n = int(n_str)
+            if n <= 0: raise ValueError("La dimensione del campione deve essere positiva.")
+        except ValueError as e:
+            customtkinter.CTkLabel(self.frame_risultati_campionatura, text=f"Errore: Inserire un numero intero valido per la dimensione del campione.\n({e})", text_color="orange").pack(pady=20)
+            return
+
+        data = self.df[variable].dropna()
+        if n > len(data):
+            customtkinter.CTkLabel(self.frame_risultati_campionatura, text=f"Errore: La dimensione del campione ({n}) non può superare il numero di dati disponibili ({len(data)}).", text_color="orange").pack(pady=20)
+            return
+        
+        campione = data.sample(n=n, random_state=None) # random_state=None per un campione diverso ogni volta
+
+        title = f"Analisi su un Campione Casuale (n={n})"
+        info = ("Questa sezione esegue un'analisi statistica su un **campione casuale** di dimensione 'n' estratto dalla popolazione dei dati. I valori calcolati (media campionaria, varianza campionaria, ecc.) sono **stime** (o statistiche) dei veri parametri della popolazione. L'obiettivo è fare **inferenza**, ovvero dedurre le caratteristiche della popolazione partendo da un suo sottoinsieme.")
+        guida = ("**Interpretazione:**\nI risultati di un campione sono soggetti a **variabilità campionaria**: ogni estrazione produrrà risultati leggermente diversi. Questi valori sono stime dei parametri della popolazione.\n\n"
+                 "- **Confronto:** Confronta la media del campione con la media della popolazione (calcolata nella scheda 'Calcolo Dati') per osservare l'effetto del campionamento.\n"
+                 "- **Legge dei Grandi Numeri:** Aumentando la dimensione del campione 'n', le statistiche calcolate tenderanno a convergere verso i veri parametri della popolazione.")
+
+        self._esegui_analisi_numerica_dettagliata(self.frame_risultati_campionatura, campione, variable, title, info, guida)
+
+    def _esegui_analisi_numerica_dettagliata(self, container, data_series, variable_name, title, info_text, guide_text):
+        """
+        Funzione refactored che esegue l'analisi numerica e costruisce l'UI.
+        Può essere usata sia per la popolazione totale sia per un campione.
+        """
+        self._crea_titolo_sezione(container, title, info_text, guide_text)
         
         # --- Sezione Indici ---
         frame_indici_main = customtkinter.CTkFrame(container, border_width=1)
@@ -426,7 +526,7 @@ class App(customtkinter.CTk):
         frame_pos = customtkinter.CTkFrame(frame_indici_main)
         frame_pos.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_pos, text="Indici di Posizione", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
-        mean, median, mode_val = data.mean(), data.median(), data.mode().iloc[0] if not data.mode().empty else 'N/A'
+        mean, median, mode_val = data_series.mean(), data_series.median(), data_series.mode().iloc[0] if not data_series.mode().empty else 'N/A'
         customtkinter.CTkLabel(frame_pos, text=f"Media: {mean:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_pos, text=f"Mediana: {median:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_pos, text=f"Moda: {mode_val}").pack(anchor="w", padx=10, pady=(0,5))
@@ -435,8 +535,8 @@ class App(customtkinter.CTk):
         frame_var = customtkinter.CTkFrame(frame_indici_main)
         frame_var.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_var, text="Indici di Variabilità", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
-        variance, std_dev, range_val = data.var(ddof=1), data.std(ddof=1), data.max() - data.min()
-        mad = (data - mean).abs().mean()
+        variance, std_dev, range_val = data_series.var(ddof=1), data_series.std(ddof=1), data_series.max() - data_series.min()
+        mad = (data_series - mean).abs().mean()
         cv = std_dev / mean if mean != 0 else 0
         customtkinter.CTkLabel(frame_var, text=f"Varianza: {variance:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_var, text=f"Dev. Std: {std_dev:.4f}").pack(anchor="w", padx=10)
@@ -448,8 +548,8 @@ class App(customtkinter.CTk):
         frame_form = customtkinter.CTkFrame(frame_indici_main)
         frame_form.grid(row=0, column=2, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_form, text="Forma e Quartili", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
-        skew, kurt = data.skew(), data.kurtosis()
-        q1, q3, iqr = data.quantile(0.25), data.quantile(0.75), data.quantile(0.75) - data.quantile(0.25)
+        skew, kurt = data_series.skew(), data_series.kurtosis()
+        q1, q3, iqr = data_series.quantile(0.25), data_series.quantile(0.75), data_series.quantile(0.75) - data_series.quantile(0.25)
         cheb_low, cheb_high = mean - 2 * std_dev, mean + 2 * std_dev
         customtkinter.CTkLabel(frame_form, text=f"Asimmetria (Skew): {skew:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_form, text=f"Curtosi: {kurt:.4f}").pack(anchor="w", padx=10)
@@ -457,17 +557,17 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_form, text=f"Interv. Chebyshev (k=2): [{cheb_low:.2f}, {cheb_high:.2f}]", font=customtkinter.CTkFont(size=11)).pack(anchor="w", padx=10, pady=(5,5))
 
         # --- Sezione Tabella Frequenze ---
-        num_unique = data.nunique()
-        if num_unique > 20 and pd.api.types.is_float_dtype(data):
+        num_unique = data_series.nunique()
+        if num_unique > 25 and pd.api.types.is_float_dtype(data_series):
             # Binning per dati continui
             bins = min(num_unique, 15)
-            freq_table = pd.cut(data, bins=bins).value_counts().sort_index().to_frame(name='Frequenza Assoluta')
+            freq_table = pd.cut(data_series, bins=bins).value_counts().sort_index().to_frame(name='Frequenza Assoluta')
             freq_table.index = freq_table.index.astype(str)
         else:
             # Dati discreti o con pochi valori
-            freq_table = data.value_counts().sort_index().to_frame(name='Frequenza Assoluta')
+            freq_table = data_series.value_counts().sort_index().to_frame(name='Frequenza Assoluta')
         
-        freq_table['Frequenza Relativa'] = freq_table['Frequenza Assoluta'] / len(data)
+        freq_table['Frequenza Relativa'] = freq_table['Frequenza Assoluta'] / len(data_series)
         freq_table['Freq. Ass. Cumulata'] = freq_table['Frequenza Assoluta'].cumsum()
         freq_table['Freq. Rel. Cumulata'] = freq_table['Frequenza Relativa'].cumsum()
         freq_table.index.name = "Classe/Valore"
@@ -482,8 +582,8 @@ class App(customtkinter.CTk):
         frame_hist = customtkinter.CTkFrame(frame_grafici)
         frame_hist.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         fig_hist, ax_hist = plt.subplots(figsize=(6, 4))
-        ax_hist.hist(data, bins='auto', edgecolor='black')
-        ax_hist.set_title(f"Istogramma di '{variable}'")
+        ax_hist.hist(data_series, bins='auto', edgecolor='black')
+        ax_hist.set_title(f"Istogramma di '{variable_name}'")
         ax_hist.set_ylabel("Frequenza")
         ax_hist.grid(True, linestyle='--', alpha=0.6)
         fig_hist.tight_layout()
@@ -497,9 +597,9 @@ class App(customtkinter.CTk):
         frame_box = customtkinter.CTkFrame(frame_grafici)
         frame_box.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
         fig_box, ax_box = plt.subplots(figsize=(6, 4))
-        ax_box.boxplot(data, vert=False, showfliers=True, patch_artist=True,
+        ax_box.boxplot(data_series, vert=False, showfliers=True, patch_artist=True,
                        boxprops=dict(facecolor="lightblue"))
-        ax_box.set_title(f"Box Plot di '{variable}'")
+        ax_box.set_title(f"Box Plot di '{variable_name}'")
         ax_box.set_yticklabels([])
         ax_box.grid(True, linestyle='--', alpha=0.6)
         fig_box.tight_layout()
@@ -550,17 +650,18 @@ class App(customtkinter.CTk):
         guida = ("- **Andamento Generale (Linee):** Mostra l'evoluzione del numero di incidenti nel tempo (giorno per giorno). Utile per identificare trend di lungo periodo, stagionalità o l'impatto di interventi specifici.\n\n"
                  "- **Distribuzione Oraria (Barre/Aste):** Aggrega gli incidenti per ora del giorno. Cruciale per individuare le fasce orarie a maggior rischio (es. ore di punta mattutine/serali).\n\n"
                  "- **Distribuzione Settimanale (Barre/Aste):** Aggrega gli incidenti per giorno della settimana. Evidenzia le differenze tra giorni feriali e weekend, aiutando a modulare i controlli.")
-        self._crea_titolo_sezione(self.frame_risultati_descrittiva, 0, f"Analisi Temporale: {tipo_aggregazione}", info, testo_guida=guida)
         
-        contenitore = customtkinter.CTkFrame(self.frame_risultati_descrittiva, fg_color="transparent")
-        contenitore.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
-        contenitore.grid_rowconfigure(1, weight=1)
-        contenitore.grid_columnconfigure(0, weight=1)
-        self.frame_risultati_descrittiva.grid_rowconfigure(1, weight=1)
+        container = self.frame_risultati_descrittiva
+        self._crea_titolo_sezione(container, f"Analisi Temporale: {tipo_aggregazione}", info, guida)
 
-        frame_tabella = customtkinter.CTkFrame(contenitore)
+        plot_container = customtkinter.CTkFrame(container, fg_color="transparent")
+        plot_container.pack(fill="both", expand=True, padx=5, pady=5)
+        plot_container.grid_rowconfigure(1, weight=1)
+        plot_container.grid_columnconfigure(0, weight=1)
+
+        frame_tabella = customtkinter.CTkFrame(plot_container)
         frame_tabella.grid(row=0, column=0, sticky="ew", pady=(0, 10))
-        frame_grafico = customtkinter.CTkFrame(contenitore)
+        frame_grafico = customtkinter.CTkFrame(plot_container)
         frame_grafico.grid(row=1, column=0, sticky='nsew')
         
         plot_data = None
@@ -584,7 +685,8 @@ class App(customtkinter.CTk):
 
         fig, ax = plt.subplots(figsize=(12, 6))
         ax.set_title(ax_title); ax.set_xlabel(ax_xlabel); ax.set_ylabel('Numero di Incidenti')
-        if tipo_aggregazione == 'Distribuzione Settimanale': ax.tick_params(axis='x', rotation=45)
+        if tipo_aggregazione == 'Distribuzione Settimanale' or (tipo_aggregazione == "Andamento Generale" and len(plot_data) > 30):
+             ax.tick_params(axis='x', rotation=45)
         
         try:
             if tipo_grafico == 'Barre': plot_data.plot(kind='bar', ax=ax)
@@ -607,17 +709,8 @@ class App(customtkinter.CTk):
         if data.empty:
             customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato disponibile.").pack(); return
 
-        self.frame_risultati_descrittiva.grid_rowconfigure(2, weight=1)
-
-        frame_stats = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
-        frame_stats.grid(row=0, column=0, sticky='ew', padx=5, pady=5)
+        container = self.frame_risultati_descrittiva
         
-        frame_tabella = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
-        frame_tabella.grid(row=1, column=0, sticky='ew', padx=5, pady=10)
-
-        frame_grafico = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
-        frame_grafico.grid(row=2, column=0, sticky='nsew', padx=5, pady=(0, 10))
-
         info = ("L'analisi descrittiva univariata esplora una singola variabile alla volta per riassumerne le caratteristiche principali attraverso indici numerici e rappresentazioni grafiche. È il primo passo fondamentale per comprendere la struttura dei dati.")
         guida = ("**Indici Numerici (se applicabili):**\n"
                  "- **Media, Mediana, Moda:** Indicano il 'centro' della distribuzione. Confrontarli aiuta a capirne la simmetria.\n"
@@ -628,35 +721,38 @@ class App(customtkinter.CTk):
                  "- **Istogramma/Barre:** Mostra la frequenza di ogni valore o classe.\n"
                  "- **Box Plot:** Visualizza i quartili (il box centrale contiene il 50% dei dati), la mediana (linea nel box) e gli outlier (punti esterni).\n"
                  "- **Torta:** Mostra la proporzione di ogni categoria sul totale. Efficace per un numero limitato di categorie.")
-        self._crea_titolo_sezione(frame_stats, 0, f"Analisi: '{variable}'", info, testo_guida=guida)
+        
+        self._crea_titolo_sezione(container, f"Analisi Descrittiva: '{variable}'", info, guida)
+
+        plot_container = customtkinter.CTkFrame(container, fg_color="transparent")
+        plot_container.pack(fill="both", expand=True, padx=5, pady=5)
+        plot_container.grid_rowconfigure(1, weight=1)
+        plot_container.grid_columnconfigure(0, weight=1)
 
         is_numeric = pd.api.types.is_numeric_dtype(data)
         
         if is_numeric:
-            mean, median, mode = data.mean(), data.median(), data.mode().iloc[0] if not data.mode().empty else 'N/A'; variance, std_dev = data.var(ddof=1), data.std(ddof=1); skew, kurt = data.skew(), data.kurtosis(); frame_indici = customtkinter.CTkFrame(frame_stats); frame_indici.grid(row=1, column=0, sticky='ew', pady=10); frame_indici.grid_columnconfigure((0,1,2,3), weight=1); indici = {'Media': mean, 'Mediana': median, 'Moda': mode, 'Varianza': variance, 'Dev. Std': std_dev, 'Asimmetria': skew, 'Curtosi': kurt}; row, col = 0, 0
+            frame_indici = customtkinter.CTkFrame(plot_container)
+            frame_indici.grid(row=0, column=0, sticky='ew', pady=(0, 10))
+            frame_indici.grid_columnconfigure((0,1,2,3), weight=1)
+            mean, median, mode = data.mean(), data.median(), data.mode().iloc[0] if not data.mode().empty else 'N/A'
+            variance, std_dev = data.var(ddof=1), data.std(ddof=1)
+            skew, kurt = data.skew(), data.kurtosis()
+            indici = {'Media': mean, 'Mediana': median, 'Moda': mode, 'Varianza': variance, 'Dev. Std': std_dev, 'Asimmetria': skew, 'Curtosi': kurt}
+            row, col = 0, 0
             for key, val in indici.items():
-                text = f"{key}\n{val:.3f}" if isinstance(val, (int, float)) else f"{key}\n{val}"; customtkinter.CTkLabel(frame_indici, text=text, justify="center").grid(row=row, column=col, padx=5, pady=5, sticky="ew"); col = (col + 1) % 4
+                text = f"{key}\n{val:.3f}" if isinstance(val, (int, float)) else f"{key}\n{val}"
+                customtkinter.CTkLabel(frame_indici, text=text, justify="center").grid(row=row, column=col, padx=5, pady=5, sticky="ew")
+                col = (col + 1) % 4
                 if col == 0: row += 1
 
-        df_for_table = None; is_aggregated = False
-        if tipo_grafico in ['Barre', 'Torta', 'Linee', 'Aste']:
-            freq_data = data.value_counts()
-            limite_categorie = 10 if tipo_grafico == 'Torta' else 20
-            if len(freq_data) > limite_categorie:
-                is_aggregated = True; top_data = freq_data.head(limite_categorie - 1); other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
-                other_series = pd.Series({'Altro': other_sum})
-                freq_data = pd.concat([top_data, other_series])
-            df_for_table = freq_data.to_frame(name="Frequenza")
-            df_for_table.index.name = "Categoria"
-        else: 
-            df_for_table = data.to_frame(name=variable).head(100)
+        frame_grafico = customtkinter.CTkFrame(plot_container)
+        frame_grafico.grid(row=1, column=0, sticky='nsew')
         
-        self._crea_tabella_treeview(frame_tabella, df_for_table.reset_index(), f"Dati per Grafico '{tipo_grafico}'")
-
         fig, ax = plt.subplots(figsize=(8, 5))
         try:
             plot_title = f"{tipo_grafico} di '{variable}'"
-            if is_aggregated: plot_title += f" (Top {limite_categorie-1} + Altro)"
+            is_aggregated = False
 
             if tipo_grafico == 'Istogramma':
                 if is_numeric: ax.hist(data, bins='auto', edgecolor='black'); ax.set_xlabel(variable); ax.set_ylabel('Frequenza')
@@ -665,9 +761,15 @@ class App(customtkinter.CTk):
                 if is_numeric: ax.boxplot(data, vert=False, showfliers=True); ax.set_yticklabels([variable]); ax.set_xlabel('Valore')
                 else: ax.text(0.5, 0.5, 'Box Plot non applicabile a dati non numerici', ha='center')
             else:
+                freq_data = data.value_counts()
+                limite_categorie = 10 if tipo_grafico == 'Torta' else 20
+                if len(freq_data) > limite_categorie:
+                    is_aggregated = True; top_data = freq_data.head(limite_categorie - 1); other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
+                    other_series = pd.Series({'Altro': other_sum}); freq_data = pd.concat([top_data, other_series])
+                    plot_title += f" (Top {limite_categorie-1} + Altro)"
+
                 plot_data = freq_data
-                if is_numeric and tipo_grafico != 'Torta':
-                    plot_data = plot_data.sort_index()
+                if is_numeric and tipo_grafico != 'Torta': plot_data = plot_data.sort_index()
 
                 ax.set_xlabel('Categorie'); ax.set_ylabel('Frequenza')
                 if tipo_grafico == 'Barre': plot_data.plot(kind='bar', ax=ax)
@@ -697,8 +799,9 @@ class App(customtkinter.CTk):
             if len(df_subset) < 2:
                 customtkinter.CTkLabel(self.frame_risultati_bivariata, text="Dati insufficienti per l'analisi.").pack(); return
 
-            self.frame_risultati_bivariata.grid_rowconfigure(2, weight=1) 
-            self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1)
+            container = self.frame_risultati_bivariata
+            container.grid_rowconfigure(1, weight=1) 
+            container.grid_columnconfigure(0, weight=1)
             
             x_data, y_data = df_subset[var_x], df_subset[var_y]
 
@@ -710,7 +813,10 @@ class App(customtkinter.CTk):
                      "  - Vicino a 0: Scarsa o nulla correlazione lineare.\n"
                      "  Il **p-value** associato testa se la correlazione osservata è statisticamente significativa o se potrebbe essere dovuta al caso.\n\n"
                      "- **Retta di Regressione:** È la linea che 'meglio si adatta' ai dati, minimizzando la distanza verticale totale dei punti dalla linea stessa. La sua equazione (y = mx + q) può essere usata per prevedere il valore di Y dato un valore di X.")
-            self._crea_titolo_sezione(self.frame_risultati_bivariata, 0, "Analisi Correlazione e Regressione", info, testo_guida=guida)
+            
+            frame_info_biv = customtkinter.CTkFrame(container)
+            frame_info_biv.pack(fill="x", padx=10, pady=10)
+            self._crea_titolo_sezione(frame_info_biv, "Analisi Correlazione e Regressione", info, guida)
 
             if var_x == var_y:
                 correlation, p_value, slope, intercept = 1.0, 0.0, 1.0, 0.0
@@ -718,16 +824,13 @@ class App(customtkinter.CTk):
                 regression = stats.linregress(x=x_data, y=y_data)
                 slope, intercept, correlation, p_value = regression.slope, regression.intercept, regression.rvalue, regression.pvalue
 
-            frame_testuali = customtkinter.CTkFrame(self.frame_risultati_bivariata)
-            frame_testuali.grid(row=1, column=0, sticky="ew", padx=10, pady=5)
             risultati = (f"Coefficiente di Correlazione (r): {correlation:.4f} (p-value: {p_value:.3g})\n"
                          f"Equazione Retta di Regressione: Y = {slope:.4f}X + {intercept:.4f}")
-            customtkinter.CTkLabel(frame_testuali, text=risultati, justify="left").pack(pady=5)
+            customtkinter.CTkLabel(frame_info_biv, text=risultati, justify="left").pack(pady=5, padx=10, anchor="w")
+            
+            frame_grafico = customtkinter.CTkFrame(container)
+            frame_grafico.pack(fill="both", expand=True, padx=10, pady=10)
 
-            frame_grafico = customtkinter.CTkFrame(self.frame_risultati_bivariata)
-            frame_grafico.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-
-            # MODIFICA: Rimozione di figsize per permettere al grafico di adattarsi al container
             fig, ax = plt.subplots()
             num_points = len(x_data)
             point_size = max(2, 40 / np.log10(num_points)) if num_points > 100 else 20
