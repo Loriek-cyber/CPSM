@@ -1,5 +1,5 @@
 # ==================================================================================
-# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v6.2 - Correzioni UI/UX)
+# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v7.0 - Aggiornamenti UI/UX)
 # ==================================================================================
 import tkinter
 from tkinter import filedialog, ttk
@@ -188,9 +188,8 @@ class App(customtkinter.CTk):
 
 
     def on_tab_change(self, *args):
-        # MODIFICA: Aggiornato commento. Le analisi ora sono automatiche alla selezione della variabile.
-        # Le analisi vengono eseguite automaticamente alla selezione di una variabile nei rispettivi
-        # menu a tendina, non al cambio di scheda, per evitare calcoli non necessari.
+        # Le analisi ora vengono eseguite automaticamente alla selezione di una variabile
+        # o al click sul pulsante di refresh, non più al cambio di scheda.
         pass
 
     def _crea_titolo_sezione(self, parent, testo_titolo, testo_info, testo_guida=None, row=None, columnspan=1):
@@ -293,15 +292,14 @@ class App(customtkinter.CTk):
         
         self.frame_controlli_calcolo = customtkinter.CTkFrame(tab)
         self.frame_controlli_calcolo.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        self.frame_controlli_calcolo.grid_columnconfigure(1, weight=1)
 
-        customtkinter.CTkLabel(self.frame_controlli_calcolo, text="Seleziona una variabile numerica:").pack(side="left", padx=(10,5))
-        # MODIFICA: Aggiunto 'command' per eseguire l'analisi automaticamente.
+        customtkinter.CTkLabel(self.frame_controlli_calcolo, text="Seleziona una variabile numerica:").grid(row=0, column=0, padx=(10,5), pady=5)
         self.selettore_var_calcolo = customtkinter.CTkComboBox(self.frame_controlli_calcolo, values=[], command=self.esegui_calcolo_dati)
-        self.selettore_var_calcolo.pack(side="left", padx=5, expand=True, fill="x")
+        self.selettore_var_calcolo.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
         
-        # MODIFICA: Il bottone non è più necessario perché l'analisi è automatica.
-        # self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="Esegui Calcolo su Popolazione", command=self.esegui_calcolo_dati)
-        # self.bottone_refresh_calcolo.pack(side="left", padx=(10, 10))
+        self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="🔄", command=self.esegui_calcolo_dati, width=35, height=35)
+        self.bottone_refresh_calcolo.grid(row=0, column=2, padx=(5,10), pady=5)
 
         self.frame_risultati_calcolo = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Calcoli Statistici sulla Popolazione")
         self.frame_risultati_calcolo.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
@@ -336,28 +334,28 @@ class App(customtkinter.CTk):
         
         self.frame_controlli_descrittiva = customtkinter.CTkFrame(tab)
         self.frame_controlli_descrittiva.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+        self.frame_controlli_descrittiva.grid_columnconfigure(1, weight=1)
 
-        customtkinter.CTkLabel(self.frame_controlli_descrittiva, text="Seleziona una variabile:").pack(side="left", padx=(10,5))
+        customtkinter.CTkLabel(self.frame_controlli_descrittiva, text="Seleziona una variabile:").grid(row=0, column=0, padx=(10,5), pady=5)
         self.selettore_var_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_descrittiva, values=[], command=self.esegui_analisi_descrittiva)
-        self.selettore_var_descrittiva.pack(side="left", padx=5, expand=True, fill="x")
+        self.selettore_var_descrittiva.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
         
         self.frame_controlli_contestuali = customtkinter.CTkFrame(self.frame_controlli_descrittiva, fg_color="transparent")
-        self.frame_controlli_contestuali.pack(side="left", fill="x", expand=True)
+        self.frame_controlli_contestuali.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
+        self.frame_controlli_contestuali.grid_columnconfigure(3, weight=1)
 
-        self.label_andamento = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Tipo di Aggregazione:")
+        self.label_andamento = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Aggregazione:")
         self.selettore_andamento = customtkinter.CTkComboBox(self.frame_controlli_contestuali, 
                                                              values=['Andamento Generale', 'Distribuzione Oraria', 'Distribuzione Settimanale'], 
                                                              command=self.esegui_analisi_descrittiva)
         self.selettore_andamento.set('Andamento Generale')
 
         self.label_tipo_grafico = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Tipo Grafico:")
-        # MODIFICA: Corretto il 'parent' del ComboBox per posizionarlo correttamente nel layout.
         self.selettore_grafico_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_contestuali, values=['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste'], command=self.esegui_analisi_descrittiva)
         self.selettore_grafico_descrittiva.set('Barre')
         
-        # MODIFICA: Il bottone di refresh è stato rimosso perché l'analisi è automatica.
-        # self.bottone_refresh_descrittiva = customtkinter.CTkButton(self.frame_controlli_descrittiva, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
-        # self.bottone_refresh_descrittiva.pack(side="left", padx=(10, 10))
+        self.bottone_refresh_descrittiva = customtkinter.CTkButton(self.frame_controlli_descrittiva, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
+        self.bottone_refresh_descrittiva.grid(row=0, column=3, padx=(5, 10), pady=5)
 
         self.frame_risultati_descrittiva = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Analisi Descrittiva")
         self.frame_risultati_descrittiva.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
@@ -373,9 +371,8 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_controlli, text="Variabile Y:").grid(row=0, column=2, padx=(10,5), pady=5)
         self.selettore_var_biv_y = customtkinter.CTkComboBox(frame_controlli, values=[], command=self.esegui_analisi_bivariata)
         self.selettore_var_biv_y.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
-        # MODIFICA: Il bottone di refresh è stato rimosso.
-        # self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
-        # self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
+        self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
+        self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
         self.frame_risultati_bivariata = customtkinter.CTkFrame(tab)
         self.frame_risultati_bivariata.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1)
 
@@ -597,27 +594,25 @@ class App(customtkinter.CTk):
         variable = self.selettore_var_descrittiva.get()
         if not variable: return
 
-        # MODIFICA: La logica di pack/pack_forget ora gestisce la visibilità
-        # dei controlli contestuali nel modo corretto e ordinato.
+        # Gestione visibilità controlli contestuali
         if variable == 'Data_Ora_Incidente':
-            self.label_andamento.pack(side="left", padx=(20,5))
-            self.selettore_andamento.pack(side="left", padx=5)
-            self.label_tipo_grafico.pack(side="left", padx=(20,5))
-            self.selettore_grafico_descrittiva.pack(side="left", padx=5)
+            self.label_andamento.grid(row=0, column=0, padx=(10,5), pady=5)
+            self.selettore_andamento.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+            self.label_tipo_grafico.grid(row=0, column=2, padx=(10,5), pady=5)
+            self.selettore_grafico_descrittiva.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
             
             opzioni_grafico = ['Barre', 'Linee', 'Aste']
-
             if self.selettore_grafico_descrittiva.get() not in opzioni_grafico:
                 self.selettore_grafico_descrittiva.set(opzioni_grafico[0])
             self.selettore_grafico_descrittiva.configure(values=opzioni_grafico)
             
             self.analisi_speciale_data_ora()
         else:
-            self.label_andamento.pack_forget()
-            self.selettore_andamento.pack_forget()
-
-            self.label_tipo_grafico.pack(side="left", padx=(20,5))
-            self.selettore_grafico_descrittiva.pack(side="left", padx=5, expand=True, fill="x")
+            self.label_andamento.grid_forget()
+            self.selettore_andamento.grid_forget()
+            
+            self.label_tipo_grafico.grid(row=0, column=0, padx=(10,5), pady=5)
+            self.selettore_grafico_descrittiva.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
             opzioni_standard = ['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste']
             if self.selettore_grafico_descrittiva.get() not in opzioni_standard:
