@@ -1,0 +1,501 @@
+Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2024-01-01 00:00:00.000000000,Roma,Lunedì,Strada Comunale,0,0,101
+2024-01-02 01:46:46.412825651,Palermo,Martedì,Strada Statale,5,0,73
+2024-01-03 03:33:32.825651302,Bologna,Mercoledì,Strada Statale,2,0,79
+2024-01-04 05:20:19.238476953,Torino,Giovedì,Strada Comunale,2,0,78
+2024-01-05 07:07:05.651302605,Milano,Venerdì,Strada Comunale,2,0,20
+2024-01-06 08:53:52.064128256,Milano,Sabato,Autostrada,2,0,65
+2024-01-07 10:40:38.476953907,Milano,Domenica,Strada Provinciale,2,0,64
+2024-01-08 12:27:24.889779559,Firenze,Lunedì,Strada Comunale,1,0,105
+2024-01-09 14:14:11.302605210,Torino,Martedì,Strada Provinciale,6,0,78
+2024-01-10 16:00:57.715430861,Bologna,Mercoledì,Strada Comunale,1,1,62
+2024-01-11 17:47:44.128256513,Milano,Giovedì,Strada Comunale,1,0,67
+2024-01-12 19:34:30.541082164,Palermo,Venerdì,Strada Statale,0,0,95
+2024-01-13 21:21:16.953907815,Firenze,Sabato,Strada Provinciale,0,0,65
+2024-01-14 23:08:03.366733466,Roma,Domenica,Strada Comunale,3,1,52
+2024-01-16 00:54:49.779559118,Milano,Martedì,Autostrada,0,0,63
+2024-01-17 02:41:36.192384769,Milano,Mercoledì,Autostrada,1,1,93
+2024-01-18 04:28:22.605210420,Roma,Giovedì,Strada Statale,2,2,82
+2024-01-19 06:15:09.018036072,Napoli,Venerdì,Strada Comunale,2,0,71
+2024-01-20 08:01:55.430861723,Napoli,Sabato,Strada Provinciale,0,1,74
+2024-01-21 09:48:41.843687374,Roma,Domenica,Autostrada,1,0,56
+2024-01-22 11:35:28.256513026,Torino,Lunedì,Strada Statale,5,0,65
+2024-01-23 13:22:14.669338677,Milano,Martedì,Strada Statale,2,0,53
+2024-01-24 15:09:01.082164328,Roma,Mercoledì,Strada Provinciale,4,0,62
+2024-01-25 16:55:47.494989979,Roma,Giovedì,Strada Comunale,2,0,103
+2024-01-26 18:42:33.907815631,Napoli,Venerdì,Strada Comunale,0,0,43
+2024-01-27 20:29:20.320641282,Bologna,Sabato,Strada Statale,1,1,52
+2024-01-28 22:16:06.733466933,Milano,Domenica,Strada Statale,1,0,38
+2024-01-30 00:02:53.146292585,Napoli,Martedì,Strada Statale,1,0,33
+2024-01-31 01:49:39.559118236,Torino,Mercoledì,Autostrada,0,0,65
+2024-02-01 03:36:25.971943887,Milano,Giovedì,Strada Comunale,2,0,54
+2024-02-02 05:23:12.384769539,Torino,Venerdì,Strada Comunale,1,1,114
+2024-02-03 07:09:58.797595190,Milano,Sabato,Strada Provinciale,3,0,62
+2024-02-04 08:56:45.210420841,Milano,Domenica,Strada Provinciale,3,1,102
+2024-02-05 10:43:31.623246493,Bari,Lunedì,Strada Statale,1,0,94
+2024-02-06 12:30:18.036072144,Palermo,Martedì,Strada Comunale,2,0,64
+2024-02-07 14:17:04.448897795,Firenze,Mercoledì,Strada Provinciale,2,0,122
+2024-02-08 16:03:50.861723446,Roma,Giovedì,Strada Comunale,1,0,76
+2024-02-09 17:50:37.274549098,Milano,Venerdì,Autostrada,0,0,107
+2024-02-10 19:37:23.687374749,Torino,Sabato,Strada Statale,1,0,104
+2024-02-11 21:24:10.100200400,Napoli,Domenica,Autostrada,2,0,80
+2024-02-12 23:10:56.513026052,Milano,Lunedì,Strada Provinciale,5,0,88
+2024-02-14 00:57:42.925851703,Napoli,Mercoledì,Strada Comunale,3,0,85
+2024-02-15 02:44:29.338677354,Milano,Giovedì,Autostrada,0,0,41
+2024-02-16 04:31:15.751503006,Bari,Venerdì,Strada Comunale,1,0,71
+2024-02-17 06:18:02.164328657,Roma,Sabato,Strada Comunale,1,0,96
+2024-02-18 08:04:48.577154308,Torino,Domenica,Strada Statale,2,0,108
+2024-02-19 09:51:34.989979959,Roma,Lunedì,Autostrada,2,0,51
+2024-02-20 11:38:21.402805611,Napoli,Martedì,Strada Comunale,6,0,83
+2024-02-21 13:25:07.815631262,Napoli,Mercoledì,Strada Statale,1,0,73
+2024-02-22 15:11:54.228456914,Milano,Giovedì,Strada Comunale,1,0,67
+2024-02-23 16:58:40.641282565,Palermo,Venerdì,Strada Statale,1,0,78
+2024-02-24 18:45:27.054108216,Bologna,Sabato,Strada Comunale,2,0,75
+2024-02-25 20:32:13.466933867,Bari,Domenica,Strada Statale,1,0,83
+2024-02-26 22:18:59.879759519,Firenze,Lunedì,Strada Statale,2,0,106
+2024-02-28 00:05:46.292585170,Torino,Mercoledì,Strada Comunale,2,0,89
+2024-02-29 01:52:32.705410821,Bari,Giovedì,Strada Statale,2,0,77
+2024-03-01 03:39:19.118236473,Milano,Venerdì,Autostrada,2,0,116
+2024-03-02 05:26:05.531062124,Milano,Sabato,Autostrada,6,0,97
+2024-03-03 07:12:51.943887775,Milano,Domenica,Strada Comunale,3,0,67
+2024-03-04 08:59:38.356713427,Roma,Lunedì,Strada Comunale,0,0,39
+2024-03-05 10:46:24.769539078,Roma,Martedì,Strada Comunale,2,0,45
+2024-03-06 12:33:11.182364729,Roma,Mercoledì,Autostrada,1,0,93
+2024-03-07 14:19:57.595190380,Firenze,Giovedì,Autostrada,2,0,54
+2024-03-08 16:06:44.008016032,Roma,Venerdì,Autostrada,3,2,44
+2024-03-09 17:53:30.420841683,Roma,Sabato,Strada Statale,1,0,51
+2024-03-10 19:40:16.833667334,Napoli,Domenica,Strada Statale,2,0,52
+2024-03-11 21:27:03.246492986,Milano,Lunedì,Strada Statale,3,0,91
+2024-03-12 23:13:49.659318637,Firenze,Martedì,Strada Statale,4,0,66
+2024-03-14 01:00:36.072144288,Milano,Giovedì,Strada Provinciale,2,0,35
+2024-03-15 02:47:22.484969939,Palermo,Venerdì,Strada Statale,2,0,70
+2024-03-16 04:34:08.897795591,Bologna,Sabato,Strada Statale,1,1,75
+2024-03-17 06:20:55.310621242,Milano,Domenica,Strada Comunale,1,0,58
+2024-03-18 08:07:41.723446893,Milano,Lunedì,Strada Statale,1,0,98
+2024-03-19 09:54:28.136272545,Firenze,Martedì,Strada Comunale,1,0,59
+2024-03-20 11:41:14.549098196,Bologna,Mercoledì,Strada Comunale,4,0,97
+2024-03-21 13:28:00.961923847,Bologna,Giovedì,Strada Provinciale,1,0,84
+2024-03-22 15:14:47.374749499,Bologna,Venerdì,Autostrada,0,0,93
+2024-03-23 17:01:33.787575150,Milano,Sabato,Strada Provinciale,1,0,42
+2024-03-24 18:48:20.200400801,Roma,Domenica,Strada Statale,4,0,72
+2024-03-25 20:35:06.613226452,Milano,Lunedì,Strada Statale,2,0,68
+2024-03-26 22:21:53.026052104,Firenze,Martedì,Strada Statale,1,0,34
+2024-03-28 00:08:39.438877755,Torino,Giovedì,Strada Provinciale,3,0,97
+2024-03-29 01:55:25.851703406,Roma,Venerdì,Strada Statale,0,0,49
+2024-03-30 03:42:12.264529058,Milano,Sabato,Strada Statale,3,0,54
+2024-03-31 05:28:58.677354709,Roma,Domenica,Strada Comunale,1,0,44
+2024-04-01 07:15:45.090180360,Roma,Lunedì,Autostrada,2,0,87
+2024-04-02 09:02:31.503006012,Bologna,Martedì,Autostrada,2,0,31
+2024-04-03 10:49:17.915831663,Torino,Mercoledì,Autostrada,3,0,85
+2024-04-04 12:36:04.328657314,Firenze,Giovedì,Autostrada,0,0,96
+2024-04-05 14:22:50.741482965,Napoli,Venerdì,Autostrada,0,1,83
+2024-04-06 16:09:37.154308617,Milano,Sabato,Autostrada,2,0,87
+2024-04-07 17:56:23.567134268,Bologna,Domenica,Strada Comunale,2,0,88
+2024-04-08 19:43:09.979959919,Bologna,Lunedì,Autostrada,5,0,46
+2024-04-09 21:29:56.392785571,Torino,Martedì,Strada Statale,0,0,105
+2024-04-10 23:16:42.805611222,Bologna,Mercoledì,Strada Comunale,0,0,58
+2024-04-12 01:03:29.218436873,Napoli,Venerdì,Strada Statale,3,0,68
+2024-04-13 02:50:15.631262524,Napoli,Sabato,Strada Comunale,1,0,61
+2024-04-14 04:37:02.044088176,Napoli,Domenica,Autostrada,0,0,82
+2024-04-15 06:23:48.456913828,Milano,Lunedì,Autostrada,3,0,56
+2024-04-16 08:10:34.869739478,Milano,Martedì,Autostrada,1,0,71
+2024-04-17 09:57:21.282565130,Milano,Mercoledì,Autostrada,1,0,39
+2024-04-18 11:44:07.695390780,Torino,Giovedì,Strada Statale,2,0,99
+2024-04-19 13:30:54.108216432,Roma,Venerdì,Autostrada,0,0,86
+2024-04-20 15:17:40.521042084,Napoli,Sabato,Autostrada,0,0,62
+2024-04-21 17:04:26.933867734,Bari,Domenica,Autostrada,2,0,58
+2024-04-22 18:51:13.346693386,Roma,Lunedì,Strada Statale,1,0,86
+2024-04-23 20:37:59.759519038,Napoli,Martedì,Autostrada,4,0,52
+2024-04-24 22:24:46.172344688,Bologna,Mercoledì,Strada Statale,2,0,73
+2024-04-26 00:11:32.585170340,Roma,Venerdì,Strada Statale,3,0,99
+2024-04-27 01:58:18.997995992,Milano,Sabato,Strada Comunale,3,0,49
+2024-04-28 03:45:05.410821642,Roma,Domenica,Autostrada,1,0,79
+2024-04-29 05:31:51.823647294,Milano,Lunedì,Strada Comunale,1,0,77
+2024-04-30 07:18:38.236472946,Bari,Martedì,Strada Comunale,0,0,67
+2024-05-01 09:05:24.649298596,Firenze,Mercoledì,Autostrada,1,0,57
+2024-05-02 10:52:11.062124248,Torino,Giovedì,Strada Comunale,0,0,100
+2024-05-03 12:38:57.474949900,Firenze,Venerdì,Strada Provinciale,2,0,55
+2024-05-04 14:25:43.887775550,Firenze,Sabato,Autostrada,3,0,24
+2024-05-05 16:12:30.300601202,Milano,Domenica,Strada Statale,0,0,86
+2024-05-06 17:59:16.713426854,Firenze,Lunedì,Strada Comunale,0,0,39
+2024-05-07 19:46:03.126252504,Napoli,Martedì,Strada Comunale,2,0,87
+2024-05-08 21:32:49.539078156,Firenze,Mercoledì,Autostrada,1,0,103
+2024-05-09 23:19:35.951903806,Firenze,Giovedì,Autostrada,5,0,85
+2024-05-11 01:06:22.364729458,Roma,Sabato,Strada Statale,2,0,96
+2024-05-12 02:53:08.777555110,Milano,Domenica,Strada Statale,3,0,120
+2024-05-13 04:39:55.190380760,Roma,Lunedì,Strada Comunale,3,0,94
+2024-05-14 06:26:41.603206412,Napoli,Martedì,Strada Statale,0,0,78
+2024-05-15 08:13:28.016032064,Firenze,Mercoledì,Strada Statale,1,0,110
+2024-05-16 10:00:14.428857714,Firenze,Giovedì,Strada Comunale,1,0,113
+2024-05-17 11:47:00.841683366,Milano,Venerdì,Autostrada,2,0,114
+2024-05-18 13:33:47.254509018,Napoli,Sabato,Strada Statale,3,0,57
+2024-05-19 15:20:33.667334668,Napoli,Domenica,Strada Comunale,1,0,36
+2024-05-20 17:07:20.080160320,Roma,Lunedì,Strada Comunale,3,0,56
+2024-05-21 18:54:06.492985972,Milano,Martedì,Strada Statale,1,0,87
+2024-05-22 20:40:52.905811622,Roma,Mercoledì,Strada Statale,0,1,73
+2024-05-23 22:27:39.318637274,Bari,Giovedì,Autostrada,1,0,64
+2024-05-25 00:14:25.731462926,Roma,Sabato,Strada Statale,4,0,84
+2024-05-26 02:01:12.144288576,Napoli,Domenica,Strada Statale,1,0,33
+2024-05-27 03:47:58.557114228,Bologna,Lunedì,Autostrada,1,0,73
+2024-05-28 05:34:44.969939878,Roma,Martedì,Strada Statale,2,0,97
+2024-05-29 07:21:31.382765530,Palermo,Mercoledì,Strada Statale,4,0,83
+2024-05-30 09:08:17.795591182,Palermo,Giovedì,Autostrada,1,1,87
+2024-05-31 10:55:04.208416832,Roma,Venerdì,Strada Statale,1,0,109
+2024-06-01 12:41:50.621242484,Napoli,Sabato,Autostrada,4,0,68
+2024-06-02 14:28:37.034068136,Roma,Domenica,Strada Statale,2,0,53
+2024-06-03 16:15:23.446893786,Roma,Lunedì,Autostrada,2,0,99
+2024-06-04 18:02:09.859719438,Milano,Martedì,Strada Comunale,2,0,99
+2024-06-05 19:48:56.272545090,Torino,Mercoledì,Strada Statale,2,0,83
+2024-06-06 21:35:42.685370740,Napoli,Giovedì,Strada Comunale,1,0,65
+2024-06-07 23:22:29.098196392,Milano,Venerdì,Strada Comunale,0,0,70
+2024-06-09 01:09:15.511022044,Roma,Domenica,Strada Statale,3,0,38
+2024-06-10 02:56:01.923847694,Bari,Lunedì,Autostrada,1,0,97
+2024-06-11 04:42:48.336673346,Roma,Martedì,Strada Statale,1,0,96
+2024-06-12 06:29:34.749498998,Milano,Mercoledì,Strada Statale,3,0,37
+2024-06-13 08:16:21.162324648,Napoli,Giovedì,Strada Comunale,0,0,91
+2024-06-14 10:03:07.575150300,Palermo,Venerdì,Strada Statale,1,1,80
+2024-06-15 11:49:53.987975952,Roma,Sabato,Autostrada,1,0,44
+2024-06-16 13:36:40.400801602,Torino,Domenica,Strada Statale,3,0,39
+2024-06-17 15:23:26.813627254,Bologna,Lunedì,Strada Statale,2,0,79
+2024-06-18 17:10:13.226452904,Roma,Martedì,Strada Comunale,1,0,60
+2024-06-19 18:56:59.639278556,Bologna,Mercoledì,Strada Statale,1,0,115
+2024-06-20 20:43:46.052104208,Roma,Giovedì,Strada Statale,3,0,93
+2024-06-21 22:30:32.464929858,Torino,Venerdì,Strada Provinciale,4,0,81
+2024-06-23 00:17:18.877755510,Torino,Domenica,Strada Comunale,0,0,83
+2024-06-24 02:04:05.290581162,Napoli,Lunedì,Autostrada,1,0,103
+2024-06-25 03:50:51.703406812,Milano,Martedì,Autostrada,2,0,91
+2024-06-26 05:37:38.116232464,Firenze,Mercoledì,Autostrada,0,1,82
+2024-06-27 07:24:24.529058116,Roma,Giovedì,Autostrada,2,0,45
+2024-06-28 09:11:10.941883766,Milano,Venerdì,Autostrada,1,0,146
+2024-06-29 10:57:57.354709418,Milano,Sabato,Autostrada,0,0,42
+2024-06-30 12:44:43.767535070,Torino,Domenica,Strada Statale,3,0,62
+2024-07-01 14:31:30.180360720,Torino,Lunedì,Autostrada,5,0,28
+2024-07-02 16:18:16.593186372,Milano,Martedì,Strada Comunale,2,0,83
+2024-07-03 18:05:03.006012024,Napoli,Mercoledì,Autostrada,0,0,73
+2024-07-04 19:51:49.418837674,Roma,Giovedì,Strada Statale,1,0,89
+2024-07-05 21:38:35.831663326,Torino,Venerdì,Strada Statale,0,0,26
+2024-07-06 23:25:22.244488976,Milano,Sabato,Strada Provinciale,2,0,97
+2024-07-08 01:12:08.657314628,Torino,Lunedì,Autostrada,3,0,49
+2024-07-09 02:58:55.070140280,Roma,Martedì,Strada Statale,4,0,66
+2024-07-10 04:45:41.482965930,Bari,Mercoledì,Strada Provinciale,4,0,93
+2024-07-11 06:32:27.895791582,Milano,Giovedì,Strada Comunale,3,0,76
+2024-07-12 08:19:14.308617234,Roma,Venerdì,Strada Comunale,2,0,78
+2024-07-13 10:06:00.721442884,Milano,Sabato,Strada Statale,0,0,89
+2024-07-14 11:52:47.134268536,Bari,Domenica,Autostrada,2,0,80
+2024-07-15 13:39:33.547094188,Firenze,Lunedì,Strada Comunale,4,0,61
+2024-07-16 15:26:19.959919838,Roma,Martedì,Strada Provinciale,3,0,65
+2024-07-17 17:13:06.372745490,Torino,Mercoledì,Strada Statale,4,0,75
+2024-07-18 18:59:52.785571142,Firenze,Giovedì,Strada Statale,1,0,47
+2024-07-19 20:46:39.198396792,Torino,Venerdì,Strada Statale,2,0,94
+2024-07-20 22:33:25.611222444,Napoli,Sabato,Strada Comunale,2,0,77
+2024-07-22 00:20:12.024048096,Roma,Lunedì,Autostrada,2,0,71
+2024-07-23 02:06:58.436873746,Milano,Martedì,Strada Statale,1,1,99
+2024-07-24 03:53:44.849699398,Firenze,Mercoledì,Strada Statale,1,0,66
+2024-07-25 05:40:31.262525048,Bari,Giovedì,Strada Statale,0,0,65
+2024-07-26 07:27:17.675350700,Torino,Venerdì,Autostrada,3,0,57
+2024-07-27 09:14:04.088176352,Roma,Sabato,Autostrada,2,0,78
+2024-07-28 11:00:50.501002004,Roma,Domenica,Strada Comunale,1,0,77
+2024-07-29 12:47:36.913827656,Bologna,Lunedì,Strada Statale,1,0,53
+2024-07-30 14:34:23.326653304,Firenze,Martedì,Strada Statale,2,0,65
+2024-07-31 16:21:09.739478956,Firenze,Mercoledì,Autostrada,6,0,53
+2024-08-01 18:07:56.152304608,Bologna,Giovedì,Strada Statale,1,0,52
+2024-08-02 19:54:42.565130260,Torino,Venerdì,Strada Statale,1,0,26
+2024-08-03 21:41:28.977955912,Milano,Sabato,Autostrada,2,0,64
+2024-08-04 23:28:15.390781560,Milano,Domenica,Strada Statale,2,0,27
+2024-08-06 01:15:01.803607212,Firenze,Martedì,Autostrada,2,0,58
+2024-08-07 03:01:48.216432864,Torino,Mercoledì,Autostrada,2,0,54
+2024-08-08 04:48:34.629258516,Milano,Giovedì,Strada Provinciale,1,0,96
+2024-08-09 06:35:21.042084168,Milano,Venerdì,Strada Statale,3,1,44
+2024-08-10 08:22:07.454909820,Torino,Sabato,Strada Comunale,2,0,50
+2024-08-11 10:08:53.867735468,Milano,Domenica,Strada Statale,2,0,60
+2024-08-12 11:55:40.280561120,Milano,Lunedì,Strada Comunale,1,0,55
+2024-08-13 13:42:26.693386772,Napoli,Martedì,Strada Comunale,1,0,104
+2024-08-14 15:29:13.106212424,Torino,Mercoledì,Strada Statale,2,0,41
+2024-08-15 17:15:59.519038076,Torino,Giovedì,Strada Statale,2,1,60
+2024-08-16 19:02:45.931863728,Roma,Venerdì,Strada Statale,3,0,78
+2024-08-17 20:49:32.344689376,Bologna,Sabato,Strada Statale,1,0,92
+2024-08-18 22:36:18.757515028,Roma,Domenica,Strada Provinciale,5,0,60
+2024-08-20 00:23:05.170340680,Roma,Martedì,Strada Comunale,0,0,22
+2024-08-21 02:09:51.583166332,Bologna,Mercoledì,Strada Provinciale,2,0,66
+2024-08-22 03:56:37.995991984,Torino,Giovedì,Autostrada,2,0,103
+2024-08-23 05:43:24.408817636,Firenze,Venerdì,Strada Comunale,2,0,77
+2024-08-24 07:30:10.821643284,Torino,Sabato,Strada Provinciale,3,0,75
+2024-08-25 09:16:57.234468936,Torino,Domenica,Autostrada,2,0,43
+2024-08-26 11:03:43.647294588,Milano,Lunedì,Autostrada,0,0,40
+2024-08-27 12:50:30.060120240,Roma,Martedì,Strada Comunale,2,0,70
+2024-08-28 14:37:16.472945892,Roma,Mercoledì,Strada Statale,1,0,34
+2024-08-29 16:24:02.885771540,Roma,Giovedì,Strada Comunale,1,0,89
+2024-08-30 18:10:49.298597192,Palermo,Venerdì,Autostrada,2,0,48
+2024-08-31 19:57:35.711422844,Roma,Sabato,Strada Comunale,2,0,69
+2024-09-01 21:44:22.124248496,Firenze,Domenica,Autostrada,4,0,22
+2024-09-02 23:31:08.537074148,Torino,Lunedì,Autostrada,2,0,60
+2024-09-04 01:17:54.949899800,Bologna,Mercoledì,Autostrada,4,0,40
+2024-09-05 03:04:41.362725448,Napoli,Giovedì,Strada Comunale,0,0,20
+2024-09-06 04:51:27.775551100,Torino,Venerdì,Strada Comunale,2,0,83
+2024-09-07 06:38:14.188376752,Napoli,Sabato,Strada Statale,1,0,111
+2024-09-08 08:25:00.601202404,Milano,Domenica,Strada Statale,0,0,98
+2024-09-09 10:11:47.014028056,Bologna,Lunedì,Strada Comunale,2,0,87
+2024-09-10 11:58:33.426853708,Roma,Martedì,Strada Statale,2,0,59
+2024-09-11 13:45:19.839679356,Milano,Mercoledì,Strada Comunale,1,0,90
+2024-09-12 15:32:06.252505008,Torino,Giovedì,Strada Statale,2,0,100
+2024-09-13 17:18:52.665330660,Milano,Venerdì,Strada Statale,1,0,73
+2024-09-14 19:05:39.078156312,Bari,Sabato,Strada Statale,3,0,40
+2024-09-15 20:52:25.490981964,Palermo,Domenica,Strada Statale,1,0,57
+2024-09-16 22:39:11.903807612,Bari,Lunedì,Strada Comunale,5,0,112
+2024-09-18 00:25:58.316633264,Roma,Mercoledì,Strada Statale,1,0,68
+2024-09-19 02:12:44.729458916,Milano,Giovedì,Autostrada,2,0,20
+2024-09-20 03:59:31.142284568,Bari,Venerdì,Strada Comunale,1,0,33
+2024-09-21 05:46:17.555110220,Napoli,Sabato,Strada Statale,2,0,59
+2024-09-22 07:33:03.967935872,Palermo,Domenica,Strada Statale,2,0,95
+2024-09-23 09:19:50.380761520,Palermo,Lunedì,Strada Provinciale,3,0,63
+2024-09-24 11:06:36.793587172,Firenze,Martedì,Strada Comunale,1,0,96
+2024-09-25 12:53:23.206412824,Roma,Mercoledì,Autostrada,4,0,56
+2024-09-26 14:40:09.619238476,Roma,Giovedì,Strada Provinciale,2,0,20
+2024-09-27 16:26:56.032064128,Firenze,Venerdì,Strada Comunale,1,0,57
+2024-09-28 18:13:42.444889780,Roma,Sabato,Strada Statale,3,0,78
+2024-09-29 20:00:28.857715428,Milano,Domenica,Autostrada,2,0,76
+2024-09-30 21:47:15.270541080,Torino,Lunedì,Strada Comunale,1,0,38
+2024-10-01 23:34:01.683366732,Bari,Martedì,Strada Comunale,3,0,61
+2024-10-03 01:20:48.096192384,Torino,Giovedì,Strada Statale,1,0,137
+2024-10-04 03:07:34.509018036,Torino,Venerdì,Strada Comunale,4,0,39
+2024-10-05 04:54:20.921843684,Milano,Sabato,Strada Comunale,2,0,86
+2024-10-06 06:41:07.334669336,Torino,Domenica,Autostrada,1,0,20
+2024-10-07 08:27:53.747494988,Palermo,Lunedì,Strada Statale,5,0,91
+2024-10-08 10:14:40.160320640,Milano,Martedì,Autostrada,3,0,47
+2024-10-09 12:01:26.573146292,Napoli,Mercoledì,Strada Comunale,2,0,80
+2024-10-10 13:48:12.985971944,Firenze,Giovedì,Autostrada,3,1,37
+2024-10-11 15:34:59.398797592,Bologna,Venerdì,Strada Statale,2,0,77
+2024-10-12 17:21:45.811623244,Torino,Sabato,Strada Comunale,5,0,47
+2024-10-13 19:08:32.224448896,Bologna,Domenica,Strada Comunale,0,0,52
+2024-10-14 20:55:18.637274548,Roma,Lunedì,Strada Statale,2,1,81
+2024-10-15 22:42:05.050100200,Roma,Martedì,Strada Comunale,1,0,59
+2024-10-17 00:28:51.462925852,Firenze,Giovedì,Autostrada,1,0,79
+2024-10-18 02:15:37.875751500,Firenze,Venerdì,Strada Comunale,0,0,65
+2024-10-19 04:02:24.288577152,Firenze,Sabato,Autostrada,0,0,71
+2024-10-20 05:49:10.701402804,Bari,Domenica,Strada Statale,3,0,81
+2024-10-21 07:35:57.114228456,Napoli,Lunedì,Strada Comunale,1,0,61
+2024-10-22 09:22:43.527054108,Napoli,Martedì,Autostrada,1,0,45
+2024-10-23 11:09:29.939879756,Bologna,Mercoledì,Autostrada,1,0,56
+2024-10-24 12:56:16.352705408,Torino,Giovedì,Strada Comunale,2,0,99
+2024-10-25 14:43:02.765531060,Bologna,Venerdì,Strada Comunale,0,0,72
+2024-10-26 16:29:49.178356712,Bologna,Sabato,Strada Comunale,3,0,48
+2024-10-27 18:16:35.591182364,Firenze,Domenica,Strada Comunale,2,0,80
+2024-10-28 20:03:22.004008016,Roma,Lunedì,Strada Statale,2,0,81
+2024-10-29 21:50:08.416833664,Roma,Martedì,Strada Statale,1,1,82
+2024-10-30 23:36:54.829659316,Milano,Mercoledì,Strada Statale,0,0,45
+2024-11-01 01:23:41.242484968,Torino,Venerdì,Autostrada,1,0,52
+2024-11-02 03:10:27.655310620,Milano,Sabato,Strada Provinciale,1,0,53
+2024-11-03 04:57:14.068136272,Napoli,Domenica,Strada Statale,4,1,60
+2024-11-04 06:44:00.480961924,Napoli,Lunedì,Strada Statale,3,0,83
+2024-11-05 08:30:46.893787572,Roma,Martedì,Strada Statale,1,0,77
+2024-11-06 10:17:33.306613224,Torino,Mercoledì,Strada Provinciale,2,0,79
+2024-11-07 12:04:19.719438876,Milano,Giovedì,Autostrada,1,0,103
+2024-11-08 13:51:06.132264528,Milano,Venerdì,Strada Statale,3,0,87
+2024-11-09 15:37:52.545090180,Firenze,Sabato,Strada Statale,1,0,66
+2024-11-10 17:24:38.957915828,Roma,Domenica,Strada Comunale,0,0,40
+2024-11-11 19:11:25.370741480,Milano,Lunedì,Autostrada,1,1,52
+2024-11-12 20:58:11.783567132,Napoli,Martedì,Strada Comunale,1,0,63
+2024-11-13 22:44:58.196392784,Bologna,Mercoledì,Strada Provinciale,2,0,90
+2024-11-15 00:31:44.609218436,Roma,Venerdì,Strada Statale,0,0,69
+2024-11-16 02:18:31.022044088,Torino,Sabato,Strada Comunale,3,0,53
+2024-11-17 04:05:17.434869736,Milano,Domenica,Strada Provinciale,2,0,51
+2024-11-18 05:52:03.847695388,Milano,Lunedì,Strada Comunale,2,0,68
+2024-11-19 07:38:50.260521040,Napoli,Martedì,Autostrada,0,0,92
+2024-11-20 09:25:36.673346692,Napoli,Mercoledì,Strada Statale,1,0,109
+2024-11-21 11:12:23.086172344,Torino,Giovedì,Strada Comunale,3,0,64
+2024-11-22 12:59:09.498997996,Bologna,Venerdì,Strada Statale,1,0,68
+2024-11-23 14:45:55.911823644,Palermo,Sabato,Strada Comunale,5,0,39
+2024-11-24 16:32:42.324649296,Napoli,Domenica,Strada Provinciale,2,0,118
+2024-11-25 18:19:28.737474948,Roma,Lunedì,Strada Provinciale,1,0,34
+2024-11-26 20:06:15.150300600,Bologna,Martedì,Strada Statale,4,0,99
+2024-11-27 21:53:01.563126252,Roma,Mercoledì,Autostrada,3,0,60
+2024-11-28 23:39:47.975951904,Napoli,Giovedì,Strada Provinciale,1,0,55
+2024-11-30 01:26:34.388777552,Milano,Sabato,Strada Comunale,3,0,42
+2024-12-01 03:13:20.801603204,Milano,Domenica,Autostrada,0,0,130
+2024-12-02 05:00:07.214428856,Palermo,Lunedì,Strada Provinciale,1,0,75
+2024-12-03 06:46:53.627254508,Firenze,Martedì,Strada Comunale,0,0,70
+2024-12-04 08:33:40.040080160,Torino,Mercoledì,Strada Statale,0,0,92
+2024-12-05 10:20:26.452905808,Napoli,Giovedì,Strada Statale,4,0,53
+2024-12-06 12:07:12.865731460,Milano,Venerdì,Strada Statale,3,0,70
+2024-12-07 13:53:59.278557112,Milano,Sabato,Autostrada,1,1,71
+2024-12-08 15:40:45.691382764,Roma,Domenica,Strada Statale,0,0,57
+2024-12-09 17:27:32.104208416,Napoli,Lunedì,Strada Comunale,0,0,99
+2024-12-10 19:14:18.517034068,Bologna,Martedì,Autostrada,2,0,64
+2024-12-11 21:01:04.929859716,Torino,Mercoledì,Strada Statale,1,0,31
+2024-12-12 22:47:51.342685368,Roma,Giovedì,Strada Statale,0,1,62
+2024-12-14 00:34:37.755511020,Palermo,Sabato,Strada Statale,2,0,76
+2024-12-15 02:21:24.168336672,Bologna,Domenica,Strada Provinciale,2,0,47
+2024-12-16 04:08:10.581162324,Torino,Lunedì,Strada Statale,0,0,49
+2024-12-17 05:54:56.993987976,Torino,Martedì,Strada Statale,3,0,56
+2024-12-18 07:41:43.406813624,Napoli,Mercoledì,Strada Comunale,0,0,100
+2024-12-19 09:28:29.819639276,Roma,Giovedì,Strada Statale,4,0,57
+2024-12-20 11:15:16.232464928,Roma,Venerdì,Autostrada,3,0,105
+2024-12-21 13:02:02.645290580,Bologna,Sabato,Strada Statale,1,0,54
+2024-12-22 14:48:49.058116232,Milano,Domenica,Autostrada,2,0,78
+2024-12-23 16:35:35.470941880,Milano,Lunedì,Autostrada,1,0,58
+2024-12-24 18:22:21.883767532,Milano,Martedì,Strada Statale,3,0,88
+2024-12-25 20:09:08.296593184,Milano,Mercoledì,Strada Statale,1,0,42
+2024-12-26 21:55:54.709418836,Firenze,Giovedì,Strada Provinciale,0,0,88
+2024-12-27 23:42:41.122244488,Bologna,Venerdì,Strada Statale,3,0,72
+2024-12-29 01:29:27.535070140,Napoli,Domenica,Strada Statale,4,0,54
+2024-12-30 03:16:13.947895788,Milano,Lunedì,Strada Comunale,3,0,65
+2024-12-31 05:03:00.360721440,Napoli,Martedì,Autostrada,3,0,108
+2025-01-01 06:49:46.773547092,Napoli,Mercoledì,Strada Comunale,3,0,73
+2025-01-02 08:36:33.186372744,Milano,Giovedì,Autostrada,0,0,52
+2025-01-03 10:23:19.599198396,Napoli,Venerdì,Strada Provinciale,0,0,39
+2025-01-04 12:10:06.012024048,Roma,Sabato,Autostrada,2,0,82
+2025-01-05 13:56:52.424849696,Torino,Domenica,Strada Statale,4,0,74
+2025-01-06 15:43:38.837675348,Torino,Lunedì,Autostrada,2,0,87
+2025-01-07 17:30:25.250501000,Milano,Martedì,Strada Provinciale,4,0,33
+2025-01-08 19:17:11.663326652,Roma,Mercoledì,Strada Statale,2,0,40
+2025-01-09 21:03:58.076152304,Torino,Giovedì,Strada Statale,1,0,98
+2025-01-10 22:50:44.488977952,Napoli,Venerdì,Autostrada,2,0,78
+2025-01-12 00:37:30.901803604,Firenze,Domenica,Strada Comunale,1,0,83
+2025-01-13 02:24:17.314629256,Torino,Lunedì,Autostrada,3,0,45
+2025-01-14 04:11:03.727454908,Milano,Martedì,Strada Comunale,3,0,45
+2025-01-15 05:57:50.140280560,Milano,Mercoledì,Autostrada,2,0,94
+2025-01-16 07:44:36.553106212,Torino,Giovedì,Autostrada,0,1,95
+2025-01-17 09:31:22.965931860,Milano,Venerdì,Autostrada,1,0,42
+2025-01-18 11:18:09.378757512,Torino,Sabato,Strada Statale,1,0,38
+2025-01-19 13:04:55.791583164,Bari,Domenica,Strada Statale,3,0,67
+2025-01-20 14:51:42.204408816,Torino,Lunedì,Autostrada,0,0,50
+2025-01-21 16:38:28.617234468,Roma,Martedì,Strada Comunale,3,0,49
+2025-01-22 18:25:15.030060120,Torino,Mercoledì,Strada Statale,4,0,38
+2025-01-23 20:12:01.442885768,Napoli,Giovedì,Strada Statale,1,0,58
+2025-01-24 21:58:47.855711420,Napoli,Venerdì,Strada Statale,2,0,41
+2025-01-25 23:45:34.268537072,Bari,Sabato,Strada Statale,2,0,42
+2025-01-27 01:32:20.681362724,Roma,Lunedì,Strada Statale,2,0,77
+2025-01-28 03:19:07.094188376,Palermo,Martedì,Autostrada,3,0,68
+2025-01-29 05:05:53.507014024,Bari,Mercoledì,Autostrada,0,0,82
+2025-01-30 06:52:39.919839676,Milano,Giovedì,Strada Comunale,2,0,28
+2025-01-31 08:39:26.332665328,Milano,Venerdì,Strada Provinciale,4,0,70
+2025-02-01 10:26:12.745490980,Milano,Sabato,Strada Statale,2,0,121
+2025-02-02 12:12:59.158316632,Milano,Domenica,Strada Statale,0,0,60
+2025-02-03 13:59:45.571142284,Milano,Lunedì,Strada Comunale,2,0,90
+2025-02-04 15:46:31.983967932,Torino,Martedì,Strada Statale,3,0,90
+2025-02-05 17:33:18.396793584,Milano,Mercoledì,Autostrada,0,0,91
+2025-02-06 19:20:04.809619236,Roma,Giovedì,Autostrada,1,0,74
+2025-02-07 21:06:51.222444888,Firenze,Venerdì,Strada Comunale,0,0,84
+2025-02-08 22:53:37.635270540,Milano,Sabato,Strada Comunale,0,0,87
+2025-02-10 00:40:24.048096192,Firenze,Lunedì,Autostrada,5,0,85
+2025-02-11 02:27:10.460921840,Roma,Martedì,Autostrada,2,0,42
+2025-02-12 04:13:56.873747492,Milano,Mercoledì,Autostrada,2,0,27
+2025-02-13 06:00:43.286573144,Torino,Giovedì,Strada Comunale,3,0,31
+2025-02-14 07:47:29.699398796,Torino,Venerdì,Autostrada,1,0,63
+2025-02-15 09:34:16.112224448,Firenze,Sabato,Autostrada,1,0,84
+2025-02-16 11:21:02.525050096,Bologna,Domenica,Strada Comunale,1,0,42
+2025-02-17 13:07:48.937875748,Firenze,Lunedì,Autostrada,2,0,93
+2025-02-18 14:54:35.350701400,Roma,Martedì,Strada Comunale,2,0,57
+2025-02-19 16:41:21.763527052,Milano,Mercoledì,Autostrada,3,0,57
+2025-02-20 18:28:08.176352704,Bologna,Giovedì,Autostrada,3,0,49
+2025-02-21 20:14:54.589178352,Firenze,Venerdì,Autostrada,0,0,22
+2025-02-22 22:01:41.002004008,Palermo,Sabato,Strada Comunale,0,0,75
+2025-02-23 23:48:27.414829656,Napoli,Domenica,Strada Comunale,2,0,112
+2025-02-25 01:35:13.827655312,Roma,Martedì,Strada Comunale,2,0,68
+2025-02-26 03:22:00.240480960,Bologna,Mercoledì,Strada Statale,1,0,23
+2025-02-27 05:08:46.653306608,Roma,Giovedì,Strada Comunale,3,0,89
+2025-02-28 06:55:33.066132264,Bari,Venerdì,Autostrada,1,0,29
+2025-03-01 08:42:19.478957912,Firenze,Sabato,Strada Statale,1,0,39
+2025-03-02 10:29:05.891783568,Napoli,Domenica,Strada Comunale,2,0,64
+2025-03-03 12:15:52.304609216,Bologna,Lunedì,Autostrada,1,0,73
+2025-03-04 14:02:38.717434864,Bologna,Martedì,Autostrada,3,0,44
+2025-03-05 15:49:25.130260520,Milano,Mercoledì,Autostrada,1,0,63
+2025-03-06 17:36:11.543086168,Bari,Giovedì,Autostrada,1,0,87
+2025-03-07 19:22:57.955911824,Napoli,Venerdì,Autostrada,1,0,91
+2025-03-08 21:09:44.368737472,Firenze,Sabato,Strada Statale,1,0,101
+2025-03-09 22:56:30.781563120,Roma,Domenica,Strada Statale,2,0,117
+2025-03-11 00:43:17.194388776,Firenze,Martedì,Strada Comunale,4,0,90
+2025-03-12 02:30:03.607214424,Roma,Mercoledì,Strada Comunale,1,0,64
+2025-03-13 04:16:50.020040080,Milano,Giovedì,Strada Statale,2,0,91
+2025-03-14 06:03:36.432865728,Bari,Venerdì,Strada Statale,2,0,81
+2025-03-15 07:50:22.845691384,Milano,Sabato,Strada Statale,3,0,82
+2025-03-16 09:37:09.258517032,Roma,Domenica,Strada Statale,1,0,74
+2025-03-17 11:23:55.671342680,Palermo,Lunedì,Strada Statale,0,0,47
+2025-03-18 13:10:42.084168336,Palermo,Martedì,Strada Comunale,1,0,44
+2025-03-19 14:57:28.496993984,Torino,Mercoledì,Strada Statale,3,0,67
+2025-03-20 16:44:14.909819640,Torino,Giovedì,Strada Statale,2,0,73
+2025-03-21 18:31:01.322645288,Napoli,Venerdì,Strada Statale,2,0,53
+2025-03-22 20:17:47.735470936,Roma,Sabato,Strada Statale,1,0,80
+2025-03-23 22:04:34.148296592,Roma,Domenica,Strada Provinciale,0,0,122
+2025-03-24 23:51:20.561122240,Torino,Lunedì,Strada Comunale,4,0,26
+2025-03-26 01:38:06.973947896,Bologna,Mercoledì,Autostrada,2,1,84
+2025-03-27 03:24:53.386773544,Bologna,Giovedì,Strada Comunale,2,0,68
+2025-03-28 05:11:39.799599192,Bologna,Venerdì,Strada Statale,1,0,81
+2025-03-29 06:58:26.212424848,Milano,Sabato,Strada Comunale,1,0,59
+2025-03-30 08:45:12.625250496,Napoli,Domenica,Strada Comunale,1,0,66
+2025-03-31 10:31:59.038076152,Milano,Lunedì,Strada Statale,2,0,73
+2025-04-01 12:18:45.450901800,Napoli,Martedì,Autostrada,1,0,62
+2025-04-02 14:05:31.863727456,Napoli,Mercoledì,Strada Statale,4,0,31
+2025-04-03 15:52:18.276553104,Firenze,Giovedì,Strada Statale,3,0,64
+2025-04-04 17:39:04.689378752,Roma,Venerdì,Strada Comunale,1,0,34
+2025-04-05 19:25:51.102204408,Milano,Sabato,Strada Statale,3,0,86
+2025-04-06 21:12:37.515030056,Milano,Domenica,Autostrada,0,0,23
+2025-04-07 22:59:23.927855712,Bologna,Lunedì,Strada Comunale,3,0,95
+2025-04-09 00:46:10.340681360,Torino,Mercoledì,Strada Provinciale,3,0,80
+2025-04-10 02:32:56.753507008,Milano,Giovedì,Strada Statale,1,0,80
+2025-04-11 04:19:43.166332664,Milano,Venerdì,Autostrada,4,0,20
+2025-04-12 06:06:29.579158312,Bologna,Sabato,Strada Statale,2,0,61
+2025-04-13 07:53:15.991983968,Milano,Domenica,Autostrada,2,0,98
+2025-04-14 09:40:02.404809616,Firenze,Lunedì,Strada Provinciale,3,0,57
+2025-04-15 11:26:48.817635272,Bologna,Martedì,Autostrada,1,0,43
+2025-04-16 13:13:35.230460920,Milano,Mercoledì,Strada Statale,0,0,54
+2025-04-17 15:00:21.643286568,Milano,Giovedì,Strada Statale,0,0,68
+2025-04-18 16:47:08.056112224,Palermo,Venerdì,Strada Statale,2,0,48
+2025-04-19 18:33:54.468937872,Roma,Sabato,Strada Comunale,2,0,100
+2025-04-20 20:20:40.881763528,Roma,Domenica,Strada Comunale,4,0,68
+2025-04-21 22:07:27.294589176,Firenze,Lunedì,Autostrada,4,0,56
+2025-04-22 23:54:13.707414824,Bari,Martedì,Autostrada,3,0,37
+2025-04-24 01:41:00.120240480,Palermo,Giovedì,Autostrada,0,0,82
+2025-04-25 03:27:46.533066128,Bologna,Venerdì,Strada Provinciale,3,0,81
+2025-04-26 05:14:32.945891784,Roma,Sabato,Strada Comunale,2,0,50
+2025-04-27 07:01:19.358717432,Milano,Domenica,Strada Statale,2,0,20
+2025-04-28 08:48:05.771543080,Bologna,Lunedì,Strada Comunale,4,0,80
+2025-04-29 10:34:52.184368736,Torino,Martedì,Strada Comunale,2,0,65
+2025-04-30 12:21:38.597194384,Napoli,Mercoledì,Autostrada,1,0,78
+2025-05-01 14:08:25.010020040,Bari,Giovedì,Strada Provinciale,2,0,118
+2025-05-02 15:55:11.422845688,Milano,Venerdì,Strada Statale,2,0,69
+2025-05-03 17:41:57.835671344,Napoli,Sabato,Strada Statale,1,0,57
+2025-05-04 19:28:44.248496992,Milano,Domenica,Strada Statale,1,0,41
+2025-05-05 21:15:30.661322640,Napoli,Lunedì,Autostrada,4,0,62
+2025-05-06 23:02:17.074148296,Milano,Martedì,Autostrada,4,0,74
+2025-05-08 00:49:03.486973944,Milano,Giovedì,Strada Comunale,1,0,71
+2025-05-09 02:35:49.899799600,Milano,Venerdì,Autostrada,2,0,113
+2025-05-10 04:22:36.312625248,Torino,Sabato,Strada Comunale,1,0,82
+2025-05-11 06:09:22.725450896,Bologna,Domenica,Autostrada,2,0,66
+2025-05-12 07:56:09.138276552,Torino,Lunedì,Strada Statale,3,0,52
+2025-05-13 09:42:55.551102200,Palermo,Martedì,Strada Statale,2,1,76
+2025-05-14 11:29:41.963927856,Roma,Mercoledì,Strada Statale,1,0,47
+2025-05-15 13:16:28.376753504,Roma,Giovedì,Strada Comunale,0,0,74
+2025-05-16 15:03:14.789579152,Firenze,Venerdì,Strada Statale,1,0,82
+2025-05-17 16:50:01.202404808,Roma,Sabato,Strada Statale,5,0,64
+2025-05-18 18:36:47.615230456,Palermo,Domenica,Strada Statale,3,0,54
+2025-05-19 20:23:34.028056112,Milano,Lunedì,Strada Comunale,1,0,20
+2025-05-20 22:10:20.440881760,Palermo,Martedì,Strada Provinciale,2,0,98
+2025-05-21 23:57:06.853707416,Milano,Mercoledì,Strada Comunale,2,0,80
+2025-05-23 01:43:53.266533064,Firenze,Venerdì,Autostrada,1,0,80
+2025-05-24 03:30:39.679358712,Napoli,Sabato,Autostrada,2,0,30
+2025-05-25 05:17:26.092184368,Palermo,Domenica,Strada Statale,4,0,104
+2025-05-26 07:04:12.505010016,Milano,Lunedì,Strada Statale,1,0,58
+2025-05-27 08:50:58.917835672,Torino,Martedì,Autostrada,2,0,62
+2025-05-28 10:37:45.330661320,Palermo,Mercoledì,Strada Statale,2,0,43
+2025-05-29 12:24:31.743486968,Napoli,Giovedì,Strada Statale,0,0,25
+2025-05-30 14:11:18.156312624,Torino,Venerdì,Strada Statale,2,0,98
+2025-05-31 15:58:04.569138272,Torino,Sabato,Strada Comunale,2,0,102
+2025-06-01 17:44:50.981963928,Napoli,Domenica,Autostrada,1,0,65
+2025-06-02 19:31:37.394789576,Torino,Lunedì,Autostrada,1,0,53
+2025-06-03 21:18:23.807615224,Torino,Martedì,Strada Comunale,2,0,60
+2025-06-04 23:05:10.220440880,Bari,Mercoledì,Strada Statale,1,0,61
+2025-06-06 00:51:56.633266528,Milano,Venerdì,Strada Comunale,5,0,40
+2025-06-07 02:38:43.046092184,Roma,Sabato,Strada Statale,0,0,62
+2025-06-08 04:25:29.458917832,Palermo,Domenica,Autostrada,1,0,73
+2025-06-09 06:12:15.871743488,Firenze,Lunedì,Strada Comunale,0,0,95
+2025-06-10 07:59:02.284569136,Napoli,Martedì,Strada Comunale,4,0,70
+2025-06-11 09:45:48.697394784,Torino,Mercoledì,Strada Comunale,2,0,30
+2025-06-12 11:32:35.110220440,Roma,Giovedì,Strada Statale,1,0,78
+2025-06-13 13:19:21.523046088,Milano,Venerdì,Strada Statale,5,0,63
+2025-06-14 15:06:07.935871744,Napoli,Sabato,Strada Statale,1,0,104
+2025-06-15 16:52:54.348697392,Roma,Domenica,Autostrada,2,0,105
+2025-06-16 18:39:40.761523040,Torino,Lunedì,Strada Provinciale,3,0,106
+2025-06-17 20:26:27.174348696,Milano,Martedì,Autostrada,2,0,55
+2025-06-18 22:13:13.587174344,Palermo,Mercoledì,Strada Provinciale,1,0,119
+2025-06-20 00:00:00.000000000,Palermo,Venerdì,Strada Statale,2,0,78

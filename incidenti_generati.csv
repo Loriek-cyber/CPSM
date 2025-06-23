@@ -1,0 +1,501 @@
+Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2024-01-01,Roma,Monday,Strada Statale,1,0,47
+2024-01-02,Bologna,Tuesday,Strada Comunale,1,0,69
+2024-01-03,Torino,Wednesday,Autostrada,0,0,25
+2024-01-04,Napoli,Thursday,Autostrada,1,0,69
+2024-01-05,Milano,Friday,Autostrada,2,0,77
+2024-01-06,Milano,Saturday,Autostrada,1,0,86
+2024-01-07,Milano,Sunday,Autostrada,1,0,87
+2024-01-08,Bologna,Monday,Autostrada,1,0,107
+2024-01-09,Napoli,Tuesday,Autostrada,0,0,33
+2024-01-10,Torino,Wednesday,Strada Statale,1,0,35
+2024-01-11,Milano,Thursday,Strada Comunale,2,0,95
+2024-01-12,Bologna,Friday,Autostrada,1,0,20
+2024-01-13,Torino,Saturday,Strada Statale,1,0,85
+2024-01-14,Milano,Sunday,Strada Statale,1,0,44
+2024-01-15,Milano,Monday,Strada Comunale,1,0,127
+2024-01-16,Milano,Tuesday,Autostrada,2,0,87
+2024-01-17,Roma,Wednesday,Strada Comunale,0,0,73
+2024-01-18,Napoli,Thursday,Autostrada,1,0,116
+2024-01-19,Roma,Friday,Strada Statale,1,0,48
+2024-01-20,Milano,Saturday,Strada Statale,0,0,53
+2024-01-21,Napoli,Sunday,Strada Statale,0,0,42
+2024-01-22,Milano,Monday,Strada Statale,1,0,54
+2024-01-23,Milano,Tuesday,Strada Comunale,0,0,81
+2024-01-24,Roma,Wednesday,Autostrada,2,0,94
+2024-01-25,Roma,Thursday,Autostrada,1,0,108
+2024-01-26,Torino,Friday,Strada Comunale,1,0,25
+2024-01-27,Milano,Saturday,Autostrada,0,0,74
+2024-01-28,Napoli,Sunday,Strada Statale,3,0,46
+2024-01-29,Napoli,Monday,Autostrada,1,0,73
+2024-01-30,Milano,Tuesday,Strada Statale,0,0,150
+2024-01-31,Napoli,Wednesday,Strada Comunale,0,0,88
+2024-02-01,Milano,Thursday,Autostrada,2,0,106
+2024-02-02,Milano,Friday,Strada Comunale,0,0,138
+2024-02-03,Bologna,Saturday,Autostrada,0,0,113
+2024-02-04,Bologna,Sunday,Strada Statale,1,0,66
+2024-02-05,Torino,Monday,Strada Comunale,0,2,41
+2024-02-06,Roma,Tuesday,Autostrada,1,0,79
+2024-02-07,Milano,Wednesday,Strada Statale,1,0,62
+2024-02-08,Napoli,Thursday,Strada Comunale,0,0,34
+2024-02-09,Roma,Friday,Strada Comunale,0,0,87
+2024-02-10,Milano,Saturday,Autostrada,3,0,87
+2024-02-11,Roma,Sunday,Autostrada,1,0,133
+2024-02-12,Milano,Monday,Autostrada,0,0,69
+2024-02-13,Bologna,Tuesday,Strada Statale,1,0,88
+2024-02-14,Milano,Wednesday,Autostrada,0,0,60
+2024-02-15,Napoli,Thursday,Strada Comunale,0,0,106
+2024-02-16,Roma,Friday,Strada Comunale,0,0,76
+2024-02-17,Napoli,Saturday,Autostrada,0,0,44
+2024-02-18,Napoli,Sunday,Autostrada,1,0,79
+2024-02-19,Milano,Monday,Strada Comunale,2,0,91
+2024-02-20,Bologna,Tuesday,Strada Statale,0,0,87
+2024-02-21,Torino,Wednesday,Autostrada,1,0,111
+2024-02-22,Bologna,Thursday,Autostrada,0,0,36
+2024-02-23,Bologna,Friday,Strada Comunale,1,0,54
+2024-02-24,Napoli,Saturday,Autostrada,1,0,99
+2024-02-25,Bologna,Sunday,Strada Statale,0,0,58
+2024-02-26,Milano,Monday,Strada Comunale,2,0,87
+2024-02-27,Milano,Tuesday,Autostrada,4,0,20
+2024-02-28,Milano,Wednesday,Strada Comunale,0,0,160
+2024-02-29,Roma,Thursday,Autostrada,0,0,71
+2024-03-01,Roma,Friday,Autostrada,2,0,115
+2024-03-02,Milano,Saturday,Autostrada,0,0,69
+2024-03-03,Torino,Sunday,Strada Statale,3,0,92
+2024-03-04,Roma,Monday,Strada Statale,0,0,124
+2024-03-05,Milano,Tuesday,Strada Comunale,0,0,114
+2024-03-06,Napoli,Wednesday,Autostrada,1,0,73
+2024-03-07,Milano,Thursday,Autostrada,1,0,75
+2024-03-08,Torino,Friday,Strada Statale,2,0,110
+2024-03-09,Milano,Saturday,Autostrada,0,0,149
+2024-03-10,Bologna,Sunday,Strada Statale,0,0,85
+2024-03-11,Torino,Monday,Autostrada,0,0,138
+2024-03-12,Milano,Tuesday,Strada Comunale,3,0,72
+2024-03-13,Milano,Wednesday,Autostrada,1,0,108
+2024-03-14,Torino,Thursday,Autostrada,2,0,113
+2024-03-15,Torino,Friday,Strada Statale,1,0,67
+2024-03-16,Torino,Saturday,Autostrada,0,0,57
+2024-03-17,Torino,Sunday,Autostrada,1,0,114
+2024-03-18,Milano,Monday,Strada Statale,1,0,64
+2024-03-19,Roma,Tuesday,Strada Comunale,1,0,53
+2024-03-20,Milano,Wednesday,Strada Comunale,1,0,59
+2024-03-21,Bologna,Thursday,Strada Statale,0,0,63
+2024-03-22,Napoli,Friday,Strada Statale,1,0,105
+2024-03-23,Roma,Saturday,Strada Statale,3,0,95
+2024-03-24,Milano,Sunday,Strada Statale,0,0,101
+2024-03-25,Roma,Monday,Strada Statale,0,0,92
+2024-03-26,Roma,Tuesday,Strada Comunale,1,0,62
+2024-03-27,Torino,Wednesday,Strada Comunale,1,0,100
+2024-03-28,Napoli,Thursday,Strada Statale,1,0,115
+2024-03-29,Bologna,Friday,Autostrada,0,0,97
+2024-03-30,Roma,Saturday,Strada Statale,0,0,93
+2024-03-31,Milano,Sunday,Autostrada,2,0,56
+2024-04-01,Torino,Monday,Strada Statale,1,0,86
+2024-04-02,Torino,Tuesday,Strada Statale,3,0,55
+2024-04-03,Napoli,Wednesday,Strada Comunale,1,0,79
+2024-04-04,Torino,Thursday,Autostrada,0,0,30
+2024-04-05,Roma,Friday,Autostrada,1,0,31
+2024-04-06,Napoli,Saturday,Strada Comunale,2,0,74
+2024-04-07,Roma,Sunday,Strada Comunale,3,0,63
+2024-04-08,Milano,Monday,Strada Comunale,3,0,83
+2024-04-09,Milano,Tuesday,Strada Comunale,1,0,75
+2024-04-10,Milano,Wednesday,Autostrada,2,0,80
+2024-04-11,Napoli,Thursday,Autostrada,2,1,98
+2024-04-12,Roma,Friday,Strada Statale,2,0,66
+2024-04-13,Napoli,Saturday,Strada Statale,1,0,73
+2024-04-14,Bologna,Sunday,Strada Comunale,5,0,123
+2024-04-15,Milano,Monday,Strada Comunale,1,0,80
+2024-04-16,Roma,Tuesday,Strada Comunale,0,0,74
+2024-04-17,Torino,Wednesday,Strada Statale,1,0,82
+2024-04-18,Milano,Thursday,Strada Statale,0,1,75
+2024-04-19,Milano,Friday,Strada Statale,0,0,58
+2024-04-20,Milano,Saturday,Strada Statale,1,0,50
+2024-04-21,Milano,Sunday,Strada Statale,1,0,57
+2024-04-22,Bologna,Monday,Strada Statale,1,0,106
+2024-04-23,Torino,Tuesday,Strada Statale,1,0,61
+2024-04-24,Napoli,Wednesday,Strada Comunale,3,1,75
+2024-04-25,Bologna,Thursday,Strada Comunale,0,0,101
+2024-04-26,Torino,Friday,Strada Comunale,1,0,71
+2024-04-27,Milano,Saturday,Strada Comunale,5,0,99
+2024-04-28,Bologna,Sunday,Strada Statale,2,0,33
+2024-04-29,Napoli,Monday,Autostrada,4,0,76
+2024-04-30,Torino,Tuesday,Strada Statale,2,0,82
+2024-05-01,Bologna,Wednesday,Autostrada,0,0,80
+2024-05-02,Roma,Thursday,Strada Comunale,1,0,30
+2024-05-03,Milano,Friday,Strada Statale,0,0,116
+2024-05-04,Milano,Saturday,Strada Comunale,0,0,54
+2024-05-05,Roma,Sunday,Strada Statale,0,0,90
+2024-05-06,Torino,Monday,Strada Comunale,0,0,80
+2024-05-07,Bologna,Tuesday,Autostrada,2,0,110
+2024-05-08,Milano,Wednesday,Autostrada,1,0,145
+2024-05-09,Napoli,Thursday,Autostrada,2,0,41
+2024-05-10,Roma,Friday,Strada Statale,3,0,60
+2024-05-11,Milano,Saturday,Autostrada,1,0,85
+2024-05-12,Milano,Sunday,Strada Statale,1,0,46
+2024-05-13,Roma,Monday,Autostrada,3,0,103
+2024-05-14,Bologna,Tuesday,Autostrada,0,0,105
+2024-05-15,Roma,Wednesday,Strada Statale,0,0,96
+2024-05-16,Napoli,Thursday,Strada Statale,0,0,87
+2024-05-17,Torino,Friday,Autostrada,0,0,121
+2024-05-18,Roma,Saturday,Strada Statale,1,0,45
+2024-05-19,Bologna,Sunday,Autostrada,0,0,81
+2024-05-20,Bologna,Monday,Strada Statale,4,0,57
+2024-05-21,Milano,Tuesday,Strada Comunale,1,0,106
+2024-05-22,Roma,Wednesday,Strada Comunale,1,0,24
+2024-05-23,Roma,Thursday,Strada Comunale,1,0,79
+2024-05-24,Milano,Friday,Strada Comunale,0,0,90
+2024-05-25,Milano,Saturday,Strada Comunale,2,0,51
+2024-05-26,Napoli,Sunday,Autostrada,0,0,61
+2024-05-27,Napoli,Monday,Strada Comunale,1,0,80
+2024-05-28,Milano,Tuesday,Strada Comunale,0,0,108
+2024-05-29,Milano,Wednesday,Strada Comunale,5,0,49
+2024-05-30,Bologna,Thursday,Strada Comunale,0,0,54
+2024-05-31,Milano,Friday,Strada Statale,1,0,113
+2024-06-01,Milano,Saturday,Autostrada,0,0,71
+2024-06-02,Roma,Sunday,Strada Comunale,2,0,56
+2024-06-03,Bologna,Monday,Strada Comunale,0,0,101
+2024-06-04,Milano,Tuesday,Strada Comunale,1,0,65
+2024-06-05,Napoli,Wednesday,Autostrada,2,0,110
+2024-06-06,Torino,Thursday,Strada Statale,2,0,60
+2024-06-07,Milano,Friday,Autostrada,2,0,75
+2024-06-08,Torino,Saturday,Strada Statale,5,1,108
+2024-06-09,Roma,Sunday,Strada Comunale,3,0,73
+2024-06-10,Napoli,Monday,Strada Comunale,1,0,102
+2024-06-11,Napoli,Tuesday,Autostrada,2,0,78
+2024-06-12,Napoli,Wednesday,Autostrada,1,0,139
+2024-06-13,Milano,Thursday,Strada Statale,1,0,127
+2024-06-14,Torino,Friday,Strada Statale,0,0,40
+2024-06-15,Roma,Saturday,Autostrada,3,0,95
+2024-06-16,Milano,Sunday,Strada Statale,0,0,55
+2024-06-17,Milano,Monday,Autostrada,3,0,85
+2024-06-18,Napoli,Tuesday,Strada Statale,2,0,82
+2024-06-19,Napoli,Wednesday,Autostrada,0,0,48
+2024-06-20,Milano,Thursday,Autostrada,3,0,111
+2024-06-21,Napoli,Friday,Autostrada,2,1,86
+2024-06-22,Milano,Saturday,Strada Statale,2,0,71
+2024-06-23,Napoli,Sunday,Strada Statale,0,0,66
+2024-06-24,Milano,Monday,Strada Statale,1,0,84
+2024-06-25,Napoli,Tuesday,Autostrada,1,0,92
+2024-06-26,Roma,Wednesday,Strada Statale,1,0,76
+2024-06-27,Bologna,Thursday,Strada Statale,4,0,20
+2024-06-28,Milano,Friday,Autostrada,1,0,80
+2024-06-29,Roma,Saturday,Strada Comunale,0,0,36
+2024-06-30,Milano,Sunday,Autostrada,1,0,73
+2024-07-01,Bologna,Monday,Strada Statale,2,0,37
+2024-07-02,Bologna,Tuesday,Autostrada,0,0,37
+2024-07-03,Milano,Wednesday,Strada Comunale,2,0,117
+2024-07-04,Napoli,Thursday,Autostrada,0,0,70
+2024-07-05,Torino,Friday,Strada Statale,2,0,68
+2024-07-06,Napoli,Saturday,Strada Comunale,0,0,94
+2024-07-07,Napoli,Sunday,Strada Statale,2,0,68
+2024-07-08,Milano,Monday,Strada Comunale,1,0,143
+2024-07-09,Milano,Tuesday,Strada Comunale,2,1,71
+2024-07-10,Bologna,Wednesday,Autostrada,1,0,90
+2024-07-11,Bologna,Thursday,Autostrada,0,0,109
+2024-07-12,Napoli,Friday,Strada Statale,3,0,128
+2024-07-13,Roma,Saturday,Autostrada,0,0,57
+2024-07-14,Roma,Sunday,Autostrada,0,0,67
+2024-07-15,Torino,Monday,Strada Comunale,1,0,118
+2024-07-16,Bologna,Tuesday,Autostrada,3,0,104
+2024-07-17,Bologna,Wednesday,Strada Comunale,5,0,112
+2024-07-18,Torino,Thursday,Strada Comunale,0,0,38
+2024-07-19,Napoli,Friday,Strada Comunale,0,0,126
+2024-07-20,Milano,Saturday,Strada Statale,3,0,57
+2024-07-21,Milano,Sunday,Strada Statale,0,0,85
+2024-07-22,Bologna,Monday,Strada Statale,0,1,75
+2024-07-23,Napoli,Tuesday,Strada Comunale,1,0,53
+2024-07-24,Milano,Wednesday,Strada Statale,0,1,37
+2024-07-25,Milano,Thursday,Strada Statale,1,0,27
+2024-07-26,Napoli,Friday,Autostrada,1,0,83
+2024-07-27,Milano,Saturday,Strada Statale,1,0,34
+2024-07-28,Milano,Sunday,Strada Statale,1,0,45
+2024-07-29,Napoli,Monday,Strada Comunale,0,0,73
+2024-07-30,Napoli,Tuesday,Strada Comunale,1,0,20
+2024-07-31,Napoli,Wednesday,Strada Comunale,1,0,103
+2024-08-01,Milano,Thursday,Strada Comunale,3,0,20
+2024-08-02,Torino,Friday,Strada Comunale,1,0,77
+2024-08-03,Milano,Saturday,Strada Comunale,0,0,80
+2024-08-04,Roma,Sunday,Strada Statale,1,0,96
+2024-08-05,Torino,Monday,Strada Comunale,2,0,78
+2024-08-06,Napoli,Tuesday,Strada Comunale,1,0,140
+2024-08-07,Torino,Wednesday,Autostrada,1,0,86
+2024-08-08,Napoli,Thursday,Strada Statale,0,0,111
+2024-08-09,Napoli,Friday,Strada Statale,1,0,58
+2024-08-10,Milano,Saturday,Strada Statale,0,0,83
+2024-08-11,Roma,Sunday,Strada Comunale,1,0,126
+2024-08-12,Milano,Monday,Strada Comunale,3,0,72
+2024-08-13,Milano,Tuesday,Strada Comunale,0,0,85
+2024-08-14,Bologna,Wednesday,Autostrada,0,0,109
+2024-08-15,Roma,Thursday,Strada Comunale,2,0,57
+2024-08-16,Bologna,Friday,Autostrada,1,0,20
+2024-08-17,Napoli,Saturday,Strada Statale,3,0,87
+2024-08-18,Torino,Sunday,Strada Comunale,1,0,109
+2024-08-19,Napoli,Monday,Autostrada,1,0,39
+2024-08-20,Napoli,Tuesday,Autostrada,3,0,100
+2024-08-21,Roma,Wednesday,Strada Comunale,2,0,100
+2024-08-22,Milano,Thursday,Strada Statale,0,0,20
+2024-08-23,Torino,Friday,Strada Statale,0,0,51
+2024-08-24,Milano,Saturday,Strada Statale,0,0,68
+2024-08-25,Milano,Sunday,Autostrada,0,0,74
+2024-08-26,Napoli,Monday,Autostrada,1,0,57
+2024-08-27,Milano,Tuesday,Autostrada,2,0,56
+2024-08-28,Bologna,Wednesday,Autostrada,2,0,130
+2024-08-29,Bologna,Thursday,Strada Statale,2,0,76
+2024-08-30,Bologna,Friday,Strada Comunale,3,0,59
+2024-08-31,Roma,Saturday,Autostrada,1,0,78
+2024-09-01,Milano,Sunday,Autostrada,0,0,96
+2024-09-02,Bologna,Monday,Strada Statale,0,0,81
+2024-09-03,Roma,Tuesday,Strada Comunale,2,1,73
+2024-09-04,Bologna,Wednesday,Strada Comunale,2,0,60
+2024-09-05,Bologna,Thursday,Strada Statale,2,0,60
+2024-09-06,Bologna,Friday,Strada Statale,2,0,62
+2024-09-07,Milano,Saturday,Strada Comunale,3,0,90
+2024-09-08,Roma,Sunday,Autostrada,1,0,50
+2024-09-09,Bologna,Monday,Strada Comunale,2,0,91
+2024-09-10,Roma,Tuesday,Strada Statale,2,0,122
+2024-09-11,Milano,Wednesday,Autostrada,0,0,89
+2024-09-12,Napoli,Thursday,Autostrada,2,0,68
+2024-09-13,Bologna,Friday,Strada Statale,0,0,41
+2024-09-14,Napoli,Saturday,Strada Statale,1,0,127
+2024-09-15,Napoli,Sunday,Strada Statale,2,0,44
+2024-09-16,Milano,Monday,Strada Comunale,2,0,105
+2024-09-17,Napoli,Tuesday,Strada Comunale,1,0,99
+2024-09-18,Bologna,Wednesday,Autostrada,0,0,72
+2024-09-19,Milano,Thursday,Strada Statale,2,0,72
+2024-09-20,Napoli,Friday,Autostrada,1,0,24
+2024-09-21,Bologna,Saturday,Autostrada,1,0,89
+2024-09-22,Torino,Sunday,Autostrada,2,0,98
+2024-09-23,Napoli,Monday,Autostrada,0,0,47
+2024-09-24,Torino,Tuesday,Strada Statale,0,0,75
+2024-09-25,Roma,Wednesday,Autostrada,1,0,81
+2024-09-26,Milano,Thursday,Strada Statale,2,0,97
+2024-09-27,Torino,Friday,Strada Statale,2,0,80
+2024-09-28,Torino,Saturday,Strada Comunale,0,0,31
+2024-09-29,Bologna,Sunday,Strada Statale,0,0,64
+2024-09-30,Bologna,Monday,Strada Comunale,2,0,86
+2024-10-01,Napoli,Tuesday,Strada Statale,4,0,105
+2024-10-02,Napoli,Wednesday,Strada Statale,0,0,61
+2024-10-03,Torino,Thursday,Strada Statale,0,0,145
+2024-10-04,Napoli,Friday,Strada Comunale,0,0,23
+2024-10-05,Torino,Saturday,Strada Comunale,2,0,63
+2024-10-06,Torino,Sunday,Autostrada,0,0,77
+2024-10-07,Bologna,Monday,Strada Comunale,2,0,73
+2024-10-08,Roma,Tuesday,Strada Comunale,1,1,43
+2024-10-09,Roma,Wednesday,Strada Comunale,0,0,93
+2024-10-10,Milano,Thursday,Strada Comunale,2,0,91
+2024-10-11,Napoli,Friday,Autostrada,3,0,81
+2024-10-12,Milano,Saturday,Strada Comunale,1,0,89
+2024-10-13,Roma,Sunday,Strada Statale,1,0,67
+2024-10-14,Napoli,Monday,Strada Statale,0,0,31
+2024-10-15,Milano,Tuesday,Strada Comunale,1,0,58
+2024-10-16,Napoli,Wednesday,Strada Comunale,0,0,84
+2024-10-17,Milano,Thursday,Strada Statale,2,0,84
+2024-10-18,Milano,Friday,Strada Statale,1,0,81
+2024-10-19,Torino,Saturday,Autostrada,1,0,96
+2024-10-20,Roma,Sunday,Strada Statale,4,0,62
+2024-10-21,Milano,Monday,Strada Statale,3,1,80
+2024-10-22,Napoli,Tuesday,Strada Comunale,3,0,97
+2024-10-23,Torino,Wednesday,Strada Statale,1,0,77
+2024-10-24,Milano,Thursday,Autostrada,1,0,42
+2024-10-25,Napoli,Friday,Strada Statale,2,0,51
+2024-10-26,Milano,Saturday,Strada Comunale,3,0,104
+2024-10-27,Milano,Sunday,Strada Comunale,3,0,121
+2024-10-28,Napoli,Monday,Strada Statale,1,0,115
+2024-10-29,Napoli,Tuesday,Strada Comunale,3,0,86
+2024-10-30,Napoli,Wednesday,Autostrada,1,0,43
+2024-10-31,Torino,Thursday,Autostrada,1,0,79
+2024-11-01,Bologna,Friday,Strada Statale,1,0,126
+2024-11-02,Napoli,Saturday,Strada Statale,1,0,98
+2024-11-03,Roma,Sunday,Strada Statale,1,0,73
+2024-11-04,Torino,Monday,Strada Comunale,0,0,98
+2024-11-05,Milano,Tuesday,Autostrada,1,0,41
+2024-11-06,Roma,Wednesday,Autostrada,0,0,59
+2024-11-07,Milano,Thursday,Strada Comunale,2,0,47
+2024-11-08,Milano,Friday,Autostrada,1,0,94
+2024-11-09,Bologna,Saturday,Strada Statale,2,0,101
+2024-11-10,Torino,Sunday,Strada Statale,0,0,75
+2024-11-11,Napoli,Monday,Strada Statale,1,0,53
+2024-11-12,Roma,Tuesday,Autostrada,1,0,79
+2024-11-13,Milano,Wednesday,Strada Statale,2,0,65
+2024-11-14,Milano,Thursday,Strada Comunale,3,0,56
+2024-11-15,Milano,Friday,Strada Comunale,0,0,90
+2024-11-16,Napoli,Saturday,Autostrada,0,0,57
+2024-11-17,Torino,Sunday,Strada Comunale,2,0,33
+2024-11-18,Napoli,Monday,Strada Comunale,1,0,39
+2024-11-19,Milano,Tuesday,Autostrada,2,0,31
+2024-11-20,Bologna,Wednesday,Strada Statale,1,2,87
+2024-11-21,Torino,Thursday,Strada Statale,0,0,84
+2024-11-22,Napoli,Friday,Strada Statale,1,0,83
+2024-11-23,Napoli,Saturday,Autostrada,1,0,97
+2024-11-24,Roma,Sunday,Strada Comunale,2,0,115
+2024-11-25,Milano,Monday,Strada Statale,1,0,62
+2024-11-26,Roma,Tuesday,Strada Statale,0,0,92
+2024-11-27,Torino,Wednesday,Autostrada,1,0,32
+2024-11-28,Milano,Thursday,Strada Statale,2,0,121
+2024-11-29,Milano,Friday,Autostrada,1,0,42
+2024-11-30,Milano,Saturday,Strada Comunale,3,0,58
+2024-12-01,Milano,Sunday,Autostrada,0,0,62
+2024-12-02,Bologna,Monday,Autostrada,3,0,34
+2024-12-03,Torino,Tuesday,Autostrada,1,0,80
+2024-12-04,Roma,Wednesday,Autostrada,0,0,86
+2024-12-05,Milano,Thursday,Strada Comunale,1,0,74
+2024-12-06,Roma,Friday,Strada Comunale,2,0,33
+2024-12-07,Roma,Saturday,Strada Statale,0,0,139
+2024-12-08,Milano,Sunday,Strada Comunale,1,0,96
+2024-12-09,Roma,Monday,Strada Comunale,2,0,159
+2024-12-10,Roma,Tuesday,Strada Statale,0,0,55
+2024-12-11,Napoli,Wednesday,Strada Comunale,1,0,108
+2024-12-12,Napoli,Thursday,Autostrada,1,0,103
+2024-12-13,Milano,Friday,Autostrada,2,0,71
+2024-12-14,Roma,Saturday,Strada Statale,0,0,122
+2024-12-15,Napoli,Sunday,Strada Statale,0,0,67
+2024-12-16,Napoli,Monday,Strada Statale,2,0,69
+2024-12-17,Bologna,Tuesday,Autostrada,0,0,20
+2024-12-18,Napoli,Wednesday,Strada Comunale,1,0,92
+2024-12-19,Milano,Thursday,Autostrada,2,0,40
+2024-12-20,Milano,Friday,Strada Statale,1,0,63
+2024-12-21,Napoli,Saturday,Strada Comunale,2,0,49
+2024-12-22,Milano,Sunday,Strada Comunale,1,0,69
+2024-12-23,Napoli,Monday,Autostrada,0,0,93
+2024-12-24,Bologna,Tuesday,Strada Statale,2,0,80
+2024-12-25,Napoli,Wednesday,Autostrada,0,0,101
+2024-12-26,Roma,Thursday,Strada Comunale,0,0,117
+2024-12-27,Napoli,Friday,Autostrada,1,0,68
+2024-12-28,Roma,Saturday,Autostrada,1,0,65
+2024-12-29,Napoli,Sunday,Strada Statale,1,0,108
+2024-12-30,Bologna,Monday,Strada Statale,1,0,111
+2024-12-31,Roma,Tuesday,Strada Comunale,1,0,102
+2025-01-01,Bologna,Wednesday,Autostrada,3,0,51
+2025-01-02,Bologna,Thursday,Autostrada,1,1,92
+2025-01-03,Milano,Friday,Autostrada,3,0,83
+2025-01-04,Milano,Saturday,Strada Comunale,2,0,111
+2025-01-05,Milano,Sunday,Strada Comunale,2,0,62
+2025-01-06,Milano,Monday,Strada Statale,1,0,30
+2025-01-07,Milano,Tuesday,Strada Statale,1,0,100
+2025-01-08,Napoli,Wednesday,Strada Statale,2,0,20
+2025-01-09,Milano,Thursday,Autostrada,3,0,58
+2025-01-10,Roma,Friday,Autostrada,1,0,49
+2025-01-11,Torino,Saturday,Strada Statale,4,0,49
+2025-01-12,Milano,Sunday,Autostrada,1,0,57
+2025-01-13,Torino,Monday,Strada Statale,1,0,116
+2025-01-14,Milano,Tuesday,Strada Comunale,3,0,104
+2025-01-15,Milano,Wednesday,Strada Statale,1,0,72
+2025-01-16,Napoli,Thursday,Strada Comunale,1,0,114
+2025-01-17,Napoli,Friday,Autostrada,2,0,48
+2025-01-18,Bologna,Saturday,Strada Statale,1,0,44
+2025-01-19,Torino,Sunday,Autostrada,2,0,105
+2025-01-20,Torino,Monday,Strada Comunale,3,0,97
+2025-01-21,Milano,Tuesday,Strada Comunale,1,0,66
+2025-01-22,Milano,Wednesday,Strada Comunale,2,0,45
+2025-01-23,Torino,Thursday,Autostrada,3,0,123
+2025-01-24,Torino,Friday,Autostrada,0,0,28
+2025-01-25,Bologna,Saturday,Autostrada,1,0,62
+2025-01-26,Roma,Sunday,Autostrada,1,0,86
+2025-01-27,Roma,Monday,Strada Comunale,3,0,134
+2025-01-28,Torino,Tuesday,Strada Comunale,3,0,91
+2025-01-29,Roma,Wednesday,Strada Statale,1,0,94
+2025-01-30,Bologna,Thursday,Strada Statale,1,2,62
+2025-01-31,Bologna,Friday,Autostrada,0,0,97
+2025-02-01,Roma,Saturday,Strada Comunale,1,0,83
+2025-02-02,Torino,Sunday,Strada Comunale,0,0,32
+2025-02-03,Torino,Monday,Strada Comunale,0,0,103
+2025-02-04,Milano,Tuesday,Strada Statale,3,0,109
+2025-02-05,Bologna,Wednesday,Strada Statale,1,0,104
+2025-02-06,Napoli,Thursday,Strada Comunale,1,0,80
+2025-02-07,Torino,Friday,Strada Comunale,1,0,51
+2025-02-08,Roma,Saturday,Strada Comunale,2,0,20
+2025-02-09,Bologna,Sunday,Strada Statale,0,0,84
+2025-02-10,Roma,Monday,Strada Comunale,2,0,112
+2025-02-11,Milano,Tuesday,Strada Comunale,1,0,109
+2025-02-12,Bologna,Wednesday,Autostrada,2,0,104
+2025-02-13,Milano,Thursday,Autostrada,0,0,77
+2025-02-14,Roma,Friday,Strada Statale,0,0,112
+2025-02-15,Bologna,Saturday,Strada Comunale,1,0,107
+2025-02-16,Bologna,Sunday,Strada Comunale,1,0,67
+2025-02-17,Napoli,Monday,Autostrada,3,0,100
+2025-02-18,Napoli,Tuesday,Strada Statale,1,0,63
+2025-02-19,Roma,Wednesday,Autostrada,1,0,96
+2025-02-20,Milano,Thursday,Autostrada,0,0,41
+2025-02-21,Roma,Friday,Autostrada,2,0,43
+2025-02-22,Napoli,Saturday,Autostrada,1,0,111
+2025-02-23,Torino,Sunday,Strada Comunale,3,0,108
+2025-02-24,Torino,Monday,Strada Comunale,1,0,99
+2025-02-25,Torino,Tuesday,Autostrada,0,0,82
+2025-02-26,Milano,Wednesday,Strada Statale,0,0,20
+2025-02-27,Roma,Thursday,Strada Statale,1,0,77
+2025-02-28,Milano,Friday,Strada Statale,1,0,93
+2025-03-01,Napoli,Saturday,Strada Statale,0,0,63
+2025-03-02,Roma,Sunday,Autostrada,0,0,58
+2025-03-03,Bologna,Monday,Strada Comunale,4,0,123
+2025-03-04,Roma,Tuesday,Strada Statale,1,0,78
+2025-03-05,Milano,Wednesday,Autostrada,1,0,93
+2025-03-06,Milano,Thursday,Strada Statale,1,0,103
+2025-03-07,Torino,Friday,Strada Statale,1,0,49
+2025-03-08,Napoli,Saturday,Autostrada,1,0,85
+2025-03-09,Milano,Sunday,Strada Comunale,1,0,119
+2025-03-10,Milano,Monday,Strada Comunale,4,0,134
+2025-03-11,Torino,Tuesday,Autostrada,1,0,81
+2025-03-12,Milano,Wednesday,Strada Comunale,0,0,72
+2025-03-13,Torino,Thursday,Autostrada,1,0,88
+2025-03-14,Torino,Friday,Autostrada,2,0,87
+2025-03-15,Milano,Saturday,Autostrada,3,0,121
+2025-03-16,Milano,Sunday,Strada Comunale,0,0,50
+2025-03-17,Bologna,Monday,Autostrada,1,0,71
+2025-03-18,Roma,Tuesday,Strada Statale,2,0,46
+2025-03-19,Roma,Wednesday,Strada Comunale,0,0,49
+2025-03-20,Torino,Thursday,Strada Comunale,0,0,91
+2025-03-21,Bologna,Friday,Strada Comunale,1,0,104
+2025-03-22,Bologna,Saturday,Strada Comunale,0,0,60
+2025-03-23,Torino,Sunday,Strada Statale,0,0,103
+2025-03-24,Roma,Monday,Strada Comunale,2,0,113
+2025-03-25,Milano,Tuesday,Strada Comunale,0,0,138
+2025-03-26,Torino,Wednesday,Autostrada,1,0,82
+2025-03-27,Napoli,Thursday,Strada Comunale,1,0,60
+2025-03-28,Roma,Friday,Strada Statale,0,0,49
+2025-03-29,Bologna,Saturday,Strada Statale,0,0,46
+2025-03-30,Milano,Sunday,Strada Statale,2,0,117
+2025-03-31,Roma,Monday,Strada Statale,0,0,34
+2025-04-01,Milano,Tuesday,Strada Comunale,0,0,116
+2025-04-02,Roma,Wednesday,Strada Comunale,1,0,53
+2025-04-03,Milano,Thursday,Strada Statale,2,0,59
+2025-04-04,Milano,Friday,Strada Statale,0,0,75
+2025-04-05,Milano,Saturday,Strada Comunale,0,0,58
+2025-04-06,Napoli,Sunday,Strada Statale,3,0,107
+2025-04-07,Torino,Monday,Autostrada,0,0,134
+2025-04-08,Napoli,Tuesday,Strada Statale,2,0,60
+2025-04-09,Bologna,Wednesday,Strada Statale,3,0,67
+2025-04-10,Roma,Thursday,Autostrada,2,0,75
+2025-04-11,Milano,Friday,Autostrada,2,0,96
+2025-04-12,Bologna,Saturday,Strada Comunale,1,0,75
+2025-04-13,Milano,Sunday,Strada Comunale,1,0,121
+2025-04-14,Bologna,Monday,Autostrada,1,0,114
+2025-04-15,Milano,Tuesday,Autostrada,0,0,44
+2025-04-16,Bologna,Wednesday,Strada Comunale,0,0,95
+2025-04-17,Milano,Thursday,Strada Statale,2,0,125
+2025-04-18,Bologna,Friday,Autostrada,4,0,65
+2025-04-19,Napoli,Saturday,Strada Comunale,2,0,71
+2025-04-20,Bologna,Sunday,Strada Statale,3,0,64
+2025-04-21,Milano,Monday,Autostrada,3,0,64
+2025-04-22,Napoli,Tuesday,Strada Statale,0,0,29
+2025-04-23,Bologna,Wednesday,Strada Comunale,0,0,40
+2025-04-24,Napoli,Thursday,Autostrada,2,0,82
+2025-04-25,Napoli,Friday,Strada Statale,3,0,125
+2025-04-26,Napoli,Saturday,Autostrada,1,0,61
+2025-04-27,Roma,Sunday,Strada Statale,0,0,60
+2025-04-28,Napoli,Monday,Strada Comunale,3,0,131
+2025-04-29,Napoli,Tuesday,Strada Comunale,1,0,46
+2025-04-30,Bologna,Wednesday,Autostrada,1,0,30
+2025-05-01,Milano,Thursday,Strada Statale,0,0,55
+2025-05-02,Milano,Friday,Autostrada,2,0,60
+2025-05-03,Bologna,Saturday,Autostrada,2,0,27
+2025-05-04,Bologna,Sunday,Strada Statale,2,1,76
+2025-05-05,Roma,Monday,Strada Statale,0,0,108
+2025-05-06,Napoli,Tuesday,Strada Statale,1,0,41
+2025-05-07,Milano,Wednesday,Strada Comunale,1,0,82
+2025-05-08,Milano,Thursday,Autostrada,1,0,91
+2025-05-09,Roma,Friday,Autostrada,1,0,77
+2025-05-10,Roma,Saturday,Strada Comunale,2,0,85
+2025-05-11,Napoli,Sunday,Strada Statale,0,1,85
+2025-05-12,Milano,Monday,Strada Comunale,1,0,55
+2025-05-13,Bologna,Tuesday,Strada Comunale,2,0,124
+2025-05-14,Bologna,Wednesday,Strada Comunale,3,0,117
