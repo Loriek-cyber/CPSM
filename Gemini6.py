@@ -1,5 +1,5 @@
 # ==================================================================================
-# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v5.0 - Aggiunta Calcolo Dati e Miglioramenti UI)
+# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v6.0 - Aggiornamento Automatico e Correzioni UI)
 # ==================================================================================
 import tkinter
 from tkinter import filedialog, ttk
@@ -186,6 +186,8 @@ class App(customtkinter.CTk):
     def on_tab_change(self, *args):
         current_tab = self.tab_view.get()
         if self.df is None: return
+        # MODIFICA LOGICA: L'aggiornamento ora è gestito dal `command` dei ComboBox.
+        # Questa funzione può essere usata per aggiornare la scheda la prima volta che viene selezionata.
         if current_tab == "Analisi Descrittiva": self.esegui_analisi_descrittiva()
         elif current_tab == "Analisi Bivariata": self.esegui_analisi_bivariata()
         elif current_tab == "Dati Forniti": self.popola_tabella_dati()
@@ -221,7 +223,6 @@ class App(customtkinter.CTk):
         
         for col in columns:
             table.heading(col, text=col)
-            # MODIFICA: Allineamento colonne a 'center'
             table.column(col, anchor='center', width=120, minwidth=100)
 
         for _, row in df.iterrows():
@@ -286,11 +287,13 @@ class App(customtkinter.CTk):
         self.frame_controlli_calcolo.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
         customtkinter.CTkLabel(self.frame_controlli_calcolo, text="Seleziona una variabile numerica:").pack(side="left", padx=(10,5))
+        # MODIFICA LOGICA: Il `command` esegue già l'analisi, rendendo il bottone superfluo.
         self.selettore_var_calcolo = customtkinter.CTkComboBox(self.frame_controlli_calcolo, values=[], command=self.esegui_calcolo_dati)
         self.selettore_var_calcolo.pack(side="left", padx=5, expand=True, fill="x")
         
-        self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="Esegui Calcolo", command=self.esegui_calcolo_dati)
-        self.bottone_refresh_calcolo.pack(side="left", padx=(10, 10))
+        # MODIFICA LOGICA: Bottone di refresh rimosso per aggiornamento automatico.
+        # self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="Esegui Calcolo", command=self.esegui_calcolo_dati)
+        # self.bottone_refresh_calcolo.pack(side="left", padx=(10, 10))
 
         self.frame_risultati_calcolo = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Calcoli Statistici")
         self.frame_risultati_calcolo.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
@@ -298,18 +301,22 @@ class App(customtkinter.CTk):
 
     def setup_tab_descrittiva(self):
         tab = self.tab_view.tab("Analisi Descrittiva")
-        tab.grid_columnconfigure(0, weight=1); tab.grid_rowconfigure(1, weight=1)
+        tab.grid_columnconfigure(0, weight=1)
+        tab.grid_rowconfigure(1, weight=1)
         
         self.frame_controlli_descrittiva = customtkinter.CTkFrame(tab)
         self.frame_controlli_descrittiva.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
+        # Selettore variabile principale
         customtkinter.CTkLabel(self.frame_controlli_descrittiva, text="Seleziona una variabile:").pack(side="left", padx=(10,5))
-        self.selettore_var_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_descrittiva, values=[], command=self.esegui_analisi_descrittiva)
-        self.selettore_var_descrittiva.pack(side="left", padx=5, expand=True, fill="x")
+        self.selettore_var_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_descrittiva, values=[], command=self.esegui_analisi_descrittiva, width=220)
+        self.selettore_var_descrittiva.pack(side="left", padx=5)
         
+        # Frame per i controlli che appaiono dinamicamente
         self.frame_controlli_contestuali = customtkinter.CTkFrame(self.frame_controlli_descrittiva, fg_color="transparent")
-        self.frame_controlli_contestuali.pack(side="left", fill="x", expand=True)
+        self.frame_controlli_contestuali.pack(side="left", fill="x", expand=True, padx=10)
 
+        # Creazione dei controlli contestuali (verranno mostrati/nascosti da `esegui_analisi_descrittiva`)
         self.label_andamento = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Tipo di Aggregazione:")
         self.selettore_andamento = customtkinter.CTkComboBox(self.frame_controlli_contestuali, 
                                                              values=['Andamento Generale', 'Distribuzione Oraria', 'Distribuzione Settimanale'], 
@@ -317,14 +324,18 @@ class App(customtkinter.CTk):
         self.selettore_andamento.set('Andamento Generale')
 
         self.label_tipo_grafico = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Tipo Grafico:")
-        self.selettore_grafico_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_descrittiva, values=['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste'], command=self.esegui_analisi_descrittiva)
+        # MODIFICA GRAFICA: Il selettore del grafico ora è figlio del frame contestuale per un layout corretto.
+        self.selettore_grafico_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_contestuali, values=['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste'], command=self.esegui_analisi_descrittiva)
         self.selettore_grafico_descrittiva.set('Barre')
 
-        self.bottone_refresh_descrittiva = customtkinter.CTkButton(self.frame_controlli_descrittiva, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
-        self.bottone_refresh_descrittiva.pack(side="left", padx=(10, 10))
+        # MODIFICA GRAFICA: Il menù a tendina ora precede il bottone di refresh.
+        # MODIFICA LOGICA: Bottone di refresh rimosso per aggiornamento automatico.
+        # self.bottone_refresh_descrittiva = customtkinter.CTkButton(self.frame_controlli_descrittiva, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
+        # self.bottone_refresh_descrittiva.pack(side="right", padx=(10, 10))
 
         self.frame_risultati_descrittiva = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Analisi Descrittiva")
-        self.frame_risultati_descrittiva.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
+        self.frame_risultati_descrittiva.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
 
     def setup_tab_bivariata(self):
         tab = self.tab_view.tab("Analisi Bivariata")
@@ -337,8 +348,11 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_controlli, text="Variabile Y:").grid(row=0, column=2, padx=(10,5), pady=5)
         self.selettore_var_biv_y = customtkinter.CTkComboBox(frame_controlli, values=[], command=self.esegui_analisi_bivariata)
         self.selettore_var_biv_y.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
-        self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
-        self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
+        
+        # MODIFICA LOGICA: Bottone di refresh rimosso per aggiornamento automatico.
+        # self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
+        # self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
+        
         self.frame_risultati_bivariata = customtkinter.CTkFrame(tab)
         self.frame_risultati_bivariata.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1)
 
@@ -414,15 +428,12 @@ class App(customtkinter.CTk):
             customtkinter.CTkLabel(self.frame_risultati_calcolo, text=f"Selezionare una variabile numerica con dati validi.", text_color="orange").pack(pady=20)
             return
         
-        # --- Contenitore Principale ---
         container = self.frame_risultati_calcolo
         
-        # --- Sezione Indici ---
         frame_indici_main = customtkinter.CTkFrame(container, border_width=1)
         frame_indici_main.pack(fill="x", expand=True, padx=10, pady=10)
         frame_indici_main.grid_columnconfigure((0, 1, 2), weight=1)
         
-        # 1. Indici di Posizione
         frame_pos = customtkinter.CTkFrame(frame_indici_main)
         frame_pos.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_pos, text="Indici di Posizione", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
@@ -431,7 +442,6 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_pos, text=f"Mediana: {median:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_pos, text=f"Moda: {mode_val}").pack(anchor="w", padx=10, pady=(0,5))
 
-        # 2. Indici di Variabilità
         frame_var = customtkinter.CTkFrame(frame_indici_main)
         frame_var.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_var, text="Indici di Variabilità", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
@@ -444,7 +454,6 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_var, text=f"Range: {range_val:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_var, text=f"Coeff. Variazione: {cv:.4f}").pack(anchor="w", padx=10, pady=(0,5))
 
-        # 3. Indici di Forma, Quartili e Intervalli
         frame_form = customtkinter.CTkFrame(frame_indici_main)
         frame_form.grid(row=0, column=2, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_form, text="Forma e Quartili", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
@@ -456,15 +465,12 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_form, text=f"Q1: {q1:.4f} | Q3: {q3:.4f} | IQR: {iqr:.4f}").pack(anchor="w", padx=10, pady=(10,0))
         customtkinter.CTkLabel(frame_form, text=f"Interv. Chebyshev (k=2): [{cheb_low:.2f}, {cheb_high:.2f}]", font=customtkinter.CTkFont(size=11)).pack(anchor="w", padx=10, pady=(5,5))
 
-        # --- Sezione Tabella Frequenze ---
         num_unique = data.nunique()
         if num_unique > 20 and pd.api.types.is_float_dtype(data):
-            # Binning per dati continui
             bins = min(num_unique, 15)
             freq_table = pd.cut(data, bins=bins).value_counts().sort_index().to_frame(name='Frequenza Assoluta')
             freq_table.index = freq_table.index.astype(str)
         else:
-            # Dati discreti o con pochi valori
             freq_table = data.value_counts().sort_index().to_frame(name='Frequenza Assoluta')
         
         freq_table['Frequenza Relativa'] = freq_table['Frequenza Assoluta'] / len(data)
@@ -473,12 +479,10 @@ class App(customtkinter.CTk):
         freq_table.index.name = "Classe/Valore"
         self._crea_tabella_treeview(container, freq_table.reset_index(), "Tabella delle Frequenze")
         
-        # --- Sezione Grafici ---
         frame_grafici = customtkinter.CTkFrame(container, fg_color="transparent")
         frame_grafici.pack(fill="x", expand=True, padx=5, pady=5)
         frame_grafici.grid_columnconfigure((0, 1), weight=1)
 
-        # 1. Istogramma
         frame_hist = customtkinter.CTkFrame(frame_grafici)
         frame_hist.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         fig_hist, ax_hist = plt.subplots(figsize=(6, 4))
@@ -493,7 +497,6 @@ class App(customtkinter.CTk):
         self.matplotlib_widgets.append(canvas_hist)
         plt.close(fig_hist)
 
-        # 2. Box Plot
         frame_box = customtkinter.CTkFrame(frame_grafici)
         frame_box.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
         fig_box, ax_box = plt.subplots(figsize=(6, 4))
@@ -514,24 +517,27 @@ class App(customtkinter.CTk):
         variable = self.selettore_var_descrittiva.get()
         if not variable: return
 
+        # MODIFICA LOGICA: Logica di visualizzazione dei controlli contestuali migliorata.
+        # Prima nasconde tutti i controlli contestuali per resettare lo stato.
+        for widget in self.frame_controlli_contestuali.winfo_children():
+            widget.pack_forget()
+
         if variable == 'Data_Ora_Incidente':
-            self.label_andamento.pack(side="left", padx=(20,5))
-            self.selettore_andamento.pack(side="left", padx=5)
-            self.label_tipo_grafico.pack(side="left", padx=(20,5))
+            # Mostra i controlli per l'analisi temporale
+            self.label_andamento.pack(side="left", padx=(10, 5))
+            self.selettore_andamento.pack(side="left", padx=(0, 20))
+            self.label_tipo_grafico.pack(side="left", padx=(10, 5))
             self.selettore_grafico_descrittiva.pack(side="left", padx=5)
             
             opzioni_grafico = ['Barre', 'Linee', 'Aste']
-
             if self.selettore_grafico_descrittiva.get() not in opzioni_grafico:
                 self.selettore_grafico_descrittiva.set(opzioni_grafico[0])
             self.selettore_grafico_descrittiva.configure(values=opzioni_grafico)
             
             self.analisi_speciale_data_ora()
         else:
-            self.label_andamento.pack_forget()
-            self.selettore_andamento.pack_forget()
-
-            self.label_tipo_grafico.pack(side="left", padx=(20,5))
+            # Mostra solo il selettore del tipo di grafico per le altre variabili
+            self.label_tipo_grafico.pack(side="left", padx=(10, 5))
             self.selettore_grafico_descrittiva.pack(side="left", padx=5, expand=True, fill="x")
 
             opzioni_standard = ['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste']
@@ -727,7 +733,6 @@ class App(customtkinter.CTk):
             frame_grafico = customtkinter.CTkFrame(self.frame_risultati_bivariata)
             frame_grafico.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
-            # MODIFICA: Rimozione di figsize per permettere al grafico di adattarsi al container
             fig, ax = plt.subplots()
             num_points = len(x_data)
             point_size = max(2, 40 / np.log10(num_points)) if num_points > 100 else 20
