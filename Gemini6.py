@@ -1,5 +1,5 @@
 # ==================================================================================
-# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v4.7 - Correzione Grafico a Barre)
+# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v5.0 - Aggiunta Calcolo Dati e Miglioramenti UI)
 # ==================================================================================
 import tkinter
 from tkinter import filedialog, ttk
@@ -57,9 +57,10 @@ class App(customtkinter.CTk):
     def setup_tab_view(self):
         self.tab_view = customtkinter.CTkTabview(self, width=250, command=self.on_tab_change)
         self.tab_view.grid(row=1, column=0, padx=20, pady=20, sticky="nsew")
-        tabs = ["Dati Forniti", "Analisi Descrittiva", "Analisi Bivariata", "Analisi Inferenziale"]
+        tabs = ["Dati Forniti", "Calcolo Dati", "Analisi Descrittiva", "Analisi Bivariata", "Analisi Inferenziale"]
         for tab in tabs: self.tab_view.add(tab)
         self.setup_tab_dati_forniti()
+        self.setup_tab_calcolo_dati()
         self.setup_tab_descrittiva()
         self.setup_tab_bivariata()
         self.setup_tab_inferenziale()
@@ -152,9 +153,17 @@ class App(customtkinter.CTk):
             all_columns.insert(1, 'Giorno')
 
         province_uniche = sorted(self.df['Provincia'].unique().tolist()) if 'Provincia' in self.df.columns else []
+        
+        # Selettori per Analisi Descrittiva
         self.selettore_var_descrittiva.configure(values=all_columns)
         if variabile_da_mantenere and variabile_da_mantenere in all_columns: self.selettore_var_descrittiva.set(variabile_da_mantenere)
         elif all_columns: self.selettore_var_descrittiva.set(all_columns[0])
+        
+        # Selettori per Calcolo Dati
+        self.selettore_var_calcolo.configure(values=numeric_columns)
+        if numeric_columns: self.selettore_var_calcolo.set(numeric_columns[0])
+
+        # Selettori per Analisi Bivariata
         self.selettore_var_biv_x.configure(values=numeric_columns)
         self.selettore_var_biv_y.configure(values=numeric_columns)
         if len(numeric_columns) > 1:
@@ -163,12 +172,16 @@ class App(customtkinter.CTk):
         elif numeric_columns:
             self.selettore_var_biv_x.set(numeric_columns[0])
             self.selettore_var_biv_y.set(numeric_columns[0])
-        self.after(50, self.on_tab_change)
+        
+        # Selettori per Analisi Inferenziale
         self.selettore_provincia_poisson.configure(values=province_uniche)
         self.selettore_provincia_ci.configure(values=province_uniche)
         if province_uniche:
             self.selettore_provincia_poisson.set(province_uniche[0])
             self.selettore_provincia_ci.set(province_uniche[0])
+        
+        self.after(50, self.on_tab_change)
+
 
     def on_tab_change(self, *args):
         current_tab = self.tab_view.get()
@@ -176,6 +189,7 @@ class App(customtkinter.CTk):
         if current_tab == "Analisi Descrittiva": self.esegui_analisi_descrittiva()
         elif current_tab == "Analisi Bivariata": self.esegui_analisi_bivariata()
         elif current_tab == "Dati Forniti": self.popola_tabella_dati()
+        elif current_tab == "Calcolo Dati": self.esegui_calcolo_dati()
 
     def _crea_titolo_sezione(self, parent, row, testo_titolo, testo_info, columnspan=1, testo_guida=None):
         frame_titolo = customtkinter.CTkFrame(parent, fg_color="transparent")
@@ -183,18 +197,65 @@ class App(customtkinter.CTk):
         inner_frame = customtkinter.CTkFrame(frame_titolo, fg_color="transparent")
         inner_frame.pack()
         customtkinter.CTkLabel(inner_frame, text=testo_titolo, font=customtkinter.CTkFont(size=16, weight="bold")).pack(side="left", padx=10)
-        customtkinter.CTkButton(inner_frame, text="i", command=lambda: self.show_info(f"Info: {testo_titolo}", testo_info), width=28, height=28, corner_radius=14).pack(side="left", padx=(0, 5))
+        if testo_info:
+            customtkinter.CTkButton(inner_frame, text="i", command=lambda: self.show_info(f"Informazioni: {testo_titolo}", testo_info), width=28, height=28, corner_radius=14).pack(side="left", padx=(0, 5))
         if testo_guida:
-            customtkinter.CTkButton(inner_frame, text="?", command=lambda: self.show_info("Come Leggere il Grafico", testo_guida), width=28, height=28, corner_radius=14).pack(side="left")
+            customtkinter.CTkButton(inner_frame, text="?", command=lambda: self.show_info("Guida alla Lettura", testo_guida), width=28, height=28, corner_radius=14).pack(side="left")
+
+    def _crea_tabella_treeview(self, parent, df, title="Dati"):
+        frame = customtkinter.CTkFrame(parent)
+        frame.pack(fill="x", expand=True, padx=5, pady=5)
+        
+        customtkinter.CTkLabel(frame, text=title, font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=(5,5), padx=10, anchor="w")
+
+        table_frame = customtkinter.CTkFrame(frame)
+        table_frame.pack(fill="x", expand=True, padx=5, pady=(0,5))
+        table_frame.grid_columnconfigure(0, weight=1)
+
+        style = ttk.Style()
+        style.configure("Treeview", rowheight=25, font=('Calibri', 11))
+        style.configure("Treeview.Heading", font=('Calibri', 12, 'bold'))
+        
+        columns = df.columns.tolist()
+        table = ttk.Treeview(table_frame, columns=columns, show='headings', height=min(len(df), 10))
+        
+        for col in columns:
+            table.heading(col, text=col)
+            # MODIFICA: Allineamento colonne a 'center'
+            table.column(col, anchor='center', width=120, minwidth=100)
+
+        for _, row in df.iterrows():
+            formatted_row = []
+            for val in row:
+                if isinstance(val, float):
+                    formatted_row.append(f"{val:.4f}")
+                else:
+                    formatted_row.append(val)
+            table.insert("", "end", values=formatted_row)
+
+        vsb = ttk.Scrollbar(table_frame, orient="vertical", command=table.yview)
+        table.configure(yscrollcommand=vsb.set)
+
+        table.grid(row=0, column=0, sticky='ew')
+        vsb.grid(row=0, column=1, sticky='ns')
+        
+        return frame
+
 
     def show_info(self, title, message):
         info_window = customtkinter.CTkToplevel(self)
         info_window.title(title)
         info_window.transient(self)
-        label = customtkinter.CTkLabel(info_window, text=message, wraplength=450, justify="left", font=customtkinter.CTkFont(size=14))
-        label.pack(padx=20, pady=20)
+        info_window.geometry("550x450")
+        
+        textbox = customtkinter.CTkTextbox(info_window, wrap="word", font=customtkinter.CTkFont(size=14))
+        textbox.pack(padx=20, pady=20, fill="both", expand=True)
+        textbox.insert("1.0", message)
+        textbox.configure(state="disabled")
+
         close_button = customtkinter.CTkButton(info_window, text="Chiudi", command=info_window.destroy)
         close_button.pack(padx=20, pady=10, side="bottom")
+
 
     def pulisci_frame(self, frame):
         for widget in self.matplotlib_widgets:
@@ -212,46 +273,56 @@ class App(customtkinter.CTk):
         columns = ('Data_Ora_Incidente', 'Provincia', 'Giorno_Settimana', 'Tipo_Strada', 'Numero_Feriti', 'Numero_Morti', 'Velocita_Media_Stimata')
         self.data_table = ttk.Treeview(data_frame, columns=columns, show='headings')
         for col in columns:
-            width = {'Data_Ora_Incidente': 160}.get(col, 120); anchor = 'center' if col not in ['Data_Ora_Incidente', 'Provincia', 'Giorno_Settimana', 'Tipo_Strada'] else 'w'
+            width = {'Data_Ora_Incidente': 160}.get(col, 120); anchor = 'center'
             self.data_table.column(col, width=width, anchor=anchor); self.data_table.heading(col, text=col)
         vsb = ttk.Scrollbar(data_frame, orient="vertical", command=self.data_table.yview); hsb = ttk.Scrollbar(data_frame, orient="horizontal", command=self.data_table.xview)
         self.data_table.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set); self.data_table.grid(row=0, column=0, sticky='nsew'); vsb.grid(row=0, column=1, sticky='ns'); hsb.grid(row=1, column=0, sticky='ew')
+
+    def setup_tab_calcolo_dati(self):
+        tab = self.tab_view.tab("Calcolo Dati")
+        tab.grid_columnconfigure(0, weight=1); tab.grid_rowconfigure(1, weight=1)
+        
+        self.frame_controlli_calcolo = customtkinter.CTkFrame(tab)
+        self.frame_controlli_calcolo.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
+
+        customtkinter.CTkLabel(self.frame_controlli_calcolo, text="Seleziona una variabile numerica:").pack(side="left", padx=(10,5))
+        self.selettore_var_calcolo = customtkinter.CTkComboBox(self.frame_controlli_calcolo, values=[], command=self.esegui_calcolo_dati)
+        self.selettore_var_calcolo.pack(side="left", padx=5, expand=True, fill="x")
+        
+        self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="Esegui Calcolo", command=self.esegui_calcolo_dati)
+        self.bottone_refresh_calcolo.pack(side="left", padx=(10, 10))
+
+        self.frame_risultati_calcolo = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Calcoli Statistici")
+        self.frame_risultati_calcolo.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.frame_risultati_calcolo.grid_columnconfigure(0, weight=1)
 
     def setup_tab_descrittiva(self):
         tab = self.tab_view.tab("Analisi Descrittiva")
         tab.grid_columnconfigure(0, weight=1); tab.grid_rowconfigure(1, weight=1)
         
-        # Frame principale dei controlli
         self.frame_controlli_descrittiva = customtkinter.CTkFrame(tab)
         self.frame_controlli_descrittiva.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
-        # Selettore variabile (sempre visibile)
         customtkinter.CTkLabel(self.frame_controlli_descrittiva, text="Seleziona una variabile:").pack(side="left", padx=(10,5))
         self.selettore_var_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_descrittiva, values=[], command=self.esegui_analisi_descrittiva)
         self.selettore_var_descrittiva.pack(side="left", padx=5, expand=True, fill="x")
         
-        # Frame per i controlli contestuali (per nascondere/mostrare)
         self.frame_controlli_contestuali = customtkinter.CTkFrame(self.frame_controlli_descrittiva, fg_color="transparent")
         self.frame_controlli_contestuali.pack(side="left", fill="x", expand=True)
 
-        # --- WIDGET CONTESTUALI (inseriti nel frame contestuale) ---
-        # 1. Selettore Aggregazione Temporale (per Data_Ora_Incidente)
         self.label_andamento = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Tipo di Aggregazione:")
         self.selettore_andamento = customtkinter.CTkComboBox(self.frame_controlli_contestuali, 
                                                              values=['Andamento Generale', 'Distribuzione Oraria', 'Distribuzione Settimanale'], 
                                                              command=self.esegui_analisi_descrittiva)
         self.selettore_andamento.set('Andamento Generale')
 
-        # 2. Selettore Tipo Grafico (sempre visibile, ma le cui opzioni cambiano)
         self.label_tipo_grafico = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Tipo Grafico:")
-        self.selettore_grafico_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_contestuali, values=['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste'], command=self.esegui_analisi_descrittiva)
+        self.selettore_grafico_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_descrittiva, values=['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste'], command=self.esegui_analisi_descrittiva)
         self.selettore_grafico_descrittiva.set('Barre')
 
-        # Bottone Refresh (sempre visibile)
         self.bottone_refresh_descrittiva = customtkinter.CTkButton(self.frame_controlli_descrittiva, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
         self.bottone_refresh_descrittiva.pack(side="left", padx=(10, 10))
 
-        # Frame per i risultati
         self.frame_risultati_descrittiva = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Analisi Descrittiva")
         self.frame_risultati_descrittiva.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
 
@@ -269,7 +340,7 @@ class App(customtkinter.CTk):
         self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
         self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
         self.frame_risultati_bivariata = customtkinter.CTkFrame(tab)
-        self.frame_risultati_bivariata.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1); self.frame_risultati_bivariata.grid_rowconfigure(1, weight=1)
+        self.frame_risultati_bivariata.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1)
 
     def setup_tab_inferenziale(self):
         tab = self.tab_view.tab("Analisi Inferenziale")
@@ -279,10 +350,9 @@ class App(customtkinter.CTk):
 
     def setup_poisson_section(self, parent):
         frame_poisson = customtkinter.CTkFrame(parent, border_width=1); frame_poisson.grid(row=0, column=0, padx=10, pady=10, sticky="nsew"); frame_poisson.grid_columnconfigure(1, weight=1)
-        info_poisson = ("Il Modello di Poisson è uno strumento statistico usato per calcolare la probabilità che un certo numero di eventi (k) si verifichi in un intervallo di tempo o spazio fissato, conoscendo il tasso medio di accadimento (λ).\n\n"
-                        "**A Cosa Serve Qui?**\n"
-                        "Serve a rispondere a domande come: 'Qual è la probabilità che domani, nella provincia di Milano tra le 8 e le 9, si verifichino esattamente 2 incidenti?'.\n"
-                        "Si basa sulla media storica degli incidenti in quella stessa provincia e fascia oraria, fornendo una stima predittiva.")
+        info_poisson = ("Il Modello di Poisson è un modello di probabilità discreta utilizzato per descrivere il numero di eventi che si verificano in un intervallo fisso di tempo o spazio, data una frequenza media nota e costante (λ, lambda) e assumendo che gli eventi siano indipendenti l'uno dall'altro.\n\n"
+                        "**Applicazione Pratica:**\n"
+                        "Questo strumento permette di stimare la probabilità di osservare un numero esatto 'k' di incidenti (es. 0, 1, 2...) in un determinato periodo (es. un giorno) e in una specifica area (es. una provincia), basandosi sulla media storica degli incidenti per quella stessa area e periodo. È fondamentale per la valutazione del rischio e l'allocazione predittiva delle risorse.")
         self._crea_titolo_sezione(frame_poisson, 0, "Modello di Poisson", info_poisson, columnspan=3)
         customtkinter.CTkLabel(frame_poisson, text="Provincia:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
         self.selettore_provincia_poisson = customtkinter.CTkComboBox(frame_poisson, values=[]); self.selettore_provincia_poisson.grid(row=1, column=1, columnspan=2, padx=10, pady=5, sticky="ew")
@@ -296,9 +366,12 @@ class App(customtkinter.CTk):
 
     def setup_ttest_section(self, parent):
         frame_ttest = customtkinter.CTkFrame(parent, border_width=1); frame_ttest.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); frame_ttest.grid_columnconfigure(1, weight=1)
-        info_ttest = ("Il Test T per Campioni Indipendenti è un test di ipotesi che confronta le medie di due gruppi distinti e non correlati per determinare se la differenza osservata tra le loro medie è statisticamente significativa o se potrebbe essere dovuta al caso.\n\n"
-                      "**A Cosa Serve Qui?**\n"
-                      "Lo usiamo per verificare se c'è una differenza reale nel numero medio di feriti tra gli incidenti che avvengono di giorno (7-19) e quelli che avvengono di notte. Un p-value basso (solitamente < 0.05) suggerisce che la differenza non è casuale, ma sistematica (es. gli incidenti notturni sono mediamente più gravi).")
+        info_ttest = ("Il Test T per Campioni Indipendenti è un test di ipotesi inferenziale utilizzato per determinare se esiste una differenza statisticamente significativa tra le medie di due gruppi indipendenti e non correlati.\n\n"
+                      "**Ipotesi del Test:**\n"
+                      "1. **Ipotesi Nulla (H₀):** Non c'è differenza tra le medie dei due gruppi (μ₁ = μ₂). La differenza osservata è dovuta puramente al caso.\n"
+                      "2. **Ipotesi Alternativa (H₁):** Esiste una differenza tra le medie (μ₁ ≠ μ₂).\n\n"
+                      "**Interpretazione (p-value):**\n"
+                      "Il p-value indica la probabilità di osservare una differenza grande come quella campionaria (o più grande) se l'ipotesi nulla fosse vera. Un p-value basso (convenzionalmente < 0.05) fornisce l'evidenza per rigettare H₀, suggerendo che la differenza tra i gruppi è 'statisticamente significativa'.")
         self._crea_titolo_sezione(frame_ttest, 0, "Test T per Campioni Indipendenti", info_ttest, columnspan=2)
         customtkinter.CTkLabel(frame_ttest, text="Confronto 'Numero_Feriti' tra Diurno (7-19) e Notturno").grid(row=1, column=0, columnspan=2, padx=10, pady=(10,0))
         customtkinter.CTkButton(frame_ttest, text="Esegui Test T", command=self.esegui_ttest).grid(row=2, column=0, padx=10, pady=10, sticky="n")
@@ -307,9 +380,11 @@ class App(customtkinter.CTk):
 
     def setup_ci_section(self, parent):
         frame_ci = customtkinter.CTkFrame(parent, border_width=1); frame_ci.grid(row=2, column=0, padx=10, pady=10, sticky="nsew"); frame_ci.grid_columnconfigure(1, weight=1)
-        info_ci = ("Un Intervallo di Confidenza (IC) è un intervallo di valori, calcolato a partire dai dati campionari, che si stima con un certo livello di fiducia (es. 95%) possa contenere il 'vero' valore di un parametro della popolazione (es. la 'vera' media di incidenti giornalieri, che non possiamo conoscere con certezza).\n\n"
-                   "**A Cosa Serve Qui?**\n"
-                   "Invece di avere solo la media di incidenti giornalieri per una provincia (una stima puntuale), l'IC ci fornisce un range di plausibilità. Un intervallo stretto (es. [2.1, 2.5]) indica una stima molto precisa; un intervallo largo (es. [1.5, 5.5]) indica maggiore incertezza.")
+        info_ci = ("Un Intervallo di Confidenza (IC) è un range di valori, calcolato a partire da dati campionari, che si stima possa contenere il vero valore di un parametro della popolazione (es. la media reale, μ) con un determinato livello di fiducia.\n\n"
+                   "**Cosa significa 'Fiducia al 95%'?**\n"
+                   "Non significa che c'è una probabilità del 95% che il vero valore della media cada in *questo specifico* intervallo. Significa che, se ripetessimo l'esperimento di campionamento molte volte, il 95% degli intervalli di confidenza così calcolati conterrebbe il vero parametro della popolazione.\n\n"
+                   "**Utilità:**\n"
+                   "Fornisce una misura della precisione della stima puntuale (la media campionaria). Un intervallo stretto indica una stima precisa, mentre un intervallo ampio riflette una maggiore incertezza dovuta alla variabilità dei dati o alla ridotta dimensione del campione.")
         self._crea_titolo_sezione(frame_ci, 0, "Intervallo di Confidenza", info_ci, columnspan=2)
         customtkinter.CTkLabel(frame_ci, text="Provincia:").grid(row=1, column=0, padx=10, pady=5, sticky="w")
         self.selettore_provincia_ci = customtkinter.CTkComboBox(frame_ci, values=[]); self.selettore_provincia_ci.grid(row=1, column=1, padx=10, pady=5, sticky="ew")
@@ -328,32 +403,134 @@ class App(customtkinter.CTk):
         display_df['Data_Ora_Incidente'] = display_df['Data_Ora_Incidente'].dt.strftime('%Y-%m-%d %H:%M:%S')
         for _, row in display_df.head(500).iterrows(): self.data_table.insert("", "end", values=list(row))
 
+    def esegui_calcolo_dati(self, *args):
+        self.pulisci_frame(self.frame_risultati_calcolo)
+        if self.df is None: return
+        variable = self.selettore_var_calcolo.get()
+        if not variable: return
+
+        data = self.df[variable].dropna()
+        if data.empty or not pd.api.types.is_numeric_dtype(data):
+            customtkinter.CTkLabel(self.frame_risultati_calcolo, text=f"Selezionare una variabile numerica con dati validi.", text_color="orange").pack(pady=20)
+            return
+        
+        # --- Contenitore Principale ---
+        container = self.frame_risultati_calcolo
+        
+        # --- Sezione Indici ---
+        frame_indici_main = customtkinter.CTkFrame(container, border_width=1)
+        frame_indici_main.pack(fill="x", expand=True, padx=10, pady=10)
+        frame_indici_main.grid_columnconfigure((0, 1, 2), weight=1)
+        
+        # 1. Indici di Posizione
+        frame_pos = customtkinter.CTkFrame(frame_indici_main)
+        frame_pos.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+        customtkinter.CTkLabel(frame_pos, text="Indici di Posizione", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
+        mean, median, mode_val = data.mean(), data.median(), data.mode().iloc[0] if not data.mode().empty else 'N/A'
+        customtkinter.CTkLabel(frame_pos, text=f"Media: {mean:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_pos, text=f"Mediana: {median:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_pos, text=f"Moda: {mode_val}").pack(anchor="w", padx=10, pady=(0,5))
+
+        # 2. Indici di Variabilità
+        frame_var = customtkinter.CTkFrame(frame_indici_main)
+        frame_var.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
+        customtkinter.CTkLabel(frame_var, text="Indici di Variabilità", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
+        variance, std_dev, range_val = data.var(ddof=1), data.std(ddof=1), data.max() - data.min()
+        mad = (data - mean).abs().mean()
+        cv = std_dev / mean if mean != 0 else 0
+        customtkinter.CTkLabel(frame_var, text=f"Varianza: {variance:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_var, text=f"Dev. Std: {std_dev:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_var, text=f"Scarto Medio Assoluto: {mad:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_var, text=f"Range: {range_val:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_var, text=f"Coeff. Variazione: {cv:.4f}").pack(anchor="w", padx=10, pady=(0,5))
+
+        # 3. Indici di Forma, Quartili e Intervalli
+        frame_form = customtkinter.CTkFrame(frame_indici_main)
+        frame_form.grid(row=0, column=2, padx=5, pady=5, sticky="nsew")
+        customtkinter.CTkLabel(frame_form, text="Forma e Quartili", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
+        skew, kurt = data.skew(), data.kurtosis()
+        q1, q3, iqr = data.quantile(0.25), data.quantile(0.75), data.quantile(0.75) - data.quantile(0.25)
+        cheb_low, cheb_high = mean - 2 * std_dev, mean + 2 * std_dev
+        customtkinter.CTkLabel(frame_form, text=f"Asimmetria (Skew): {skew:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_form, text=f"Curtosi: {kurt:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_form, text=f"Q1: {q1:.4f} | Q3: {q3:.4f} | IQR: {iqr:.4f}").pack(anchor="w", padx=10, pady=(10,0))
+        customtkinter.CTkLabel(frame_form, text=f"Interv. Chebyshev (k=2): [{cheb_low:.2f}, {cheb_high:.2f}]", font=customtkinter.CTkFont(size=11)).pack(anchor="w", padx=10, pady=(5,5))
+
+        # --- Sezione Tabella Frequenze ---
+        num_unique = data.nunique()
+        if num_unique > 20 and pd.api.types.is_float_dtype(data):
+            # Binning per dati continui
+            bins = min(num_unique, 15)
+            freq_table = pd.cut(data, bins=bins).value_counts().sort_index().to_frame(name='Frequenza Assoluta')
+            freq_table.index = freq_table.index.astype(str)
+        else:
+            # Dati discreti o con pochi valori
+            freq_table = data.value_counts().sort_index().to_frame(name='Frequenza Assoluta')
+        
+        freq_table['Frequenza Relativa'] = freq_table['Frequenza Assoluta'] / len(data)
+        freq_table['Freq. Ass. Cumulata'] = freq_table['Frequenza Assoluta'].cumsum()
+        freq_table['Freq. Rel. Cumulata'] = freq_table['Frequenza Relativa'].cumsum()
+        freq_table.index.name = "Classe/Valore"
+        self._crea_tabella_treeview(container, freq_table.reset_index(), "Tabella delle Frequenze")
+        
+        # --- Sezione Grafici ---
+        frame_grafici = customtkinter.CTkFrame(container, fg_color="transparent")
+        frame_grafici.pack(fill="x", expand=True, padx=5, pady=5)
+        frame_grafici.grid_columnconfigure((0, 1), weight=1)
+
+        # 1. Istogramma
+        frame_hist = customtkinter.CTkFrame(frame_grafici)
+        frame_hist.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+        fig_hist, ax_hist = plt.subplots(figsize=(6, 4))
+        ax_hist.hist(data, bins='auto', edgecolor='black')
+        ax_hist.set_title(f"Istogramma di '{variable}'")
+        ax_hist.set_ylabel("Frequenza")
+        ax_hist.grid(True, linestyle='--', alpha=0.6)
+        fig_hist.tight_layout()
+        canvas_hist = FigureCanvasTkAgg(fig_hist, master=frame_hist)
+        canvas_hist.draw()
+        canvas_hist.get_tk_widget().pack(fill='both', expand=True, padx=5, pady=5)
+        self.matplotlib_widgets.append(canvas_hist)
+        plt.close(fig_hist)
+
+        # 2. Box Plot
+        frame_box = customtkinter.CTkFrame(frame_grafici)
+        frame_box.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
+        fig_box, ax_box = plt.subplots(figsize=(6, 4))
+        ax_box.boxplot(data, vert=False, showfliers=True, patch_artist=True,
+                       boxprops=dict(facecolor="lightblue"))
+        ax_box.set_title(f"Box Plot di '{variable}'")
+        ax_box.set_yticklabels([])
+        ax_box.grid(True, linestyle='--', alpha=0.6)
+        fig_box.tight_layout()
+        canvas_box = FigureCanvasTkAgg(fig_box, master=frame_box)
+        canvas_box.draw()
+        canvas_box.get_tk_widget().pack(fill='both', expand=True, padx=5, pady=5)
+        self.matplotlib_widgets.append(canvas_box)
+        plt.close(fig_box)
+
     def esegui_analisi_descrittiva(self, *args):
         if self.df is None: return
         variable = self.selettore_var_descrittiva.get()
         if not variable: return
 
-        # Gestione dinamica dei controlli UI
         if variable == 'Data_Ora_Incidente':
-            # Mostra i controlli per l'analisi temporale
             self.label_andamento.pack(side="left", padx=(20,5))
             self.selettore_andamento.pack(side="left", padx=5)
             self.label_tipo_grafico.pack(side="left", padx=(20,5))
             self.selettore_grafico_descrittiva.pack(side="left", padx=5)
             
-            # Imposta le opzioni grafiche adatte all'analisi temporale
             opzioni_grafico = ['Barre', 'Linee', 'Aste']
+
             if self.selettore_grafico_descrittiva.get() not in opzioni_grafico:
                 self.selettore_grafico_descrittiva.set(opzioni_grafico[0])
             self.selettore_grafico_descrittiva.configure(values=opzioni_grafico)
             
             self.analisi_speciale_data_ora()
         else:
-            # Nascondi i controlli per l'analisi temporale
             self.label_andamento.pack_forget()
             self.selettore_andamento.pack_forget()
 
-            # Mostra solo il selettore del tipo di grafico standard
             self.label_tipo_grafico.pack(side="left", padx=(20,5))
             self.selettore_grafico_descrittiva.pack(side="left", padx=5, expand=True, fill="x")
 
@@ -369,61 +546,56 @@ class App(customtkinter.CTk):
         tipo_aggregazione = self.selettore_andamento.get()
         tipo_grafico = self.selettore_grafico_descrittiva.get()
 
-        info = ("L'analisi della variabile temporale è cruciale per la sicurezza stradale. Permette di identificare pattern e ciclicità nel fenomeno degli incidenti, rispondendo a domande fondamentali come:\n\n"
-                "- Ci sono più incidenti in certi periodi dell'anno?\n"
-                "- Quali sono le ore del giorno più pericolose?\n"
-                "- Il rischio è maggiore nei giorni feriali o nel weekend?")
-        guida = ("- **Andamento Generale**: Mostra il numero di incidenti giorno per giorno. Utile per identificare trend a lungo termine, stagionalità (es. picchi estivi) o l'impatto di eventi specifici.\n\n"
-                 "- **Distribuzione Oraria**: Aggrega tutti gli incidenti in base all'ora in cui sono avvenuti. Essenziale per localizzare le fasce orarie critiche (es. ora di punta mattutina/serale).\n\n"
-                 "- **Distribuzione Settimanale**: Aggrega gli incidenti per giorno della settimana. Evidenzia le differenze tra giorni lavorativi e festivi, aiutando a pianificare controlli mirati.")
+        info = ("L'analisi della variabile temporale è fondamentale per identificare pattern e tendenze nel verificarsi degli incidenti. Permette di capire 'quando' gli incidenti sono più frequenti, supportando decisioni strategiche su sorveglianza e prevenzione.")
+        guida = ("- **Andamento Generale (Linee):** Mostra l'evoluzione del numero di incidenti nel tempo (giorno per giorno). Utile per identificare trend di lungo periodo, stagionalità o l'impatto di interventi specifici.\n\n"
+                 "- **Distribuzione Oraria (Barre/Aste):** Aggrega gli incidenti per ora del giorno. Cruciale per individuare le fasce orarie a maggior rischio (es. ore di punta mattutine/serali).\n\n"
+                 "- **Distribuzione Settimanale (Barre/Aste):** Aggrega gli incidenti per giorno della settimana. Evidenzia le differenze tra giorni feriali e weekend, aiutando a modulare i controlli.")
         self._crea_titolo_sezione(self.frame_risultati_descrittiva, 0, f"Analisi Temporale: {tipo_aggregazione}", info, testo_guida=guida)
         
-        frame_grafico = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
-        frame_grafico.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
+        contenitore = customtkinter.CTkFrame(self.frame_risultati_descrittiva, fg_color="transparent")
+        contenitore.grid(row=1, column=0, sticky='nsew', padx=5, pady=5)
+        contenitore.grid_rowconfigure(1, weight=1)
+        contenitore.grid_columnconfigure(0, weight=1)
         self.frame_risultati_descrittiva.grid_rowconfigure(1, weight=1)
 
-        fig, ax = plt.subplots(figsize=(12, 6))
+        frame_tabella = customtkinter.CTkFrame(contenitore)
+        frame_tabella.grid(row=0, column=0, sticky="ew", pady=(0, 10))
+        frame_grafico = customtkinter.CTkFrame(contenitore)
+        frame_grafico.grid(row=1, column=0, sticky='nsew')
+        
         plot_data = None
-        ax.set_ylabel('Numero di Incidenti')
-
+        ax_title, ax_xlabel = "", ""
         if tipo_aggregazione == 'Distribuzione Oraria':
             plot_data = self.df['Ora'].value_counts().sort_index()
-            ax.set_title('Distribuzione Incidenti per Ora del Giorno')
-            ax.set_xlabel('Ora del Giorno')
-        
+            ax_title, ax_xlabel = 'Distribuzione Incidenti per Ora del Giorno', 'Ora del Giorno'
         elif tipo_aggregazione == 'Distribuzione Settimanale':
             days_map = {0: 'Lunedì', 1: 'Martedì', 2: 'Mercoledì', 3: 'Giovedì', 4: 'Venerdì', 5: 'Sabato', 6: 'Domenica'}
             days_order = list(days_map.values())
             daily_names = self.df['Data_Ora_Incidente'].dt.weekday.map(days_map)
             plot_data = daily_names.value_counts().reindex(days_order)
-            ax.set_title('Distribuzione Incidenti per Giorno della Settimana')
-            ax.set_xlabel('Giorno della Settimana')
-            ax.tick_params(axis='x', rotation=45)
-
-        else: # Default: 'Andamento Generale'
+            ax_title, ax_xlabel = 'Distribuzione Incidenti per Giorno della Settimana', 'Giorno della Settimana'
+        else:
             plot_data = self.df.groupby(self.df['Data_Ora_Incidente'].dt.date).size()
-            ax.set_title('Andamento Temporale degli Incidenti')
-            ax.set_xlabel('Data')
+            ax_title, ax_xlabel = 'Andamento Temporale degli Incidenti', 'Data'
+
+        df_tabella = plot_data.to_frame(name="Numero Incidenti")
+        df_tabella.index.name = ax_xlabel
+        self._crea_tabella_treeview(frame_tabella, df_tabella.reset_index(), "Dati del Grafico")
+
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.set_title(ax_title); ax.set_xlabel(ax_xlabel); ax.set_ylabel('Numero di Incidenti')
+        if tipo_aggregazione == 'Distribuzione Settimanale': ax.tick_params(axis='x', rotation=45)
         
-        # ==================== INIZIO BLOCCO DI CORREZIONE ====================
         try:
-            if tipo_grafico == 'Barre':
-                plot_data.plot(kind='bar', ax=ax)
-            elif tipo_grafico == 'Linee':
-                plot_data.plot(kind='line', ax=ax, marker='o')
-            elif tipo_grafico == 'Aste':
-                ax.stem(plot_data.index.astype(str), plot_data.values)
-            else:
-                # Fallback nel caso in cui un tipo non sia gestito
-                plot_data.plot(kind='line', ax=ax)
-        # ===================== FINE BLOCCO DI CORREZIONE =====================
+            if tipo_grafico == 'Barre': plot_data.plot(kind='bar', ax=ax)
+            elif tipo_grafico == 'Linee': plot_data.plot(kind='line', ax=ax, marker='o')
+            elif tipo_grafico == 'Aste': ax.stem(plot_data.index.astype(str), plot_data.values)
+            else: plot_data.plot(kind='line', ax=ax)
         except Exception as e:
             ax.text(0.5, 0.5, f"Impossibile generare il grafico: {e}", ha='center')
 
-        ax.grid(True, linestyle='--', alpha=0.7)
-        fig.tight_layout()
-        canvas = FigureCanvasTkAgg(fig, master=frame_grafico)
-        canvas.draw()
+        ax.grid(True, linestyle='--', alpha=0.7); fig.tight_layout()
+        canvas = FigureCanvasTkAgg(fig, master=frame_grafico); canvas.draw()
         canvas.get_tk_widget().pack(fill='both', expand=True)
         self.matplotlib_widgets.append(canvas)
         plt.close(fig)
@@ -435,79 +607,73 @@ class App(customtkinter.CTk):
         if data.empty:
             customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato disponibile.").pack(); return
 
+        self.frame_risultati_descrittiva.grid_rowconfigure(2, weight=1)
+
         frame_stats = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
         frame_stats.grid(row=0, column=0, sticky='ew', padx=5, pady=5)
-        frame_grafico = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
-        frame_grafico.grid(row=1, column=0, sticky='nsew', padx=5, pady=10)
-        self.frame_risultati_descrittiva.grid_rowconfigure(1, weight=1)
         
-        info = ("L'analisi descrittiva univariata esplora una singola variabile alla volta. Il suo scopo è sintetizzare e descrivere le caratteristiche principali dei dati.\n\n"
-                "- Per **variabili numeriche** (es. N. Feriti), calcola indici di tendenza centrale (media, mediana), di dispersione (deviazione standard) e di forma (simmetria) per capire l'ordine di grandezza e la variabilità del fenomeno.\n"
-                "- Per **variabili categoriche** (es. Tipo Strada), calcola le frequenze di ogni categoria per capire quali sono le modalità più comuni.")
-        guida = ("**Come leggere gli Indici (per dati numerici):**\n"
-                 "- **Media vs Mediana**: Se sono molto diverse, la distribuzione è asimmetrica.\n"
-                 "- **Dev. Std / CV**: Valori alti indicano grande variabilità (dati molto dispersi).\n"
-                 "- **Asimmetria (Skew)**: >0 coda a dx, <0 coda a sx.\n"
-                 "- **Curtosi (Kurt)**: >0 distribuzione 'appuntita', <0 'piatta'.\n\n"
-                 "**Come leggere i Grafici:**\n"
-                 "- **Istogramma/Box Plot**: Mostrano la forma della distribuzione di dati numerici.\n"
-                 "- **Barre/Torta**: Confrontano le frequenze delle diverse categorie. Il grafico a torta è efficace solo con poche categorie.")
+        frame_tabella = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
+        frame_tabella.grid(row=1, column=0, sticky='ew', padx=5, pady=10)
+
+        frame_grafico = customtkinter.CTkFrame(self.frame_risultati_descrittiva)
+        frame_grafico.grid(row=2, column=0, sticky='nsew', padx=5, pady=(0, 10))
+
+        info = ("L'analisi descrittiva univariata esplora una singola variabile alla volta per riassumerne le caratteristiche principali attraverso indici numerici e rappresentazioni grafiche. È il primo passo fondamentale per comprendere la struttura dei dati.")
+        guida = ("**Indici Numerici (se applicabili):**\n"
+                 "- **Media, Mediana, Moda:** Indicano il 'centro' della distribuzione. Confrontarli aiuta a capirne la simmetria.\n"
+                 "- **Dev. Std, Varianza:** Misurano la dispersione dei dati attorno alla media. Valori alti indicano maggiore variabilità.\n"
+                 "- **Asimmetria (Skewness):** > 0 coda a destra; < 0 coda a sinistra; ≈ 0 simmetrica.\n"
+                 "- **Curtosi:** Misura la 'pesantezza' delle code. > 0 code più pesanti (distribuzione leptocurtica); < 0 code più leggere (platicurtica).\n\n"
+                 "**Grafici:**\n"
+                 "- **Istogramma/Barre:** Mostra la frequenza di ogni valore o classe.\n"
+                 "- **Box Plot:** Visualizza i quartili (il box centrale contiene il 50% dei dati), la mediana (linea nel box) e gli outlier (punti esterni).\n"
+                 "- **Torta:** Mostra la proporzione di ogni categoria sul totale. Efficace per un numero limitato di categorie.")
         self._crea_titolo_sezione(frame_stats, 0, f"Analisi: '{variable}'", info, testo_guida=guida)
 
         is_numeric = pd.api.types.is_numeric_dtype(data)
-        is_aggregated = False
-
+        
         if is_numeric:
-            mean, median, mode = data.mean(), data.median(), data.mode().iloc[0] if not data.mode().empty else 'N/A'; variance, std_dev = data.var(ddof=1), data.std(ddof=1); mad = (data - mean).abs().mean(); range_val = data.max() - data.min(); cv = std_dev / mean if mean != 0 else 0; skew, kurt = data.skew(), data.kurtosis(); q1, q3, iqr = data.quantile(0.25), data.quantile(0.75), data.quantile(0.75) - data.quantile(0.25); cheb_low, cheb_high = mean - 2 * std_dev, mean + 2 * std_dev; frame_indici = customtkinter.CTkFrame(frame_stats); frame_indici.grid(row=1, column=0, sticky='ew', pady=10); frame_indici.grid_columnconfigure((0,1,2,3), weight=1); indici = {'Media': mean, 'Mediana': median, 'Moda': mode, 'Varianza': variance, 'Dev. Std': std_dev, 'Range': range_val, 'CV': cv, 'Asimmetria': skew, 'Curtosi': kurt, 'Q1': q1, 'Q3': q3, 'IQR': iqr}; row, col = 0, 0
+            mean, median, mode = data.mean(), data.median(), data.mode().iloc[0] if not data.mode().empty else 'N/A'; variance, std_dev = data.var(ddof=1), data.std(ddof=1); skew, kurt = data.skew(), data.kurtosis(); frame_indici = customtkinter.CTkFrame(frame_stats); frame_indici.grid(row=1, column=0, sticky='ew', pady=10); frame_indici.grid_columnconfigure((0,1,2,3), weight=1); indici = {'Media': mean, 'Mediana': median, 'Moda': mode, 'Varianza': variance, 'Dev. Std': std_dev, 'Asimmetria': skew, 'Curtosi': kurt}; row, col = 0, 0
             for key, val in indici.items():
                 text = f"{key}\n{val:.3f}" if isinstance(val, (int, float)) else f"{key}\n{val}"; customtkinter.CTkLabel(frame_indici, text=text, justify="center").grid(row=row, column=col, padx=5, pady=5, sticky="ew"); col = (col + 1) % 4
                 if col == 0: row += 1
-            customtkinter.CTkLabel(frame_indici, text=f"Intervallo di Chebyshev (k=2): [{cheb_low:.3f}, {cheb_high:.3f}] (contiene almeno il 75% dei dati)", justify='center').grid(row=row+1, column=0, columnspan=4, pady=10)
-        else:
-            if pd.api.types.is_datetime64_any_dtype(data) or (len(data) > 0 and isinstance(data.iloc[0], date)):
-                data = data.astype(str)
-            
-            freq_data = data.value_counts()
-            
-            limite_categorie = 10 if tipo_grafico == 'Torta' else 20
 
+        df_for_table = None; is_aggregated = False
+        if tipo_grafico in ['Barre', 'Torta', 'Linee', 'Aste']:
+            freq_data = data.value_counts()
+            limite_categorie = 10 if tipo_grafico == 'Torta' else 20
             if len(freq_data) > limite_categorie:
-                is_aggregated = True
-                top_data = freq_data.head(limite_categorie - 1)
-                other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
-                freq_data = pd.concat([top_data, pd.Series({'Altro': other_sum})])
+                is_aggregated = True; top_data = freq_data.head(limite_categorie - 1); other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
+                other_series = pd.Series({'Altro': other_sum})
+                freq_data = pd.concat([top_data, other_series])
+            df_for_table = freq_data.to_frame(name="Frequenza")
+            df_for_table.index.name = "Categoria"
+        else: 
+            df_for_table = data.to_frame(name=variable).head(100)
+        
+        self._crea_tabella_treeview(frame_tabella, df_for_table.reset_index(), f"Dati per Grafico '{tipo_grafico}'")
 
         fig, ax = plt.subplots(figsize=(8, 5))
         try:
             plot_title = f"{tipo_grafico} di '{variable}'"
-            
+            if is_aggregated: plot_title += f" (Top {limite_categorie-1} + Altro)"
+
             if tipo_grafico == 'Istogramma':
                 if is_numeric: ax.hist(data, bins='auto', edgecolor='black'); ax.set_xlabel(variable); ax.set_ylabel('Frequenza')
-                else: ax.text(0.5, 0.5, 'Istogramma non applicabile a dati categorici', ha='center')
+                else: ax.text(0.5, 0.5, 'Istogramma non applicabile a dati non numerici', ha='center')
             elif tipo_grafico == 'Box Plot':
                 if is_numeric: ax.boxplot(data, vert=False, showfliers=True); ax.set_yticklabels([variable]); ax.set_xlabel('Valore')
-                else: ax.text(0.5, 0.5, 'Box Plot non applicabile a dati categorici', ha='center')
+                else: ax.text(0.5, 0.5, 'Box Plot non applicabile a dati non numerici', ha='center')
             else:
-                # Se freq_data non esiste (perché i dati sono numerici), lo creiamo ora.
-                if 'freq_data' not in locals():
-                    freq_data = data.value_counts()
-                    limite_categorie = 10 if tipo_grafico == 'Torta' else 20
-                    if len(freq_data) > limite_categorie:
-                        is_aggregated = True
-                        top_data = freq_data.head(limite_categorie - 1)
-                        other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
-                        freq_data = pd.concat([top_data, pd.Series({'Altro': other_sum})])
+                plot_data = freq_data
+                if is_numeric and tipo_grafico != 'Torta':
+                    plot_data = plot_data.sort_index()
 
-                if is_aggregated: plot_title += f" (Top {limite_categorie-1} + Altro)"
-                
-                # Per grafici a linee con indici non numerici (es. date come stringhe), ordiniamo
-                plot_data = freq_data.sort_index() if tipo_grafico == 'Linee' else freq_data
-                
                 ax.set_xlabel('Categorie'); ax.set_ylabel('Frequenza')
                 if tipo_grafico == 'Barre': plot_data.plot(kind='bar', ax=ax)
                 elif tipo_grafico == 'Linee': plot_data.plot(kind='line', ax=ax, marker='o')
                 elif tipo_grafico == 'Torta': 
-                    plot_data.plot(kind='pie', ax=ax, autopct=lambda p: f'{p:.1f}%' if p > 3 else '', textprops={'fontsize': 10})
+                    ax.pie(plot_data, labels=plot_data.index, autopct=lambda p: f'{p:.1f}%' if p > 3 else '', textprops={'fontsize': 10})
                     ax.set_ylabel('')
                 elif tipo_grafico == 'Aste': ax.stem(plot_data.index.astype(str), plot_data.values)
                 ax.tick_params(axis='x', rotation=45, labelsize=9)
@@ -531,15 +697,19 @@ class App(customtkinter.CTk):
             if len(df_subset) < 2:
                 customtkinter.CTkLabel(self.frame_risultati_bivariata, text="Dati insufficienti per l'analisi.").pack(); return
 
+            self.frame_risultati_bivariata.grid_rowconfigure(2, weight=1) 
+            self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1)
+            
             x_data, y_data = df_subset[var_x], df_subset[var_y]
 
-            info = ("L'analisi bivariata esplora la relazione tra **due variabili numeriche** contemporaneamente. Si compone di due parti:\n\n"
-                    "1.  **Correlazione**: Misura la **forza** e la **direzione** di un legame lineare tra le due variabili. Il coefficiente 'r' varia da -1 (relazione inversa perfetta) a +1 (relazione diretta perfetta), con 0 che indica assenza di legame lineare.\n\n"
-                    "2.  **Regressione Lineare Semplice**: Fornisce un'equazione matematica (una retta) che descrive la relazione e permette di **prevedere** il valore di una variabile (Y) conoscendo il valore dell'altra (X).")
-            guida = ("- **Punti Blu (Dati Osservati)**: Ogni punto rappresenta un singolo incidente, con le sue coordinate (X, Y).\n"
-                     "- **Forma della Nuvola**: Se i punti tendono a salire da sinistra a destra, la correlazione è positiva. Se tendono a scendere, è negativa. Se sono sparsi casualmente, la correlazione è debole o nulla.\n"
-                     "- **Retta Rossa (di Regressione)**: È la linea che 'meglio' approssima la nuvola di punti. La sua pendenza indica di quanto cambia mediamente Y per un aumento unitario di X.\n"
-                     "- **Dispersione dei Punti**: Più i punti sono vicini alla retta, più forte è la relazione e più affidabili sono le previsioni.")
+            info = ("L'analisi bivariata esamina la relazione tra due variabili numeriche. Gli strumenti principali sono il coefficiente di correlazione, che misura la forza e la direzione del legame lineare, e il modello di regressione lineare, che descrive tale legame tramite un'equazione matematica.")
+            guida = ("- **Diagramma a Dispersione (Scatter Plot):** Ogni punto rappresenta un'osservazione (un incidente). La disposizione dei punti suggerisce visivamente la natura della relazione (lineare, non lineare, assente).\n\n"
+                     "- **Coefficiente di Correlazione (r):** Varia da -1 a +1.\n"
+                     "  - Vicino a +1: Forte correlazione lineare positiva (al crescere di X, cresce Y).\n"
+                     "  - Vicino a -1: Forte correlazione lineare negativa (al crescere di X, decresce Y).\n"
+                     "  - Vicino a 0: Scarsa o nulla correlazione lineare.\n"
+                     "  Il **p-value** associato testa se la correlazione osservata è statisticamente significativa o se potrebbe essere dovuta al caso.\n\n"
+                     "- **Retta di Regressione:** È la linea che 'meglio si adatta' ai dati, minimizzando la distanza verticale totale dei punti dalla linea stessa. La sua equazione (y = mx + q) può essere usata per prevedere il valore di Y dato un valore di X.")
             self._crea_titolo_sezione(self.frame_risultati_bivariata, 0, "Analisi Correlazione e Regressione", info, testo_guida=guida)
 
             if var_x == var_y:
@@ -549,31 +719,21 @@ class App(customtkinter.CTk):
                 slope, intercept, correlation, p_value = regression.slope, regression.intercept, regression.rvalue, regression.pvalue
 
             frame_testuali = customtkinter.CTkFrame(self.frame_risultati_bivariata)
-            frame_testuali.grid(row=1, column=0, sticky="ew", padx=10)
+            frame_testuali.grid(row=1, column=0, sticky="ew", padx=10, pady=5)
             risultati = (f"Coefficiente di Correlazione (r): {correlation:.4f} (p-value: {p_value:.3g})\n"
-                         f"Equazione Retta di Regressione: y = {slope:.4f}x + {intercept:.4f}")
-
+                         f"Equazione Retta di Regressione: Y = {slope:.4f}X + {intercept:.4f}")
             customtkinter.CTkLabel(frame_testuali, text=risultati, justify="left").pack(pady=5)
 
             frame_grafico = customtkinter.CTkFrame(self.frame_risultati_bivariata)
             frame_grafico.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-            self.frame_risultati_bivariata.grid_rowconfigure(2, weight=1)
 
-            fig, ax = plt.subplots(figsize=(8, 6))
-
-            # ==== BLOCCO MODIFICATO: GESTIONE DINAMICA DELLO SCATTER PLOT ====
+            # MODIFICA: Rimozione di figsize per permettere al grafico di adattarsi al container
+            fig, ax = plt.subplots()
             num_points = len(x_data)
-            # Adatta la dimensione e la trasparenza in base al numero di punti
-            if num_points > 100:
-                point_size = max(2, 40 / np.log10(num_points)) # Diminuisce logaritmicamente
-                alpha_value = max(0.1, 0.7 / np.log10(num_points)) # Diminuisce logaritmicamente
-            else:
-                point_size = 20
-                alpha_value = 0.6
+            point_size = max(2, 40 / np.log10(num_points)) if num_points > 100 else 20
+            alpha_value = max(0.1, 0.7 / np.log10(num_points)) if num_points > 100 else 0.6
             
             ax.scatter(x_data, y_data, alpha=alpha_value, s=point_size, label='Dati Osservati')
-            # =================================================================
-
             line_x = np.array(ax.get_xlim()); line_y = slope * line_x + intercept
             ax.plot(line_x, line_y, color='red', label='Retta di Regressione')
             ax.set_title(f'Diagramma a Dispersione: {var_x} vs {var_y}'); ax.set_xlabel(var_x); ax.set_ylabel(var_y)
