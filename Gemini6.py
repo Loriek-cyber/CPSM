@@ -1,5 +1,5 @@
 # ==================================================================================
-# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v6.1 - Correzione Bug Layout)
+# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v6.2 - Correzioni UI/UX)
 # ==================================================================================
 import tkinter
 from tkinter import filedialog, ttk
@@ -188,13 +188,12 @@ class App(customtkinter.CTk):
 
 
     def on_tab_change(self, *args):
-        # Le analisi ora vengono eseguite solo tramite i rispettivi bottoni
-        # per evitare esecuzioni non necessarie al cambio di scheda.
+        # MODIFICA: Aggiornato commento. Le analisi ora sono automatiche alla selezione della variabile.
+        # Le analisi vengono eseguite automaticamente alla selezione di una variabile nei rispettivi
+        # menu a tendina, non al cambio di scheda, per evitare calcoli non necessari.
         pass
 
-    # BUGFIX: La funzione ora gestisce sia il layout .grid() che .pack()
     def _crea_titolo_sezione(self, parent, testo_titolo, testo_info, testo_guida=None, row=None, columnspan=1):
-        # Se 'row' è specificato, usa .grid(). Altrimenti, usa .pack().
         if row is not None:
             frame_titolo = customtkinter.CTkFrame(parent, fg_color="transparent")
             frame_titolo.grid(row=row, column=0, columnspan=columnspan, sticky="ew", pady=(15, 5))
@@ -202,7 +201,6 @@ class App(customtkinter.CTk):
             frame_titolo = customtkinter.CTkFrame(parent)
             frame_titolo.pack(fill="x", expand=True, padx=10, pady=(10,0))
         
-        # I figli di frame_titolo possono usare .pack() perché hanno un nuovo parente.
         inner_frame = customtkinter.CTkFrame(frame_titolo, fg_color="transparent")
         inner_frame.pack(pady=5)
         
@@ -297,11 +295,13 @@ class App(customtkinter.CTk):
         self.frame_controlli_calcolo.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
         customtkinter.CTkLabel(self.frame_controlli_calcolo, text="Seleziona una variabile numerica:").pack(side="left", padx=(10,5))
-        self.selettore_var_calcolo = customtkinter.CTkComboBox(self.frame_controlli_calcolo, values=[])
+        # MODIFICA: Aggiunto 'command' per eseguire l'analisi automaticamente.
+        self.selettore_var_calcolo = customtkinter.CTkComboBox(self.frame_controlli_calcolo, values=[], command=self.esegui_calcolo_dati)
         self.selettore_var_calcolo.pack(side="left", padx=5, expand=True, fill="x")
         
-        self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="Esegui Calcolo su Popolazione", command=self.esegui_calcolo_dati)
-        self.bottone_refresh_calcolo.pack(side="left", padx=(10, 10))
+        # MODIFICA: Il bottone non è più necessario perché l'analisi è automatica.
+        # self.bottone_refresh_calcolo = customtkinter.CTkButton(self.frame_controlli_calcolo, text="Esegui Calcolo su Popolazione", command=self.esegui_calcolo_dati)
+        # self.bottone_refresh_calcolo.pack(side="left", padx=(10, 10))
 
         self.frame_risultati_calcolo = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Calcoli Statistici sulla Popolazione")
         self.frame_risultati_calcolo.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
@@ -351,11 +351,13 @@ class App(customtkinter.CTk):
         self.selettore_andamento.set('Andamento Generale')
 
         self.label_tipo_grafico = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Tipo Grafico:")
-        self.selettore_grafico_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_descrittiva, values=['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste'], command=self.esegui_analisi_descrittiva)
+        # MODIFICA: Corretto il 'parent' del ComboBox per posizionarlo correttamente nel layout.
+        self.selettore_grafico_descrittiva = customtkinter.CTkComboBox(self.frame_controlli_contestuali, values=['Istogramma', 'Box Plot', 'Barre', 'Torta', 'Linee', 'Aste'], command=self.esegui_analisi_descrittiva)
         self.selettore_grafico_descrittiva.set('Barre')
-
-        self.bottone_refresh_descrittiva = customtkinter.CTkButton(self.frame_controlli_descrittiva, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
-        self.bottone_refresh_descrittiva.pack(side="left", padx=(10, 10))
+        
+        # MODIFICA: Il bottone di refresh è stato rimosso perché l'analisi è automatica.
+        # self.bottone_refresh_descrittiva = customtkinter.CTkButton(self.frame_controlli_descrittiva, text="🔄", command=self.esegui_analisi_descrittiva, width=35, height=35)
+        # self.bottone_refresh_descrittiva.pack(side="left", padx=(10, 10))
 
         self.frame_risultati_descrittiva = customtkinter.CTkScrollableFrame(tab, label_text="Risultati Analisi Descrittiva")
         self.frame_risultati_descrittiva.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_descrittiva.grid_columnconfigure(0, weight=1)
@@ -371,8 +373,9 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_controlli, text="Variabile Y:").grid(row=0, column=2, padx=(10,5), pady=5)
         self.selettore_var_biv_y = customtkinter.CTkComboBox(frame_controlli, values=[], command=self.esegui_analisi_bivariata)
         self.selettore_var_biv_y.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
-        self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
-        self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
+        # MODIFICA: Il bottone di refresh è stato rimosso.
+        # self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
+        # self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
         self.frame_risultati_bivariata = customtkinter.CTkFrame(tab)
         self.frame_risultati_bivariata.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1)
 
@@ -383,10 +386,7 @@ class App(customtkinter.CTk):
         scroll_frame = customtkinter.CTkScrollableFrame(tab)
         scroll_frame.grid(row=0, column=0, sticky="nsew")
         scroll_frame.grid_columnconfigure(0, weight=1)
-
-        # BUGFIX: La struttura di ogni sezione è basata su .grid() per risolvere il conflitto di layout
         
-        # --- Sezione Poisson ---
         info_poisson = ("Il Modello di Poisson è un modello di probabilità discreta utilizzato per descrivere il numero di eventi che si verificano in un intervallo fisso di tempo o spazio, data una frequenza media nota e costante (λ, lambda) e assumendo che gli eventi siano indipendenti l'uno dall'altro.\n\n"
                         "**Applicazione Pratica:**\n"
                         "Questo strumento permette di stimare la probabilità di osservare un numero esatto 'k' di incidenti (es. 0, 1, 2...) in un determinato periodo (es. un giorno) e in una specifica area (es. una provincia), basandosi sulla media storica degli incidenti per quella stessa area e periodo. È fondamentale per la valutazione del rischio e l'allocazione predittiva delle risorse.")
@@ -409,7 +409,6 @@ class App(customtkinter.CTk):
         self.risultato_poisson_textbox.grid(row=4, column=1, columnspan=2, padx=10, pady=10, sticky="ew")
         self.risultato_poisson_textbox.configure(state="disabled")
 
-        # --- Sezione T-Test ---
         info_ttest = ("Il Test T per Campioni Indipendenti è un test di ipotesi inferenziale utilizzato per determinare se esiste una differenza statisticamente significativa tra le medie di due gruppi indipendenti e non correlati.\n\n"
                       "**Ipotesi del Test:**\n"
                       "1. **Ipotesi Nulla (H₀):** Non c'è differenza tra le medie dei due gruppi (μ₁ = μ₂). La differenza osservata è dovuta puramente al caso.\n"
@@ -427,7 +426,6 @@ class App(customtkinter.CTk):
         self.risultato_ttest_textbox.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
         self.risultato_ttest_textbox.configure(state="disabled")
 
-        # --- Sezione Intervallo di Confidenza ---
         info_ci = ("Un Intervallo di Confidenza (IC) è un range di valori, calcolato a partire da dati campionari, che si stima possa contenere il vero valore di un parametro della popolazione (es. la media reale, μ) con un determinato livello di fiducia.\n\n"
                    "**Cosa significa 'Fiducia al 95%'?**\n"
                    "Non significa che c'è una probabilità del 95% che il vero valore della media cada in *questo specifico* intervallo. Significa che, se ripetessimo l'esperimento di campionamento molte volte, il 95% degli intervalli di confidenza così calcolati conterrebbe il vero parametro della popolazione.\n\n"
@@ -500,8 +498,7 @@ class App(customtkinter.CTk):
             customtkinter.CTkLabel(self.frame_risultati_campionatura, text=f"Errore: La dimensione del campione ({n}) non può superare il numero di dati disponibili ({len(data)}).", text_color="orange").pack(pady=20)
             return
         
-        campione = data.sample(n=n, random_state=None) # random_state=None per un campione diverso ogni volta
-
+        campione = data.sample(n=n, random_state=None) 
         title = f"Analisi su un Campione Casuale (n={n})"
         info = ("Questa sezione esegue un'analisi statistica su un **campione casuale** di dimensione 'n' estratto dalla popolazione dei dati. I valori calcolati (media campionaria, varianza campionaria, ecc.) sono **stime** (o statistiche) dei veri parametri della popolazione. L'obiettivo è fare **inferenza**, ovvero dedurre le caratteristiche della popolazione partendo da un suo sottoinsieme.")
         guida = ("**Interpretazione:**\nI risultati di un campione sono soggetti a **variabilità campionaria**: ogni estrazione produrrà risultati leggermente diversi. Questi valori sono stime dei parametri della popolazione.\n\n"
@@ -511,18 +508,12 @@ class App(customtkinter.CTk):
         self._esegui_analisi_numerica_dettagliata(self.frame_risultati_campionatura, campione, variable, title, info, guida)
 
     def _esegui_analisi_numerica_dettagliata(self, container, data_series, variable_name, title, info_text, guide_text):
-        """
-        Funzione refactored che esegue l'analisi numerica e costruisce l'UI.
-        Può essere usata sia per la popolazione totale sia per un campione.
-        """
         self._crea_titolo_sezione(container, title, info_text, guide_text)
         
-        # --- Sezione Indici ---
         frame_indici_main = customtkinter.CTkFrame(container, border_width=1)
         frame_indici_main.pack(fill="x", expand=True, padx=10, pady=10)
         frame_indici_main.grid_columnconfigure((0, 1, 2), weight=1)
         
-        # 1. Indici di Posizione
         frame_pos = customtkinter.CTkFrame(frame_indici_main)
         frame_pos.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_pos, text="Indici di Posizione", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
@@ -531,7 +522,6 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_pos, text=f"Mediana: {median:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_pos, text=f"Moda: {mode_val}").pack(anchor="w", padx=10, pady=(0,5))
 
-        # 2. Indici di Variabilità
         frame_var = customtkinter.CTkFrame(frame_indici_main)
         frame_var.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_var, text="Indici di Variabilità", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
@@ -544,7 +534,6 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_var, text=f"Range: {range_val:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_var, text=f"Coeff. Variazione: {cv:.4f}").pack(anchor="w", padx=10, pady=(0,5))
 
-        # 3. Indici di Forma, Quartili e Intervalli
         frame_form = customtkinter.CTkFrame(frame_indici_main)
         frame_form.grid(row=0, column=2, padx=5, pady=5, sticky="nsew")
         customtkinter.CTkLabel(frame_form, text="Forma e Quartili", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
@@ -556,15 +545,12 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_form, text=f"Q1: {q1:.4f} | Q3: {q3:.4f} | IQR: {iqr:.4f}").pack(anchor="w", padx=10, pady=(10,0))
         customtkinter.CTkLabel(frame_form, text=f"Interv. Chebyshev (k=2): [{cheb_low:.2f}, {cheb_high:.2f}]", font=customtkinter.CTkFont(size=11)).pack(anchor="w", padx=10, pady=(5,5))
 
-        # --- Sezione Tabella Frequenze ---
         num_unique = data_series.nunique()
         if num_unique > 25 and pd.api.types.is_float_dtype(data_series):
-            # Binning per dati continui
             bins = min(num_unique, 15)
             freq_table = pd.cut(data_series, bins=bins).value_counts().sort_index().to_frame(name='Frequenza Assoluta')
             freq_table.index = freq_table.index.astype(str)
         else:
-            # Dati discreti o con pochi valori
             freq_table = data_series.value_counts().sort_index().to_frame(name='Frequenza Assoluta')
         
         freq_table['Frequenza Relativa'] = freq_table['Frequenza Assoluta'] / len(data_series)
@@ -573,12 +559,10 @@ class App(customtkinter.CTk):
         freq_table.index.name = "Classe/Valore"
         self._crea_tabella_treeview(container, freq_table.reset_index(), "Tabella delle Frequenze")
         
-        # --- Sezione Grafici ---
         frame_grafici = customtkinter.CTkFrame(container, fg_color="transparent")
         frame_grafici.pack(fill="x", expand=True, padx=5, pady=5)
         frame_grafici.grid_columnconfigure((0, 1), weight=1)
 
-        # 1. Istogramma
         frame_hist = customtkinter.CTkFrame(frame_grafici)
         frame_hist.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         fig_hist, ax_hist = plt.subplots(figsize=(6, 4))
@@ -593,7 +577,6 @@ class App(customtkinter.CTk):
         self.matplotlib_widgets.append(canvas_hist)
         plt.close(fig_hist)
 
-        # 2. Box Plot
         frame_box = customtkinter.CTkFrame(frame_grafici)
         frame_box.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
         fig_box, ax_box = plt.subplots(figsize=(6, 4))
@@ -614,6 +597,8 @@ class App(customtkinter.CTk):
         variable = self.selettore_var_descrittiva.get()
         if not variable: return
 
+        # MODIFICA: La logica di pack/pack_forget ora gestisce la visibilità
+        # dei controlli contestuali nel modo corretto e ordinato.
         if variable == 'Data_Ora_Incidente':
             self.label_andamento.pack(side="left", padx=(20,5))
             self.selettore_andamento.pack(side="left", padx=5)
@@ -904,7 +889,7 @@ class App(customtkinter.CTk):
         if len(data_diurno) < 2 or len(data_notturno) < 2:
             risultato = "Dati insufficienti: necessari almeno 2 campioni per gruppo (diurno e notturno)."
         else:
-            ttest_res = stats.ttest_ind(data_diurno, data_notturno, equal_var=False) # Welch's t-test
+            ttest_res = stats.ttest_ind(data_diurno, data_notturno, equal_var=False) 
             risultato = ("CONFRONTO NUMERO MEDIO FERITI: DIURNO vs. NOTTURNO\n"
                          "--------------------------------------------------\n"
                          f"Gruppo Diurno (7-19), n={len(data_diurno)}: Media Feriti = {data_diurno.mean():.3f}\n"
