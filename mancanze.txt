@@ -1,0 +1,14 @@
+- Calcolo degli indici di posizione:
+    - Media campionaria
+    - Mediana campionaria
+    - Moda campionaria
+- Calcolo degli indici di variabilità:
+    - Varianza campionaria
+    - Deviazione standard campionaria
+    - Scarto medio assoluto
+    - Ampiezza del campo di variazione
+    - Coefficiente di variazione
+Fatto ma Dobbiamo fare una sezione apposta:
+    - Calcolo degli indici di forma:
+        - Indice di asimmetria
+        - Indice di curtosi
