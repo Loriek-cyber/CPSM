@@ -13,7 +13,7 @@ from sklearn.linear_model import LinearRegression
 import warnings
 warnings.filterwarnings('ignore')
 
-ctk.set_appearance_mode("light")
+ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 class ExcelTableApp(ctk.CTk):
@@ -55,6 +55,7 @@ class ExcelTableApp(ctk.CTk):
         self.setup_visual_tab()
         self.setup_stats_tab()
         self.setup_bivariate_tab()
+        
 
     def setup_data_tab(self):
         # Frame per i pulsanti
