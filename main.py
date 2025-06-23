@@ -1,371 +1,958 @@
-import tkinter
 import customtkinter as ctk
-from tkinter import filedialog, messagebox
+import tkinter as tk
+from tkinter import filedialog, ttk, messagebox
 import pandas as pd
-import numpy as np
+from tksheet import Sheet
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import seaborn as sns
-from scipy.stats import linregress
-import os
+from datetime import datetime
+import numpy as np
+from scipy import stats
+from sklearn.linear_model import LinearRegression
+import warnings
+warnings.filterwarnings('ignore')
 
-# --- CLASSE BACKEND PER L'ANALISI (Leggermente modificata per il GUI) ---
+ctk.set_appearance_mode("light")
+ctk.set_default_color_theme("blue")
 
-class AnalisiDatiIncidenti:
-    """
-    Classe di backend per eseguire le analisi statistiche.
-    Restituisce dati e stringhe formattate invece di stampare a console.
-    """
-    def __init__(self, dataframe):
-        self.df = dataframe
-        # Prepara le colonne numeriche e categoriali
-        self.colonne_numeriche = self.df.select_dtypes(include=np.number).columns.tolist()
-        self.colonne_categoriali = self.df.select_dtypes(include=['object', 'category']).columns.tolist()
-
-    def calcola_frequenze(self, colonna):
-        if colonna not in self.colonne_categoriali:
-            return f"Errore: La colonna '{colonna}' non è di tipo categoriale."
-        
-        freq_assoluta = self.df[colonna].value_counts()
-        freq_relativa = self.df[colonna].value_counts(normalize=True)
-        freq_cum_assoluta = freq_assoluta.cumsum()
-        freq_cum_relativa = freq_relativa.cumsum()
-
-        tabella = pd.DataFrame({
-            'Frequenza Assoluta': freq_assoluta,
-            'Frequenza Relativa (%)': freq_relativa * 100,
-            'Cumulata Assoluta': freq_cum_assoluta,
-            'Cumulata Relativa (%)': freq_cum_relativa * 100
-        })
-        return f"--- Tabella di Frequenza per '{colonna}' ---\n\n" + tabella.round(2).to_string()
-
-    def calcola_indici_univariati(self, colonna):
-        if colonna not in self.colonne_numeriche:
-            return f"Errore: La colonna '{colonna}' non è di tipo numerico."
-        
-        data = self.df[colonna].dropna()
-        if data.empty:
-            return f"La colonna '{colonna}' non contiene dati validi."
-        
-        media = data.mean()
-        mediana = data.median()
-        moda = data.mode().to_list()
-        varianza = data.var(ddof=1)
-        dev_std = data.std(ddof=1)
-        campo_variazione = data.max() - data.min()
-        coeff_variazione = (dev_std / media) if media != 0 else float('inf')
-        asimmetria = data.skew()
-        curtosi = data.kurt()
-        q1, q3 = data.quantile(0.25), data.quantile(0.75)
-        
-        output = f"--- Indici Statistici per '{colonna}' ---\n\n"
-        output += f">> Indici di Posizione:\n"
-        output += f"   - Media Campionaria: {media:.4f}\n"
-        output += f"   - Mediana: {mediana:.4f}\n"
-        output += f"   - Moda: {moda}\n\n"
-        output += f">> Indici di Variabilità:\n"
-        output += f"   - Varianza Campionaria: {varianza:.4f}\n"
-        output += f"   - Deviazione Standard: {dev_std:.4f}\n"
-        output += f"   - Campo di Variazione: {campo_variazione:.4f}\n"
-        output += f"   - Coeff. di Variazione: {coeff_variazione:.4f}\n\n"
-        output += f">> Indici di Forma:\n"
-        output += f"   - Asimmetria: {asimmetria:.4f}\n"
-        output += f"   - Curtosi: {curtosi:.4f}\n\n"
-        output += f">> Quartili e Intervalli:\n"
-        output += f"   - Q1 (25° percentile): {q1:.2f}\n"
-        output += f"   - Q3 (75° percentile): {q3:.2f}\n"
-        output += f"   - Intervallo Interquartile (IQR): {q3-q1:.2f}\n"
-        return output
-
-    def analisi_bivariata(self, var1, var2):
-        if var1 not in self.colonne_numeriche or var2 not in self.colonne_numeriche:
-            return "Errore: Entrambe le colonne devono essere numeriche."
-        
-        correlazione = self.df[var1].corr(self.df[var2])
-        slope, intercept, r_value, p_value, std_err = linregress(self.df[var1], self.df[var2])
-        
-        output = f"--- Analisi Bivariata tra '{var1}' e '{var2}' ---\n\n"
-        output += f"Coefficiente di Correlazione di Pearson (r): {correlazione:.4f}\n"
-        output += "\nRetta di Regressione Stimata:\n"
-        output += f"   - Equazione: {var2} = {slope:.4f} * {var1} + {intercept:.4f}\n"
-        return output
-
-    def plot_categoriali(self):
-        fig, axes = plt.subplots(1, 2, figsize=(18, 7))
-        fig.suptitle('Analisi Variabili Categoriali', fontsize=16)
-        
-        # Grafico a Barre per Provincia
-        sns.countplot(y=self.df['Provincia'], ax=axes[0], order=self.df['Provincia'].value_counts().index, palette='crest')
-        axes[0].set_title('Numero di Incidenti per Provincia')
-        
-        # Grafico a Torta per Tipo Strada
-        tipo_strada_counts = self.df['Tipo_Strada'].value_counts()
-        axes[1].pie(tipo_strada_counts, labels=tipo_strada_counts.index, autopct='%1.1f%%', startangle=140, colors=sns.color_palette('magma'))
-        axes[1].set_title('Distribuzione per Tipo di Strada')
-
-        plt.tight_layout(rect=[0, 0, 1, 0.96])
-        plt.show()
-
-    def plot_numerici(self, colonna):
-        if colonna not in self.colonne_numeriche:
-            messagebox.showerror("Errore", f"La colonna '{colonna}' non è numerica.")
-            return
-
-        fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-        fig.suptitle(f'Analisi della variabile: {colonna}', fontsize=16)
-        
-        sns.histplot(self.df[colonna], kde=True, ax=axes[0], bins=20)
-        axes[0].set_title(f'Istogramma di {colonna}')
-        
-        sns.boxplot(x=self.df[colonna], ax=axes[1])
-        axes[1].set_title(f'Box Plot di {colonna}')
-
-        plt.tight_layout(rect=[0, 0, 1, 0.95])
-        plt.show()
-
-    def plot_bivariato(self, var1, var2):
-        if var1 not in self.colonne_numeriche or var2 not in self.colonne_numeriche:
-            messagebox.showerror("Errore", "Entrambe le variabili devono essere numeriche.")
-            return
-
-        plt.figure(figsize=(10, 7))
-        sns.regplot(x=var1, y=var2, data=self.df, scatter_kws={'alpha':0.5}, line_kws={'color': 'red'})
-        plt.title(f'Diagramma a Dispersione e Regressione: {var1} vs {var2}', fontsize=14)
-        plt.show()
-
-# --- CLASSE FRONTEND (INTERFACCIA GRAFICA) ---
-
-class App(ctk.CTk):
+class ExcelTableApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-
-        self.title("Analizzatore Statistico di Incidenti Stradali")
-        self.geometry("1000x700")
-        ctk.set_appearance_mode("Dark")
-
-        self.df = None
-        self.analyzer = None
-
-        # Crea la struttura a schede (tabs)
-        self.tab_view = ctk.CTkTabview(self)
-        self.tab_view.pack(expand=True, fill="both", padx=10, pady=10)
-
-        # Aggiungi le schede
-        self.tab_data = self.tab_view.add("1. Carica/Genera Dati")
-        self.tab_uni = self.tab_view.add("2. Analisi Univariata")
-        self.tab_bi = self.tab_view.add("3. Analisi Bivariata")
-        self.tab_plot = self.tab_view.add("4. Visualizzazione Grafica")
+        self.title("Analisi Statistiche Dati Incidenti Stradali")
+        self.geometry("1400x800")
         
-        self.crea_tab_data()
-        self.crea_tab_uni()
-        self.crea_tab_bi()
-        self.crea_tab_plot()
-
-    def crea_tab_data(self):
-        # Frame per generazione
-        gen_frame = ctk.CTkFrame(self.tab_data)
-        gen_frame.pack(pady=10, padx=10, fill="x")
-        ctk.CTkLabel(gen_frame, text="Numero righe da generare:").pack(side="left", padx=5)
-        self.entry_righe = ctk.CTkEntry(gen_frame, width=80)
-        self.entry_righe.insert(0, "500")
-        self.entry_righe.pack(side="left", padx=5)
-        ctk.CTkButton(gen_frame, text="Genera e Carica Dati", command=self.generate_and_load_data).pack(side="left", padx=5)
-
-        # Frame per caricamento
-        load_frame = ctk.CTkFrame(self.tab_data)
-        load_frame.pack(pady=10, padx=10, fill="x")
-        ctk.CTkButton(load_frame, text="Carica File CSV Esistente", command=self.load_existing_data).pack(side="left", padx=5)
-        self.status_label = ctk.CTkLabel(load_frame, text="Nessun dato caricato.", text_color="yellow")
-        self.status_label.pack(side="left", padx=10)
-
-        # Frame per anteprima dati
-        preview_frame = ctk.CTkFrame(self.tab_data)
-        preview_frame.pack(pady=10, padx=10, expand=True, fill="both")
-        ctk.CTkLabel(preview_frame, text="Anteprima Dati:").pack(anchor="w")
-        self.preview_textbox = ctk.CTkTextbox(preview_frame, state="disabled", font=("Courier New", 10))
-        self.preview_textbox.pack(expand=True, fill="both", pady=5)
+        # DataFrame per memorizzare i dati
+        self.df = pd.DataFrame()
         
-    def crea_tab_uni(self):
-        # Frame controlli
-        control_frame = ctk.CTkFrame(self.tab_uni)
-        control_frame.pack(pady=10, padx=10, fill="x")
-        ctk.CTkLabel(control_frame, text="Seleziona Colonna:").pack(side="left", padx=5)
-        self.uni_col_menu = ctk.CTkOptionMenu(control_frame, values=["...caricare i dati..."])
-        self.uni_col_menu.pack(side="left", padx=5)
-        ctk.CTkButton(control_frame, text="Calcola Frequenze (per categorie)", command=self.run_frequency_analysis).pack(side="left", padx=10)
-        ctk.CTkButton(control_frame, text="Calcola Indici Statistici (per numeri)", command=self.run_statistical_indices).pack(side="left", padx=10)
-        
-        # Textbox risultati
-        self.uni_results_textbox = ctk.CTkTextbox(self.tab_uni, state="disabled", font=("Courier New", 11))
-        self.uni_results_textbox.pack(pady=10, padx=10, expand=True, fill="both")
+        # Colonne attese per i dati degli incidenti
+        self.expected_columns = [
+            "Data_Ora_Incidente", "Provincia", "Giorno_Settimana", 
+            "Tipo_Strada", "Numero_Feriti", "Numero_Morti", "Velocita_Media_Stimata"
+        ]
 
-    def crea_tab_bi(self):
-        # Frame controlli
-        control_frame = ctk.CTkFrame(self.tab_bi)
-        control_frame.pack(pady=10, padx=10, fill="x")
-        
-        ctk.CTkLabel(control_frame, text="Variabile 1 (X):").pack(side="left", padx=(5,0))
-        self.bi_col1_menu = ctk.CTkOptionMenu(control_frame, values=["..."])
-        self.bi_col1_menu.pack(side="left", padx=(0,15))
-        
-        ctk.CTkLabel(control_frame, text="Variabile 2 (Y):").pack(side="left", padx=(5,0))
-        self.bi_col2_menu = ctk.CTkOptionMenu(control_frame, values=["..."])
-        self.bi_col2_menu.pack(side="left", padx=(0,15))
-        
-        ctk.CTkButton(control_frame, text="Calcola Correlazione e Regressione", command=self.run_bivariate_analysis).pack(side="left", padx=10)
+        # Notebook for tabs
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(fill="both", expand=True, padx=10, pady=10)
 
-        # Textbox risultati
-        self.bi_results_textbox = ctk.CTkTextbox(self.tab_bi, state="disabled", font=("Courier New", 11))
-        self.bi_results_textbox.pack(pady=10, padx=10, expand=True, fill="both")
+        # Tab 1: Dati (table)
+        self.dati_frame = ctk.CTkFrame(self.notebook)
+        self.notebook.add(self.dati_frame, text="Dati")
 
-    def crea_tab_plot(self):
-        plot_frame = ctk.CTkFrame(self.tab_plot)
-        plot_frame.pack(pady=20, padx=20)
+        # Tab 2: Visualizzazione dei dati
+        self.visual_frame = ctk.CTkFrame(self.notebook)
+        self.notebook.add(self.visual_frame, text="Grafici")
+
+        # Tab 3: Analisi Statistiche
+        self.stats_frame = ctk.CTkFrame(self.notebook)
+        self.notebook.add(self.stats_frame, text="Analisi Statistiche")
+
+        # Tab 4: Analisi Bivariata
+        self.bivariate_frame = ctk.CTkFrame(self.notebook)
+        self.notebook.add(self.bivariate_frame, text="Analisi Bivariata")
+
+        self.setup_data_tab()
+        self.setup_visual_tab()
+        self.setup_stats_tab()
+        self.setup_bivariate_tab()
+
+    def setup_data_tab(self):
+        # Frame per i pulsanti
+        buttons_frame = ctk.CTkFrame(self.dati_frame)
+        buttons_frame.pack(fill="x", padx=10, pady=(10, 0))
+
+        # Pulsanti per operazioni sui dati
+        upload_btn = ctk.CTkButton(buttons_frame, text="Carica CSV", command=self.upload_csv)
+        upload_btn.pack(side="left", padx=(0, 10))
+
+        save_btn = ctk.CTkButton(buttons_frame, text="Salva CSV", command=self.save_csv)
+        save_btn.pack(side="left", padx=(0, 10))
+
+        add_row_btn = ctk.CTkButton(buttons_frame, text="Aggiungi Riga", command=self.add_row)
+        add_row_btn.pack(side="left", padx=(0, 10))
+
+        delete_row_btn = ctk.CTkButton(buttons_frame, text="Elimina Riga", command=self.delete_row)
+        delete_row_btn.pack(side="left", padx=(0, 10))
+
+        create_sample_btn = ctk.CTkButton(buttons_frame, text="Crea Dati Esempio", command=self.create_sample_data)
+        create_sample_btn.pack(side="left")
+
+        # Tabella modificabile
+        self.sheet = Sheet(
+            self.dati_frame, 
+            data=[[]], 
+            headers=self.expected_columns,
+            width=1300, 
+            height=500
+        )
         
-        ctk.CTkLabel(plot_frame, text="Genera Grafici (si apriranno in una nuova finestra)", font=("", 14, "bold")).pack(pady=10, padx=10)
-
-        ctk.CTkButton(plot_frame, text="Grafici Variabili Categoriali (Barre e Torta)", command=self.show_categorical_plots).pack(fill="x", pady=5)
-
-        # Frame per grafici numerici
-        num_plot_frame = ctk.CTkFrame(plot_frame)
-        num_plot_frame.pack(fill="x", pady=10)
-        ctk.CTkLabel(num_plot_frame, text="Seleziona variabile numerica:").pack(side="left", padx=5)
-        self.plot_num_menu = ctk.CTkOptionMenu(num_plot_frame, values=["..."])
-        self.plot_num_menu.pack(side="left", padx=5)
-        ctk.CTkButton(num_plot_frame, text="Mostra Istogramma e Box Plot", command=self.show_numerical_plots).pack(side="left", padx=5)
+        # Abilita tutte le funzionalità di modifica
+        self.sheet.enable_bindings([
+            "single_select", "row_select", "column_select", "drag_select",
+            "column_width_resize", "double_click_column_resize",
+            "row_height_resize", "column_height_resize",
+            "arrowkeys", "right_click_popup_menu", "rc_select",
+            "rc_insert_column", "rc_delete_column", "rc_insert_row", "rc_delete_row",
+            "copy", "cut", "paste", "delete", "undo", "edit_cell"
+        ])
         
+        self.sheet.pack(fill="both", expand=True, padx=10, pady=10)
+        self.sheet.bind("<<SheetModified>>", self.on_sheet_modified)
+
+    def setup_visual_tab(self):
+        # Frame per i controlli dei grafici
+        controls_frame = ctk.CTkFrame(self.visual_frame)
+        controls_frame.pack(fill="x", padx=10, pady=(10, 0))
+
+        # Pulsanti per diversi tipi di grafici
+        graph_buttons = [
+            ("Incidenti per Provincia", self.plot_incidents_by_province),
+            ("Incidenti per Giorno", self.plot_incidents_by_day),
+            ("Feriti vs Morti", self.plot_casualties),
+            ("Tipo Strada", self.plot_road_type),
+            ("Velocità Media", self.plot_speed_distribution),
+            ("Trend Temporale", self.plot_time_trend)
+        ]
+
+        for i, (text, command) in enumerate(graph_buttons):
+            btn = ctk.CTkButton(controls_frame, text=text, command=command, width=150)
+            btn.grid(row=i//3, column=i%3, padx=5, pady=5)
+
+        # Frame per i grafici
+        self.graph_frame = ctk.CTkFrame(self.visual_frame)
+        self.graph_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Label iniziale
+        self.no_data_label = ctk.CTkLabel(
+            self.graph_frame, 
+            text="Carica dei dati per visualizzare i grafici",
+            font=ctk.CTkFont(size=16)
+        )
+        self.no_data_label.pack(expand=True)
+
+    def setup_stats_tab(self):
+        # Frame principale diviso in due parti
+        main_frame = ctk.CTkFrame(self.stats_frame)
+        main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Frame di controllo
+        control_frame = ctk.CTkFrame(main_frame)
+        control_frame.pack(fill="x", padx=10, pady=(10, 0))
+
+        # Selezione variabile
+        ctk.CTkLabel(control_frame, text="Seleziona Variabile:", font=ctk.CTkFont(size=14)).pack(side="left", padx=(0, 10))
+        
+        self.stats_var = ctk.StringVar(value="Numero_Feriti")
+        self.stats_dropdown = ctk.CTkComboBox(
+            control_frame, 
+            values=["Numero_Feriti", "Numero_Morti", "Velocita_Media_Stimata"],
+            variable=self.stats_var,
+            width=200
+        )
+        self.stats_dropdown.pack(side="left", padx=(0, 10))
+
+        # Pulsanti per analisi
+        stats_buttons = [
+            ("Tabelle Frequenze", self.show_frequency_tables),
+            ("Indici Posizione", self.show_position_indices),
+            ("Indici Variabilità", self.show_variability_indices),
+            ("Indici Forma", self.show_shape_indices),
+            ("Box Plot", self.show_boxplot),
+            ("Quartili e Outlier", self.show_quartiles_analysis)
+        ]
+
+        for i, (text, command) in enumerate(stats_buttons):
+            btn = ctk.CTkButton(control_frame, text=text, command=command, width=130)
+            btn.pack(side="left", padx=2)
+
+        # Frame per risultati statistici
+        self.stats_result_frame = ctk.CTkFrame(main_frame)
+        self.stats_result_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Textbox per risultati
+        self.stats_textbox = ctk.CTkTextbox(self.stats_result_frame, font=ctk.CTkFont(family="Courier", size=12))
+        self.stats_textbox.pack(side="left", fill="both", expand=True, padx=(0, 5))
+
+        # Frame per grafici statistici
+        self.stats_graph_frame = ctk.CTkFrame(self.stats_result_frame)
+        self.stats_graph_frame.pack(side="right", fill="both", expand=True, padx=(5, 0))
+
+    def setup_bivariate_tab(self):
+        # Frame principale
+        main_frame = ctk.CTkFrame(self.bivariate_frame)
+        main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Frame di controllo
+        control_frame = ctk.CTkFrame(main_frame)
+        control_frame.pack(fill="x", padx=10, pady=(10, 0))
+
+        # Selezione variabili
+        ctk.CTkLabel(control_frame, text="Variabile X:", font=ctk.CTkFont(size=14)).pack(side="left", padx=(0, 5))
+        
+        self.bivar_x = ctk.StringVar(value="Numero_Feriti")
+        self.bivar_x_dropdown = ctk.CTkComboBox(
+            control_frame, 
+            values=["Numero_Feriti", "Numero_Morti", "Velocita_Media_Stimata"],
+            variable=self.bivar_x,
+            width=150
+        )
+        self.bivar_x_dropdown.pack(side="left", padx=(0, 20))
+
+        ctk.CTkLabel(control_frame, text="Variabile Y:", font=ctk.CTkFont(size=14)).pack(side="left", padx=(0, 5))
+        
+        self.bivar_y = ctk.StringVar(value="Velocita_Media_Stimata")
+        self.bivar_y_dropdown = ctk.CTkComboBox(
+            control_frame, 
+            values=["Numero_Feriti", "Numero_Morti", "Velocita_Media_Stimata"],
+            variable=self.bivar_y,
+            width=150
+        )
+        self.bivar_y_dropdown.pack(side="left", padx=(0, 20))
+
+        # Pulsanti analisi bivariata
+        bivar_buttons = [
+            ("Diagramma Dispersione", self.show_scatter_plot),
+            ("Correlazione", self.show_correlation),
+            ("Regressione Lineare", self.show_regression)
+        ]
+
+        for text, command in bivar_buttons:
+            btn = ctk.CTkButton(control_frame, text=text, command=command, width=150)
+            btn.pack(side="left", padx=5)
+
+        # Frame per risultati bivariati
+        self.bivar_result_frame = ctk.CTkFrame(main_frame)
+        self.bivar_result_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Textbox per risultati
+        self.bivar_textbox = ctk.CTkTextbox(self.bivar_result_frame, font=ctk.CTkFont(family="Courier", size=12))
+        self.bivar_textbox.pack(side="left", fill="both", expand=True, padx=(0, 5))
+
         # Frame per grafici bivariati
-        bi_plot_frame = ctk.CTkFrame(plot_frame)
-        bi_plot_frame.pack(fill="x", pady=10)
-        ctk.CTkLabel(bi_plot_frame, text="Var 1 (X):").pack(side="left", padx=5)
-        self.plot_bi1_menu = ctk.CTkOptionMenu(bi_plot_frame, values=["..."])
-        self.plot_bi1_menu.pack(side="left", padx=5)
-        ctk.CTkLabel(bi_plot_frame, text="Var 2 (Y):").pack(side="left", padx=5)
-        self.plot_bi2_menu = ctk.CTkOptionMenu(bi_plot_frame, values=["..."])
-        self.plot_bi2_menu.pack(side="left", padx=5)
-        ctk.CTkButton(bi_plot_frame, text="Mostra Grafico a Dispersione", command=self.show_bivariate_plot).pack(side="left", padx=5)
+        self.bivar_graph_frame = ctk.CTkFrame(self.bivar_result_frame)
+        self.bivar_graph_frame.pack(side="right", fill="both", expand=True, padx=(5, 0))
 
-    def _load_data_into_app(self, filepath):
+    def upload_csv(self):
+        file_path = filedialog.askopenfilename(
+            filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+        )
+        if file_path:
+            try:
+                self.df = pd.read_csv(file_path)
+                self.update_sheet_from_df()
+                messagebox.showinfo("Successo", "File CSV caricato correttamente!")
+            except Exception as e:
+                messagebox.showerror("Errore", f"Errore nel caricamento del file: {str(e)}")
+
+    def save_csv(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Nessun dato da salvare!")
+            return
+            
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".csv",
+            filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+        )
+        if file_path:
+            try:
+                self.df.to_csv(file_path, index=False)
+                messagebox.showinfo("Successo", "File salvato correttamente!")
+            except Exception as e:
+                messagebox.showerror("Errore", f"Errore nel salvataggio: {str(e)}")
+
+    def add_row(self):
+        self.sheet.insert_row()
+        self.update_df_from_sheet()
+
+    def delete_row(self):
+        selected = self.sheet.get_selected_rows()
+        if selected:
+            for row in sorted(selected, reverse=True):
+                self.sheet.delete_row(row)
+            self.update_df_from_sheet()
+        else:
+            messagebox.showwarning("Attenzione", "Seleziona una riga da eliminare!")
+
+    def create_sample_data(self):
+        sample_data = []
+        provinces = ["Milano", "Roma", "Napoli", "Torino", "Palermo", "Genova", "Bologna", "Firenze"]
+        days = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]
+        road_types = ["Urbana", "Extraurbana", "Autostrada", "Provinciale"]
+        
+        np.random.seed(42)  # Per risultati riproducibili
+        for i in range(100):
+            feriti = np.random.poisson(2)  # Distribuzione Poisson per feriti
+            morti = np.random.binomial(feriti, 0.1) if feriti > 0 else 0  # Morti proporzionali ai feriti
+            velocita = np.random.normal(70, 25)  # Distribuzione normale per velocità
+            velocita = max(20, min(150, velocita))  # Limita velocità tra 20 e 150
+            
+            sample_data.append([
+                f"2024-{np.random.randint(1,13):02d}-{np.random.randint(1,29):02d} {np.random.randint(0,24):02d}:{np.random.randint(0,60):02d}",
+                np.random.choice(provinces),
+                np.random.choice(days),
+                np.random.choice(road_types),
+                feriti,
+                morti,
+                round(velocita, 1)
+            ])
+        
+        self.df = pd.DataFrame(sample_data, columns=self.expected_columns)
+        self.update_sheet_from_df()
+        messagebox.showinfo("Successo", "Dati di esempio creati!")
+
+    def update_sheet_from_df(self):
+        if not self.df.empty:
+            self.sheet.set_sheet_data(self.df.values.tolist())
+            self.sheet.headers(list(self.df.columns))
+
+    def update_df_from_sheet(self):
+        data = self.sheet.get_sheet_data()
+        headers = self.sheet.headers()
+        if data and headers:
+            filtered_data = [row for row in data if any(str(cell).strip() for cell in row)]
+            self.df = pd.DataFrame(filtered_data, columns=headers)
+
+    def on_sheet_modified(self, event):
+        self.update_df_from_sheet()
+
+    def get_numeric_data(self, column_name):
+        """Estrae i dati numerici da una colonna"""
+        if self.df.empty:
+            return None
+        return pd.to_numeric(self.df[column_name], errors='coerce').dropna()
+
+    def show_frequency_tables(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        variable = self.stats_var.get()
+        data = self.get_numeric_data(variable)
+        
+        if data is None or data.empty:
+            messagebox.showwarning("Attenzione", "Nessun dato numerico valido!")
+            return
+
+        # Costruisci le classi
+        n_classes = min(10, int(np.sqrt(len(data))))
+        hist, bin_edges = np.histogram(data, bins=n_classes)
+        
+        # Tabella delle frequenze
+        result = f"TABELLE DELLE FREQUENZE - {variable}\n"
+        result += "=" * 60 + "\n\n"
+        
+        # Frequenze assolute e relative
+        result += f"{'Classe':<20} {'Freq. Ass.':<12} {'Freq. Rel.':<12} {'Freq. Ass. Cum.':<15} {'Freq. Rel. Cum.':<15}\n"
+        result += "-" * 80 + "\n"
+        
+        cum_freq = 0
+        cum_rel = 0
+        
+        for i in range(len(hist)):
+            freq_abs = hist[i]
+            freq_rel = freq_abs / len(data)
+            cum_freq += freq_abs
+            cum_rel += freq_rel
+            
+            class_label = f"[{bin_edges[i]:.1f}, {bin_edges[i+1]:.1f})"
+            result += f"{class_label:<20} {freq_abs:<12} {freq_rel:<12.4f} {cum_freq:<15} {cum_rel:<15.4f}\n"
+        
+        result += f"\nTotale: {len(data)} osservazioni\n"
+        
+        self.stats_textbox.delete("1.0", "end")
+        self.stats_textbox.insert("1.0", result)
+        
+        # Crea istogramma
+        self.clear_stats_graph()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        ax.hist(data, bins=n_classes, alpha=0.7, color='skyblue', edgecolor='black')
+        ax.set_title(f'Istogramma - {variable}', fontsize=14, fontweight='bold')
+        ax.set_xlabel(variable)
+        ax.set_ylabel('Frequenza')
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        canvas = FigureCanvasTkAgg(fig, self.stats_graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def show_position_indices(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        variable = self.stats_var.get()
+        data = self.get_numeric_data(variable)
+        
+        if data is None or data.empty:
+            messagebox.showwarning("Attenzione", "Nessun dato numerico valido!")
+            return
+
+        # Calcola indici di posizione
+        mean_val = data.mean()
+        median_val = data.median()
+        mode_val = data.mode()
+        
+        result = f"INDICI DI POSIZIONE - {variable}\n"
+        result += "=" * 50 + "\n\n"
+        result += f"Media campionaria:           {mean_val:.4f}\n"
+        result += f"Mediana campionaria:         {median_val:.4f}\n"
+        
+        if not mode_val.empty:
+            if len(mode_val) == 1:
+                result += f"Moda campionaria:            {mode_val.iloc[0]:.4f}\n"
+            else:
+                result += f"Mode campionarie:            {', '.join([f'{x:.4f}' for x in mode_val])}\n"
+        else:
+            result += f"Moda campionaria:            Non presente\n"
+        
+        result += f"\nNumero di osservazioni:      {len(data)}\n"
+        result += f"Valore minimo:               {data.min():.4f}\n"
+        result += f"Valore massimo:              {data.max():.4f}\n"
+        
+        self.stats_textbox.delete("1.0", "end")
+        self.stats_textbox.insert("1.0", result)
+
+    def show_variability_indices(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        variable = self.stats_var.get()
+        data = self.get_numeric_data(variable)
+        
+        if data is None or data.empty:
+            messagebox.showwarning("Attenzione", "Nessun dato numerico valido!")
+            return
+
+        # Calcola indici di variabilità
+        var_sample = data.var(ddof=1)  # Varianza campionaria (n-1)
+        std_sample = data.std(ddof=1)  # Deviazione standard campionaria
+        mean_val = data.mean()
+        mad = np.mean(np.abs(data - mean_val))  # Scarto medio assoluto
+        range_val = data.max() - data.min()  # Ampiezza del campo di variazione
+        cv = (std_sample / mean_val) * 100 if mean_val != 0 else 0  # Coefficiente di variazione
+        
+        result = f"INDICI DI VARIABILITÀ - {variable}\n"
+        result += "=" * 50 + "\n\n"
+        result += f"Varianza campionaria:        {var_sample:.4f}\n"
+        result += f"Deviazione standard camp.:   {std_sample:.4f}\n"
+        result += f"Scarto medio assoluto:       {mad:.4f}\n"
+        result += f"Ampiezza campo variazione:   {range_val:.4f}\n"
+        result += f"Coefficiente di variazione:  {cv:.2f}%\n"
+        
+        result += f"\nMedia:                       {mean_val:.4f}\n"
+        result += f"Numero di osservazioni:      {len(data)}\n"
+        
+        self.stats_textbox.delete("1.0", "end")
+        self.stats_textbox.insert("1.0", result)
+
+    def show_shape_indices(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        variable = self.stats_var.get()
+        data = self.get_numeric_data(variable)
+        
+        if data is None or data.empty:
+            messagebox.showwarning("Attenzione", "Nessun dato numerico valido!")
+            return
+
+        # Calcola indici di forma
+        skewness = stats.skew(data)
+        kurtosis = stats.kurtosis(data)
+        
+        result = f"INDICI DI FORMA - {variable}\n"
+        result += "=" * 50 + "\n\n"
+        result += f"Indice di asimmetria:        {skewness:.4f}\n"
+        
+        if skewness > 0.5:
+            result += "  → Distribuzione asimmetrica positiva (coda a destra)\n"
+        elif skewness < -0.5:
+            result += "  → Distribuzione asimmetrica negativa (coda a sinistra)\n"
+        else:
+            result += "  → Distribuzione approssimativamente simmetrica\n"
+        
+        result += f"\nIndice di curtosi:           {kurtosis:.4f}\n"
+        
+        if kurtosis > 0:
+            result += "  → Distribuzione leptocurtica (più piccata della normale)\n"
+        elif kurtosis < 0:
+            result += "  → Distribuzione platicurtica (più piatta della normale)\n"
+        else:
+            result += "  → Distribuzione mesocurtica (simile alla normale)\n"
+        
+        self.stats_textbox.delete("1.0", "end")
+        self.stats_textbox.insert("1.0", result)
+
+    def show_boxplot(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        variable = self.stats_var.get()
+        data = self.get_numeric_data(variable)
+        
+        if data is None or data.empty:
+            messagebox.showwarning("Attenzione", "Nessun dato numerico valido!")
+            return
+
+        # Crea box plot
+        self.clear_stats_graph()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        
+        box_plot = ax.boxplot(data, patch_artist=True, labels=[variable])
+        box_plot['boxes'][0].set_facecolor('lightblue')
+        
+        ax.set_title(f'Box Plot - {variable}', fontsize=14, fontweight='bold')
+        ax.set_ylabel(variable)
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        canvas = FigureCanvasTkAgg(fig, self.stats_graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def show_quartiles_analysis(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        variable = self.stats_var.get()
+        data = self.get_numeric_data(variable)
+        
+        if data is None or data.empty:
+            messagebox.showwarning("Attenzione", "Nessun dato numerico valido!")
+            return
+
+        # Calcola quartili e outlier
+        Q1 = data.quantile(0.25)
+        Q2 = data.quantile(0.5)  # Mediana
+        Q3 = data.quantile(0.75)
+        IQR = Q3 - Q1
+        
+        # Outlier
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        outliers = data[(data < lower_bound) | (data > upper_bound)]
+        
+        # Disuguaglianza di Chebyshev
+        mean_val = data.mean()
+        std_val = data.std()
+        
+        result = f"ANALISI QUARTILI E OUTLIER - {variable}\n"
+        result += "=" * 60 + "\n\n"
+        result += f"Primo quartile (Q1):         {Q1:.4f}\n"
+        result += f"Secondo quartile (Q2):       {Q2:.4f} (Mediana)\n"
+        result += f"Terzo quartile (Q3):         {Q3:.4f}\n"
+        result += f"Differenza interquartile:    {IQR:.4f}\n"
+        
+        result += f"\nLimiti per outlier:\n"
+        result += f"Limite inferiore:            {lower_bound:.4f}\n"
+        result += f"Limite superiore:            {upper_bound:.4f}\n"
+        result += f"Numero di outlier:           {len(outliers)}\n"
+        
+        if len(outliers) > 0:
+            result += f"Valori outlier:              {', '.join([f'{x:.2f}' for x in outliers.head(10)])}\n"
+            if len(outliers) > 10:
+                result += f"  ... e altri {len(outliers)-10} valori\n"
+        
+        result += f"\nDISUGUAGLIANZA DI CHEBYSHEV:\n"
+        result += f"Media: {mean_val:.4f}, Deviazione standard: {std_val:.4f}\n"
+        
+        for k in [1.5, 2, 2.5, 3]:
+            lower_cheb = mean_val - k * std_val
+            upper_cheb = mean_val + k * std_val
+            proportion_theory = 1 - 1/(k**2)
+            data_in_interval = len(data[(data >= lower_cheb) & (data <= upper_cheb)])
+            proportion_actual = data_in_interval / len(data)
+            
+            result += f"k={k}: [{lower_cheb:.2f}, {upper_cheb:.2f}] "
+            result += f"- Teorico: {proportion_theory:.1%}, Effettivo: {proportion_actual:.1%}\n"
+        
+        self.stats_textbox.delete("1.0", "end")
+        self.stats_textbox.insert("1.0", result)
+
+    def show_scatter_plot(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        var_x = self.bivar_x.get()
+        var_y = self.bivar_y.get()
+        
+        data_x = self.get_numeric_data(var_x)
+        data_y = self.get_numeric_data(var_y)
+        
+        if data_x is None or data_y is None or data_x.empty or data_y.empty:
+            messagebox.showwarning("Attenzione", "Dati numerici non validi!")
+            return
+
+        # Allinea i dati (stesso indice)
+        common_index = data_x.index.intersection(data_y.index)
+        data_x = data_x.loc[common_index]
+        data_y = data_y.loc[common_index]
+
+        # Crea diagramma a dispersione
+        self.clear_bivar_graph()
+        fig, ax = plt.subplots(figsize=(8, 6))
+        
+        ax.scatter(data_x, data_y, alpha=0.6, color='blue')
+        ax.set_xlabel(var_x)
+        ax.set_ylabel(var_y)
+        ax.set_title(f'Diagramma a Dispersione: {var_x} vs {var_y}', fontsize=14, fontweight='bold')
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        canvas = FigureCanvasTkAgg(fig, self.bivar_graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def show_correlation(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        var_x = self.bivar_x.get()
+        var_y = self.bivar_y.get()
+        
+        data_x = self.get_numeric_data(var_x)
+        data_y = self.get_numeric_data(var_y)
+        
+        if data_x is None or data_y is None or data_x.empty or data_y.empty:
+            messagebox.showwarning("Attenzione", "Dati numerici non validi!")
+            return
+
+        # Allinea i dati
+        common_index = data_x.index.intersection(data_y.index)
+        data_x = data_x.loc[common_index]
+        data_y = data_y.loc[common_index]
+
+        # Calcola coefficiente di correlazione
+        correlation = np.corrcoef(data_x, data_y)[0, 1]
+        
+        # Test di significatività
+        n = len(data_x)
+        t_stat = correlation * np.sqrt((n-2)/(1-correlation**2)) if correlation != 1 else float('inf')
+        p_value = 2 * (1 - stats.t.cdf(abs(t_stat), n-2)) if correlation != 1 else 0
+
+        result = f"ANALISI DI CORRELAZIONE\n"
+        result += "=" * 50 + "\n\n"
+        result += f"Variabile X: {var_x}\n"
+        result += f"Variabile Y: {var_y}\n"
+        result += f"Numero di osservazioni: {n}\n\n"
+        
+        result += f"Coefficiente di correlazione di Pearson: {correlation:.4f}\n\n"
+        
+        # Interpretazione della correlazione
+        if abs(correlation) >= 0.8:
+            strength = "molto forte"
+        elif abs(correlation) >= 0.6:
+            strength = "forte"
+        elif abs(correlation) >= 0.4:
+            strength = "moderata"
+        elif abs(correlation) >= 0.2:
+            strength = "debole"
+        else:
+            strength = "molto debole"
+        
+        direction = "positiva" if correlation > 0 else "negativa"
+        result += f"Interpretazione: Correlazione {strength} {direction}\n\n"
+        
+        result += f"Test di significatività:\n"
+        result += f"Statistica t: {t_stat:.4f}\n"
+        result += f"P-value: {p_value:.4f}\n"
+        result += f"Significativo al 5%: {'Sì' if p_value < 0.05 else 'No'}\n\n"
+        
+        # Covarianza
+        covariance = np.cov(data_x, data_y)[0, 1]
+        result += f"Covarianza: {covariance:.4f}\n"
+        
+        # Coefficiente di determinazione
+        r_squared = correlation**2
+        result += f"Coefficiente di determinazione (R²): {r_squared:.4f}\n"
+        result += f"Varianza spiegata: {r_squared*100:.2f}%\n"
+
+        self.bivar_textbox.delete("1.0", "end")
+        self.bivar_textbox.insert("1.0", result)
+
+    def show_regression(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima!")
+            return
+
+        var_x = self.bivar_x.get()
+        var_y = self.bivar_y.get()
+        
+        data_x = self.get_numeric_data(var_x)
+        data_y = self.get_numeric_data(var_y)
+        
+        if data_x is None or data_y is None or data_x.empty or data_y.empty:
+            messagebox.showwarning("Attenzione", "Dati numerici non validi!")
+            return
+
+        # Allinea i dati
+        common_index = data_x.index.intersection(data_y.index)
+        data_x = data_x.loc[common_index]
+        data_y = data_y.loc[common_index]
+
+        # Regressione lineare
+        X = data_x.values.reshape(-1, 1)
+        y = data_y.values
+        
+        model = LinearRegression()
+        model.fit(X, y)
+        
+        slope = model.coef_[0]
+        intercept = model.intercept_
+        r_squared = model.score(X, y)
+        
+        # Predizioni
+        y_pred = model.predict(X)
+        
+        # Residui
+        residuals = y - y_pred
+        mse = np.mean(residuals**2)
+        rmse = np.sqrt(mse)
+        
+        # Statistiche aggiuntive
+        n = len(data_x)
+        correlation = np.corrcoef(data_x, data_y)[0, 1]
+        
+        result = f"REGRESSIONE LINEARE\n"
+        result += "=" * 50 + "\n\n"
+        result += f"Variabile indipendente (X): {var_x}\n"
+        result += f"Variabile dipendente (Y): {var_y}\n"
+        result += f"Numero di osservazioni: {n}\n\n"
+        
+        result += f"EQUAZIONE DELLA RETTA:\n"
+        result += f"Y = {intercept:.4f} + {slope:.4f} * X\n\n"
+        
+        result += f"PARAMETRI:\n"
+        result += f"Intercetta (a): {intercept:.4f}\n"
+        result += f"Coefficiente angolare (b): {slope:.4f}\n\n"
+        
+        result += f"BONTÀ DEL MODELLO:\n"
+        result += f"Coefficiente di correlazione: {correlation:.4f}\n"
+        result += f"Coefficiente di determinazione (R²): {r_squared:.4f}\n"
+        result += f"Varianza spiegata: {r_squared*100:.2f}%\n"
+        result += f"Errore quadratico medio: {mse:.4f}\n"
+        result += f"Radice errore quadratico medio: {rmse:.4f}\n\n"
+        
+        result += f"INTERPRETAZIONE:\n"
+        if slope > 0:
+            result += f"Per ogni unità di aumento di {var_x}, {var_y} aumenta di {slope:.4f} unità\n"
+        else:
+            result += f"Per ogni unità di aumento di {var_x}, {var_y} diminuisce di {abs(slope):.4f} unità\n"
+
+        self.bivar_textbox.delete("1.0", "end")
+        self.bivar_textbox.insert("1.0", result)
+
+        # Crea grafico di regressione
+        self.clear_bivar_graph()
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+        
+        # Grafico principale con retta di regressione
+        ax1.scatter(data_x, data_y, alpha=0.6, color='blue', label='Dati')
+        ax1.plot(data_x, y_pred, color='red', linewidth=2, label=f'Y = {intercept:.2f} + {slope:.2f}X')
+        ax1.set_xlabel(var_x)
+        ax1.set_ylabel(var_y)
+        ax1.set_title('Regressione Lineare', fontsize=12, fontweight='bold')
+        ax1.legend()
+        ax1.grid(True, alpha=0.3)
+        
+        # Grafico dei residui
+        ax2.scatter(y_pred, residuals, alpha=0.6, color='green')
+        ax2.axhline(y=0, color='red', linestyle='--', alpha=0.8)
+        ax2.set_xlabel('Valori Predetti')
+        ax2.set_ylabel('Residui')
+        ax2.set_title('Analisi dei Residui', fontsize=12, fontweight='bold')
+        ax2.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        canvas = FigureCanvasTkAgg(fig, self.bivar_graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def clear_graph_frame(self):
+        for widget in self.graph_frame.winfo_children():
+            widget.destroy()
+
+    def clear_stats_graph(self):
+        for widget in self.stats_graph_frame.winfo_children():
+            widget.destroy()
+
+    def clear_bivar_graph(self):
+        for widget in self.bivar_graph_frame.winfo_children():
+            widget.destroy()
+
+    # Metodi per i grafici della tab Visualizzazione (mantenuti come prima)
+    def plot_incidents_by_province(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima di creare i grafici!")
+            return
+
+        self.clear_graph_frame()
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        province_counts = self.df['Provincia'].value_counts()
+        province_counts.plot(kind='bar', ax=ax, color='skyblue')
+        ax.set_title('Numero di Incidenti per Provincia', fontsize=16, fontweight='bold')
+        ax.set_xlabel('Provincia')
+        ax.set_ylabel('Numero di Incidenti')
+        ax.tick_params(axis='x', rotation=45)
+        
+        plt.tight_layout()
+        
+        canvas = FigureCanvasTkAgg(fig, self.graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def plot_incidents_by_day(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima di creare i grafici!")
+            return
+
+        self.clear_graph_frame()
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        day_order = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"]
+        day_counts = self.df['Giorno_Settimana'].value_counts().reindex(day_order, fill_value=0)
+        
+        day_counts.plot(kind='bar', ax=ax, color='lightcoral')
+        ax.set_title('Numero di Incidenti per Giorno della Settimana', fontsize=16, fontweight='bold')
+        ax.set_xlabel('Giorno della Settimana')
+        ax.set_ylabel('Numero di Incidenti')
+        ax.tick_params(axis='x', rotation=45)
+        
+        plt.tight_layout()
+        
+        canvas = FigureCanvasTkAgg(fig, self.graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def plot_casualties(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima di creare i grafici!")
+            return
+
+        self.clear_graph_frame()
+        
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+        
+        # Grafico feriti
+        feriti = pd.to_numeric(self.df['Numero_Feriti'], errors='coerce').dropna()
+        ax1.hist(feriti, bins=10, color='orange', alpha=0.7, edgecolor='black')
+        ax1.set_title('Distribuzione Numero Feriti', fontsize=14, fontweight='bold')
+        ax1.set_xlabel('Numero Feriti')
+        ax1.set_ylabel('Frequenza')
+        
+        # Grafico morti
+        morti = pd.to_numeric(self.df['Numero_Morti'], errors='coerce').dropna()
+        ax2.hist(morti, bins=10, color='red', alpha=0.7, edgecolor='black')
+        ax2.set_title('Distribuzione Numero Morti', fontsize=14, fontweight='bold')
+        ax2.set_xlabel('Numero Morti')
+        ax2.set_ylabel('Frequenza')
+        
+        plt.tight_layout()
+        
+        canvas = FigureCanvasTkAgg(fig, self.graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def plot_road_type(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima di creare i grafici!")
+            return
+
+        self.clear_graph_frame()
+        
+        fig, ax = plt.subplots(figsize=(8, 8))
+        
+        road_counts = self.df['Tipo_Strada'].value_counts()
+        colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+        
+        wedges, texts, autotexts = ax.pie(
+            road_counts.values, 
+            labels=road_counts.index, 
+            autopct='%1.1f%%',
+            colors=colors,
+            startangle=90
+        )
+        
+        ax.set_title('Distribuzione Incidenti per Tipo di Strada', fontsize=16, fontweight='bold')
+        
+        plt.tight_layout()
+        
+        canvas = FigureCanvasTkAgg(fig, self.graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def plot_speed_distribution(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima di creare i grafici!")
+            return
+
+        self.clear_graph_frame()
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        speed_data = pd.to_numeric(self.df['Velocita_Media_Stimata'], errors='coerce').dropna()
+        
+        ax.hist(speed_data, bins=15, color='purple', alpha=0.7, edgecolor='black')
+        ax.axvline(speed_data.mean(), color='red', linestyle='--', linewidth=2, 
+                  label=f'Media: {speed_data.mean():.1f} km/h')
+        ax.set_title('Distribuzione Velocità Media Stimata', fontsize=16, fontweight='bold')
+        ax.set_xlabel('Velocità (km/h)')
+        ax.set_ylabel('Frequenza')
+        ax.legend()
+        
+        plt.tight_layout()
+        
+        canvas = FigureCanvasTkAgg(fig, self.graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+    def plot_time_trend(self):
+        if self.df.empty:
+            messagebox.showwarning("Attenzione", "Carica dei dati prima di creare i grafici!")
+            return
+
+        self.clear_graph_frame()
+        
         try:
-            self.df = pd.read_csv(filepath)
-            self.df['Data_Ora_Incidente'] = pd.to_datetime(self.df['Data_Ora_Incidente'])
-            self.analyzer = AnalisiDatiIncidenti(self.df)
+            # Converti le date
+            dates = pd.to_datetime(self.df['Data_Ora_Incidente'], errors='coerce').dropna()
             
-            # Aggiorna UI
-            self.status_label.configure(text=f"Caricato: {os.path.basename(filepath)} ({len(self.df)} righe)", text_color="lightgreen")
+            if dates.empty:
+                messagebox.showwarning("Attenzione", "Formato data non valido per il trend temporale!")
+                return
             
-            self.preview_textbox.configure(state="normal")
-            self.preview_textbox.delete("1.0", "end")
-            self.preview_textbox.insert("1.0", self.df.head(10).to_string())
-            self.preview_textbox.configure(state="disabled")
+            fig, ax = plt.subplots(figsize=(12, 6))
             
-            self._update_option_menus()
-            messagebox.showinfo("Successo", "Dati caricati e analizzatore pronto.")
+            # Raggruppa per mese
+            monthly_counts = dates.dt.to_period('M').value_counts().sort_index()
+            
+            ax.plot(monthly_counts.index.astype(str), monthly_counts.values, 
+                   marker='o', linewidth=2, markersize=6, color='green')
+            ax.set_title('Trend Temporale degli Incidenti', fontsize=16, fontweight='bold')
+            ax.set_xlabel('Mese')
+            ax.set_ylabel('Numero di Incidenti')
+            ax.tick_params(axis='x', rotation=45)
+            ax.grid(True, alpha=0.3)
+            
+            plt.tight_layout()
+            
+            canvas = FigureCanvasTkAgg(fig, self.graph_frame)
+            canvas.draw()
+            canvas.get_tk_widget().pack(fill="both", expand=True)
+            
         except Exception as e:
-            messagebox.showerror("Errore di Caricamento", f"Impossibile caricare o processare il file.\nErrore: {e}")
-            self.df = None
-            self.analyzer = None
-
-    def _update_option_menus(self):
-        all_cols = self.df.columns.tolist()
-        num_cols = self.analyzer.colonne_numeriche
-        
-        self.uni_col_menu.configure(values=all_cols)
-        self.uni_col_menu.set(all_cols[0] if all_cols else "...")
-        
-        self.bi_col1_menu.configure(values=num_cols)
-        self.bi_col2_menu.configure(values=num_cols)
-        if len(num_cols) > 1:
-            self.bi_col1_menu.set(num_cols[0])
-            self.bi_col2_menu.set(num_cols[1])
-
-        self.plot_num_menu.configure(values=num_cols)
-        self.plot_num_menu.set(num_cols[0] if num_cols else "...")
-        self.plot_bi1_menu.configure(values=num_cols)
-        self.plot_bi2_menu.configure(values=num_cols)
-        if len(num_cols) > 1:
-            self.plot_bi1_menu.set(num_cols[0])
-            self.plot_bi2_menu.set(num_cols[1])
-
-
-    def generate_and_load_data(self):
-        try:
-            num_righe = int(self.entry_righe.get())
-            if num_righe <= 0:
-                raise ValueError()
-        except ValueError:
-            messagebox.showerror("Errore", "Inserisci un numero di righe valido (intero e positivo).")
-            return
-            
-        filepath = "incidenti_generati.csv"
-        # Funzione di generazione dati
-        np.random.seed(42)
-        date = pd.to_datetime(pd.date_range(start='2024-01-01', periods=num_righe))
-        data = {
-            'Data_Ora_Incidente': date,
-            'Provincia': np.random.choice(['Milano', 'Roma', 'Napoli', 'Torino', 'Bologna'], num_righe, p=[0.3, 0.2, 0.2, 0.15, 0.15]),
-            'Giorno_Settimana': [d.strftime('%A') for d in date],
-            'Tipo_Strada': np.random.choice(['Autostrada', 'Strada Statale', 'Strada Comunale'], num_righe),
-            'Numero_Feriti': np.random.poisson(lam=1.2, size=num_righe),
-            'Numero_Morti': np.random.choice([0, 1, 2], size=num_righe, p=[0.96, 0.03, 0.01]),
-            'Velocita_Media_Stimata': np.clip(np.random.normal(loc=80, scale=30, size=num_righe), 20, 160).astype(int)
-        }
-        df_esempio = pd.DataFrame(data)
-        df_esempio.to_csv(filepath, index=False)
-        
-        self._load_data_into_app(filepath)
-
-    def load_existing_data(self):
-        filepath = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv"), ("All Files", "*.*")])
-        if filepath:
-            self._load_data_into_app(filepath)
-
-    def run_frequency_analysis(self):
-        if not self.analyzer:
-            messagebox.showwarning("Attenzione", "Caricare prima i dati.")
-            return
-        col = self.uni_col_menu.get()
-        result = self.analyzer.calcola_frequenze(col)
-        self.uni_results_textbox.configure(state="normal")
-        self.uni_results_textbox.delete("1.0", "end")
-        self.uni_results_textbox.insert("1.0", result)
-        self.uni_results_textbox.configure(state="disabled")
-
-    def run_statistical_indices(self):
-        if not self.analyzer:
-            messagebox.showwarning("Attenzione", "Caricare prima i dati.")
-            return
-        col = self.uni_col_menu.get()
-        result = self.analyzer.calcola_indici_univariati(col)
-        self.uni_results_textbox.configure(state="normal")
-        self.uni_results_textbox.delete("1.0", "end")
-        self.uni_results_textbox.insert("1.0", result)
-        self.uni_results_textbox.configure(state="disabled")
-    
-    def run_bivariate_analysis(self):
-        if not self.analyzer:
-            messagebox.showwarning("Attenzione", "Caricare prima i dati.")
-            return
-        var1 = self.bi_col1_menu.get()
-        var2 = self.bi_col2_menu.get()
-        result = self.analyzer.analisi_bivariata(var1, var2)
-        self.bi_results_textbox.configure(state="normal")
-        self.bi_results_textbox.delete("1.0", "end")
-        self.bi_results_textbox.insert("1.0", result)
-        self.bi_results_textbox.configure(state="disabled")
-        
-    def show_categorical_plots(self):
-        if self.analyzer: self.analyzer.plot_categoriali()
-        else: messagebox.showwarning("Attenzione", "Caricare prima i dati.")
-
-    def show_numerical_plots(self):
-        if self.analyzer: self.analyzer.plot_numerici(self.plot_num_menu.get())
-        else: messagebox.showwarning("Attenzione", "Caricare prima i dati.")
-
-    def show_bivariate_plot(self):
-        if self.analyzer: self.analyzer.plot_bivariato(self.plot_bi1_menu.get(), self.plot_bi2_menu.get())
-        else: messagebox.showwarning("Attenzione", "Caricare prima i dati.")
-
+            messagebox.showerror("Errore", f"Errore nella creazione del trend temporale: {str(e)}")
 
 if __name__ == "__main__":
-    app = App()
+    app = ExcelTableApp()
     app.mainloop()

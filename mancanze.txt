@@ -12,3 +12,6 @@ Fatto ma Dobbiamo fare una sezione apposta:
     - Calcolo degli indici di forma:
         - Indice di asimmetria
         - Indice di curtosi
+- Calcolo di quartili e costruzione di box plot (eventualmente con outlier)
+
+- Individuazione di intervalli rappresentativi basati su quartili e su disuguaglianza di Chebyshev
