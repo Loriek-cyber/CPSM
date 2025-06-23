@@ -1,6 +1,6 @@
-# =============================================================================
-# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v4.5 - Migliorie Richieste)
-# =============================================================================
+# ==================================================================================
+# SOFTWARE DI ANALISI STATISTICA INCIDENTI STRADALI (v4.7 - Correzione Grafico a Barre)
+# ==================================================================================
 import tkinter
 from tkinter import filedialog, ttk
 import customtkinter
@@ -335,7 +335,7 @@ class App(customtkinter.CTk):
 
         # Gestione dinamica dei controlli UI
         if variable == 'Data_Ora_Incidente':
-            # Mostra i controlli per l'analisi temporale e nascondi quelli standard
+            # Mostra i controlli per l'analisi temporale
             self.label_andamento.pack(side="left", padx=(20,5))
             self.selettore_andamento.pack(side="left", padx=5)
             self.label_tipo_grafico.pack(side="left", padx=(20,5))
@@ -405,14 +405,18 @@ class App(customtkinter.CTk):
             ax.set_title('Andamento Temporale degli Incidenti')
             ax.set_xlabel('Data')
         
+        # ==================== INIZIO BLOCCO DI CORREZIONE ====================
         try:
-            kind_map = {'Barre': 'bar', 'Linee': 'line', 'Aste': 'stem'}
-            plot_kind = kind_map.get(tipo_grafico, 'line')
-            
-            if plot_kind == 'stem':
+            if tipo_grafico == 'Barre':
+                plot_data.plot(kind='bar', ax=ax)
+            elif tipo_grafico == 'Linee':
+                plot_data.plot(kind='line', ax=ax, marker='o')
+            elif tipo_grafico == 'Aste':
                 ax.stem(plot_data.index.astype(str), plot_data.values)
             else:
-                plot_data.plot(kind=plot_kind, ax=ax, marker='o' if plot_kind == 'line' else '')
+                # Fallback nel caso in cui un tipo non sia gestito
+                plot_data.plot(kind='line', ax=ax)
+        # ===================== FINE BLOCCO DI CORREZIONE =====================
         except Exception as e:
             ax.text(0.5, 0.5, f"Impossibile generare il grafico: {e}", ha='center')
 
@@ -476,8 +480,7 @@ class App(customtkinter.CTk):
         fig, ax = plt.subplots(figsize=(8, 5))
         try:
             plot_title = f"{tipo_grafico} di '{variable}'"
-            if is_aggregated: plot_title += f" (Top {limite_categorie-1} + Altro)"
-
+            
             if tipo_grafico == 'Istogramma':
                 if is_numeric: ax.hist(data, bins='auto', edgecolor='black'); ax.set_xlabel(variable); ax.set_ylabel('Frequenza')
                 else: ax.text(0.5, 0.5, 'Istogramma non applicabile a dati categorici', ha='center')
@@ -485,6 +488,19 @@ class App(customtkinter.CTk):
                 if is_numeric: ax.boxplot(data, vert=False, showfliers=True); ax.set_yticklabels([variable]); ax.set_xlabel('Valore')
                 else: ax.text(0.5, 0.5, 'Box Plot non applicabile a dati categorici', ha='center')
             else:
+                # Se freq_data non esiste (perché i dati sono numerici), lo creiamo ora.
+                if 'freq_data' not in locals():
+                    freq_data = data.value_counts()
+                    limite_categorie = 10 if tipo_grafico == 'Torta' else 20
+                    if len(freq_data) > limite_categorie:
+                        is_aggregated = True
+                        top_data = freq_data.head(limite_categorie - 1)
+                        other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
+                        freq_data = pd.concat([top_data, pd.Series({'Altro': other_sum})])
+
+                if is_aggregated: plot_title += f" (Top {limite_categorie-1} + Altro)"
+                
+                # Per grafici a linee con indici non numerici (es. date come stringhe), ordiniamo
                 plot_data = freq_data.sort_index() if tipo_grafico == 'Linee' else freq_data
                 
                 ax.set_xlabel('Categorie'); ax.set_ylabel('Frequenza')
