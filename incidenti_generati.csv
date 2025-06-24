@@ -1,501 +1,1001 @@
 Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
-2024-01-01,Roma,Monday,Strada Statale,1,0,47
-2024-01-02,Bologna,Tuesday,Strada Comunale,1,0,69
-2024-01-03,Torino,Wednesday,Autostrada,0,0,25
-2024-01-04,Napoli,Thursday,Autostrada,1,0,69
-2024-01-05,Milano,Friday,Autostrada,2,0,77
-2024-01-06,Milano,Saturday,Autostrada,1,0,86
-2024-01-07,Milano,Sunday,Autostrada,1,0,87
-2024-01-08,Bologna,Monday,Autostrada,1,0,107
-2024-01-09,Napoli,Tuesday,Autostrada,0,0,33
-2024-01-10,Torino,Wednesday,Strada Statale,1,0,35
-2024-01-11,Milano,Thursday,Strada Comunale,2,0,95
-2024-01-12,Bologna,Friday,Autostrada,1,0,20
-2024-01-13,Torino,Saturday,Strada Statale,1,0,85
-2024-01-14,Milano,Sunday,Strada Statale,1,0,44
-2024-01-15,Milano,Monday,Strada Comunale,1,0,127
-2024-01-16,Milano,Tuesday,Autostrada,2,0,87
-2024-01-17,Roma,Wednesday,Strada Comunale,0,0,73
-2024-01-18,Napoli,Thursday,Autostrada,1,0,116
-2024-01-19,Roma,Friday,Strada Statale,1,0,48
-2024-01-20,Milano,Saturday,Strada Statale,0,0,53
-2024-01-21,Napoli,Sunday,Strada Statale,0,0,42
-2024-01-22,Milano,Monday,Strada Statale,1,0,54
-2024-01-23,Milano,Tuesday,Strada Comunale,0,0,81
-2024-01-24,Roma,Wednesday,Autostrada,2,0,94
-2024-01-25,Roma,Thursday,Autostrada,1,0,108
-2024-01-26,Torino,Friday,Strada Comunale,1,0,25
-2024-01-27,Milano,Saturday,Autostrada,0,0,74
-2024-01-28,Napoli,Sunday,Strada Statale,3,0,46
-2024-01-29,Napoli,Monday,Autostrada,1,0,73
-2024-01-30,Milano,Tuesday,Strada Statale,0,0,150
-2024-01-31,Napoli,Wednesday,Strada Comunale,0,0,88
-2024-02-01,Milano,Thursday,Autostrada,2,0,106
-2024-02-02,Milano,Friday,Strada Comunale,0,0,138
-2024-02-03,Bologna,Saturday,Autostrada,0,0,113
-2024-02-04,Bologna,Sunday,Strada Statale,1,0,66
-2024-02-05,Torino,Monday,Strada Comunale,0,2,41
-2024-02-06,Roma,Tuesday,Autostrada,1,0,79
-2024-02-07,Milano,Wednesday,Strada Statale,1,0,62
-2024-02-08,Napoli,Thursday,Strada Comunale,0,0,34
-2024-02-09,Roma,Friday,Strada Comunale,0,0,87
-2024-02-10,Milano,Saturday,Autostrada,3,0,87
-2024-02-11,Roma,Sunday,Autostrada,1,0,133
-2024-02-12,Milano,Monday,Autostrada,0,0,69
-2024-02-13,Bologna,Tuesday,Strada Statale,1,0,88
-2024-02-14,Milano,Wednesday,Autostrada,0,0,60
-2024-02-15,Napoli,Thursday,Strada Comunale,0,0,106
-2024-02-16,Roma,Friday,Strada Comunale,0,0,76
-2024-02-17,Napoli,Saturday,Autostrada,0,0,44
-2024-02-18,Napoli,Sunday,Autostrada,1,0,79
-2024-02-19,Milano,Monday,Strada Comunale,2,0,91
-2024-02-20,Bologna,Tuesday,Strada Statale,0,0,87
-2024-02-21,Torino,Wednesday,Autostrada,1,0,111
-2024-02-22,Bologna,Thursday,Autostrada,0,0,36
-2024-02-23,Bologna,Friday,Strada Comunale,1,0,54
-2024-02-24,Napoli,Saturday,Autostrada,1,0,99
-2024-02-25,Bologna,Sunday,Strada Statale,0,0,58
-2024-02-26,Milano,Monday,Strada Comunale,2,0,87
-2024-02-27,Milano,Tuesday,Autostrada,4,0,20
-2024-02-28,Milano,Wednesday,Strada Comunale,0,0,160
-2024-02-29,Roma,Thursday,Autostrada,0,0,71
-2024-03-01,Roma,Friday,Autostrada,2,0,115
-2024-03-02,Milano,Saturday,Autostrada,0,0,69
-2024-03-03,Torino,Sunday,Strada Statale,3,0,92
-2024-03-04,Roma,Monday,Strada Statale,0,0,124
-2024-03-05,Milano,Tuesday,Strada Comunale,0,0,114
-2024-03-06,Napoli,Wednesday,Autostrada,1,0,73
-2024-03-07,Milano,Thursday,Autostrada,1,0,75
-2024-03-08,Torino,Friday,Strada Statale,2,0,110
-2024-03-09,Milano,Saturday,Autostrada,0,0,149
-2024-03-10,Bologna,Sunday,Strada Statale,0,0,85
-2024-03-11,Torino,Monday,Autostrada,0,0,138
-2024-03-12,Milano,Tuesday,Strada Comunale,3,0,72
-2024-03-13,Milano,Wednesday,Autostrada,1,0,108
-2024-03-14,Torino,Thursday,Autostrada,2,0,113
-2024-03-15,Torino,Friday,Strada Statale,1,0,67
-2024-03-16,Torino,Saturday,Autostrada,0,0,57
-2024-03-17,Torino,Sunday,Autostrada,1,0,114
-2024-03-18,Milano,Monday,Strada Statale,1,0,64
-2024-03-19,Roma,Tuesday,Strada Comunale,1,0,53
-2024-03-20,Milano,Wednesday,Strada Comunale,1,0,59
-2024-03-21,Bologna,Thursday,Strada Statale,0,0,63
-2024-03-22,Napoli,Friday,Strada Statale,1,0,105
-2024-03-23,Roma,Saturday,Strada Statale,3,0,95
-2024-03-24,Milano,Sunday,Strada Statale,0,0,101
-2024-03-25,Roma,Monday,Strada Statale,0,0,92
-2024-03-26,Roma,Tuesday,Strada Comunale,1,0,62
-2024-03-27,Torino,Wednesday,Strada Comunale,1,0,100
-2024-03-28,Napoli,Thursday,Strada Statale,1,0,115
-2024-03-29,Bologna,Friday,Autostrada,0,0,97
-2024-03-30,Roma,Saturday,Strada Statale,0,0,93
-2024-03-31,Milano,Sunday,Autostrada,2,0,56
-2024-04-01,Torino,Monday,Strada Statale,1,0,86
-2024-04-02,Torino,Tuesday,Strada Statale,3,0,55
-2024-04-03,Napoli,Wednesday,Strada Comunale,1,0,79
-2024-04-04,Torino,Thursday,Autostrada,0,0,30
-2024-04-05,Roma,Friday,Autostrada,1,0,31
-2024-04-06,Napoli,Saturday,Strada Comunale,2,0,74
-2024-04-07,Roma,Sunday,Strada Comunale,3,0,63
-2024-04-08,Milano,Monday,Strada Comunale,3,0,83
-2024-04-09,Milano,Tuesday,Strada Comunale,1,0,75
-2024-04-10,Milano,Wednesday,Autostrada,2,0,80
-2024-04-11,Napoli,Thursday,Autostrada,2,1,98
-2024-04-12,Roma,Friday,Strada Statale,2,0,66
-2024-04-13,Napoli,Saturday,Strada Statale,1,0,73
-2024-04-14,Bologna,Sunday,Strada Comunale,5,0,123
-2024-04-15,Milano,Monday,Strada Comunale,1,0,80
-2024-04-16,Roma,Tuesday,Strada Comunale,0,0,74
-2024-04-17,Torino,Wednesday,Strada Statale,1,0,82
-2024-04-18,Milano,Thursday,Strada Statale,0,1,75
-2024-04-19,Milano,Friday,Strada Statale,0,0,58
-2024-04-20,Milano,Saturday,Strada Statale,1,0,50
-2024-04-21,Milano,Sunday,Strada Statale,1,0,57
-2024-04-22,Bologna,Monday,Strada Statale,1,0,106
-2024-04-23,Torino,Tuesday,Strada Statale,1,0,61
-2024-04-24,Napoli,Wednesday,Strada Comunale,3,1,75
-2024-04-25,Bologna,Thursday,Strada Comunale,0,0,101
-2024-04-26,Torino,Friday,Strada Comunale,1,0,71
-2024-04-27,Milano,Saturday,Strada Comunale,5,0,99
-2024-04-28,Bologna,Sunday,Strada Statale,2,0,33
-2024-04-29,Napoli,Monday,Autostrada,4,0,76
-2024-04-30,Torino,Tuesday,Strada Statale,2,0,82
-2024-05-01,Bologna,Wednesday,Autostrada,0,0,80
-2024-05-02,Roma,Thursday,Strada Comunale,1,0,30
-2024-05-03,Milano,Friday,Strada Statale,0,0,116
-2024-05-04,Milano,Saturday,Strada Comunale,0,0,54
-2024-05-05,Roma,Sunday,Strada Statale,0,0,90
-2024-05-06,Torino,Monday,Strada Comunale,0,0,80
-2024-05-07,Bologna,Tuesday,Autostrada,2,0,110
-2024-05-08,Milano,Wednesday,Autostrada,1,0,145
-2024-05-09,Napoli,Thursday,Autostrada,2,0,41
-2024-05-10,Roma,Friday,Strada Statale,3,0,60
-2024-05-11,Milano,Saturday,Autostrada,1,0,85
-2024-05-12,Milano,Sunday,Strada Statale,1,0,46
-2024-05-13,Roma,Monday,Autostrada,3,0,103
-2024-05-14,Bologna,Tuesday,Autostrada,0,0,105
-2024-05-15,Roma,Wednesday,Strada Statale,0,0,96
-2024-05-16,Napoli,Thursday,Strada Statale,0,0,87
-2024-05-17,Torino,Friday,Autostrada,0,0,121
-2024-05-18,Roma,Saturday,Strada Statale,1,0,45
-2024-05-19,Bologna,Sunday,Autostrada,0,0,81
-2024-05-20,Bologna,Monday,Strada Statale,4,0,57
-2024-05-21,Milano,Tuesday,Strada Comunale,1,0,106
-2024-05-22,Roma,Wednesday,Strada Comunale,1,0,24
-2024-05-23,Roma,Thursday,Strada Comunale,1,0,79
-2024-05-24,Milano,Friday,Strada Comunale,0,0,90
-2024-05-25,Milano,Saturday,Strada Comunale,2,0,51
-2024-05-26,Napoli,Sunday,Autostrada,0,0,61
-2024-05-27,Napoli,Monday,Strada Comunale,1,0,80
-2024-05-28,Milano,Tuesday,Strada Comunale,0,0,108
-2024-05-29,Milano,Wednesday,Strada Comunale,5,0,49
-2024-05-30,Bologna,Thursday,Strada Comunale,0,0,54
-2024-05-31,Milano,Friday,Strada Statale,1,0,113
-2024-06-01,Milano,Saturday,Autostrada,0,0,71
-2024-06-02,Roma,Sunday,Strada Comunale,2,0,56
-2024-06-03,Bologna,Monday,Strada Comunale,0,0,101
-2024-06-04,Milano,Tuesday,Strada Comunale,1,0,65
-2024-06-05,Napoli,Wednesday,Autostrada,2,0,110
-2024-06-06,Torino,Thursday,Strada Statale,2,0,60
-2024-06-07,Milano,Friday,Autostrada,2,0,75
-2024-06-08,Torino,Saturday,Strada Statale,5,1,108
-2024-06-09,Roma,Sunday,Strada Comunale,3,0,73
-2024-06-10,Napoli,Monday,Strada Comunale,1,0,102
-2024-06-11,Napoli,Tuesday,Autostrada,2,0,78
-2024-06-12,Napoli,Wednesday,Autostrada,1,0,139
-2024-06-13,Milano,Thursday,Strada Statale,1,0,127
-2024-06-14,Torino,Friday,Strada Statale,0,0,40
-2024-06-15,Roma,Saturday,Autostrada,3,0,95
-2024-06-16,Milano,Sunday,Strada Statale,0,0,55
-2024-06-17,Milano,Monday,Autostrada,3,0,85
-2024-06-18,Napoli,Tuesday,Strada Statale,2,0,82
-2024-06-19,Napoli,Wednesday,Autostrada,0,0,48
-2024-06-20,Milano,Thursday,Autostrada,3,0,111
-2024-06-21,Napoli,Friday,Autostrada,2,1,86
-2024-06-22,Milano,Saturday,Strada Statale,2,0,71
-2024-06-23,Napoli,Sunday,Strada Statale,0,0,66
-2024-06-24,Milano,Monday,Strada Statale,1,0,84
-2024-06-25,Napoli,Tuesday,Autostrada,1,0,92
-2024-06-26,Roma,Wednesday,Strada Statale,1,0,76
-2024-06-27,Bologna,Thursday,Strada Statale,4,0,20
-2024-06-28,Milano,Friday,Autostrada,1,0,80
-2024-06-29,Roma,Saturday,Strada Comunale,0,0,36
-2024-06-30,Milano,Sunday,Autostrada,1,0,73
-2024-07-01,Bologna,Monday,Strada Statale,2,0,37
-2024-07-02,Bologna,Tuesday,Autostrada,0,0,37
-2024-07-03,Milano,Wednesday,Strada Comunale,2,0,117
-2024-07-04,Napoli,Thursday,Autostrada,0,0,70
-2024-07-05,Torino,Friday,Strada Statale,2,0,68
-2024-07-06,Napoli,Saturday,Strada Comunale,0,0,94
-2024-07-07,Napoli,Sunday,Strada Statale,2,0,68
-2024-07-08,Milano,Monday,Strada Comunale,1,0,143
-2024-07-09,Milano,Tuesday,Strada Comunale,2,1,71
-2024-07-10,Bologna,Wednesday,Autostrada,1,0,90
-2024-07-11,Bologna,Thursday,Autostrada,0,0,109
-2024-07-12,Napoli,Friday,Strada Statale,3,0,128
-2024-07-13,Roma,Saturday,Autostrada,0,0,57
-2024-07-14,Roma,Sunday,Autostrada,0,0,67
-2024-07-15,Torino,Monday,Strada Comunale,1,0,118
-2024-07-16,Bologna,Tuesday,Autostrada,3,0,104
-2024-07-17,Bologna,Wednesday,Strada Comunale,5,0,112
-2024-07-18,Torino,Thursday,Strada Comunale,0,0,38
-2024-07-19,Napoli,Friday,Strada Comunale,0,0,126
-2024-07-20,Milano,Saturday,Strada Statale,3,0,57
-2024-07-21,Milano,Sunday,Strada Statale,0,0,85
-2024-07-22,Bologna,Monday,Strada Statale,0,1,75
-2024-07-23,Napoli,Tuesday,Strada Comunale,1,0,53
-2024-07-24,Milano,Wednesday,Strada Statale,0,1,37
-2024-07-25,Milano,Thursday,Strada Statale,1,0,27
-2024-07-26,Napoli,Friday,Autostrada,1,0,83
-2024-07-27,Milano,Saturday,Strada Statale,1,0,34
-2024-07-28,Milano,Sunday,Strada Statale,1,0,45
-2024-07-29,Napoli,Monday,Strada Comunale,0,0,73
-2024-07-30,Napoli,Tuesday,Strada Comunale,1,0,20
-2024-07-31,Napoli,Wednesday,Strada Comunale,1,0,103
-2024-08-01,Milano,Thursday,Strada Comunale,3,0,20
-2024-08-02,Torino,Friday,Strada Comunale,1,0,77
-2024-08-03,Milano,Saturday,Strada Comunale,0,0,80
-2024-08-04,Roma,Sunday,Strada Statale,1,0,96
-2024-08-05,Torino,Monday,Strada Comunale,2,0,78
-2024-08-06,Napoli,Tuesday,Strada Comunale,1,0,140
-2024-08-07,Torino,Wednesday,Autostrada,1,0,86
-2024-08-08,Napoli,Thursday,Strada Statale,0,0,111
-2024-08-09,Napoli,Friday,Strada Statale,1,0,58
-2024-08-10,Milano,Saturday,Strada Statale,0,0,83
-2024-08-11,Roma,Sunday,Strada Comunale,1,0,126
-2024-08-12,Milano,Monday,Strada Comunale,3,0,72
-2024-08-13,Milano,Tuesday,Strada Comunale,0,0,85
-2024-08-14,Bologna,Wednesday,Autostrada,0,0,109
-2024-08-15,Roma,Thursday,Strada Comunale,2,0,57
-2024-08-16,Bologna,Friday,Autostrada,1,0,20
-2024-08-17,Napoli,Saturday,Strada Statale,3,0,87
-2024-08-18,Torino,Sunday,Strada Comunale,1,0,109
-2024-08-19,Napoli,Monday,Autostrada,1,0,39
-2024-08-20,Napoli,Tuesday,Autostrada,3,0,100
-2024-08-21,Roma,Wednesday,Strada Comunale,2,0,100
-2024-08-22,Milano,Thursday,Strada Statale,0,0,20
-2024-08-23,Torino,Friday,Strada Statale,0,0,51
-2024-08-24,Milano,Saturday,Strada Statale,0,0,68
-2024-08-25,Milano,Sunday,Autostrada,0,0,74
-2024-08-26,Napoli,Monday,Autostrada,1,0,57
-2024-08-27,Milano,Tuesday,Autostrada,2,0,56
-2024-08-28,Bologna,Wednesday,Autostrada,2,0,130
-2024-08-29,Bologna,Thursday,Strada Statale,2,0,76
-2024-08-30,Bologna,Friday,Strada Comunale,3,0,59
-2024-08-31,Roma,Saturday,Autostrada,1,0,78
-2024-09-01,Milano,Sunday,Autostrada,0,0,96
-2024-09-02,Bologna,Monday,Strada Statale,0,0,81
-2024-09-03,Roma,Tuesday,Strada Comunale,2,1,73
-2024-09-04,Bologna,Wednesday,Strada Comunale,2,0,60
-2024-09-05,Bologna,Thursday,Strada Statale,2,0,60
-2024-09-06,Bologna,Friday,Strada Statale,2,0,62
-2024-09-07,Milano,Saturday,Strada Comunale,3,0,90
-2024-09-08,Roma,Sunday,Autostrada,1,0,50
-2024-09-09,Bologna,Monday,Strada Comunale,2,0,91
-2024-09-10,Roma,Tuesday,Strada Statale,2,0,122
-2024-09-11,Milano,Wednesday,Autostrada,0,0,89
-2024-09-12,Napoli,Thursday,Autostrada,2,0,68
-2024-09-13,Bologna,Friday,Strada Statale,0,0,41
-2024-09-14,Napoli,Saturday,Strada Statale,1,0,127
-2024-09-15,Napoli,Sunday,Strada Statale,2,0,44
-2024-09-16,Milano,Monday,Strada Comunale,2,0,105
-2024-09-17,Napoli,Tuesday,Strada Comunale,1,0,99
-2024-09-18,Bologna,Wednesday,Autostrada,0,0,72
-2024-09-19,Milano,Thursday,Strada Statale,2,0,72
-2024-09-20,Napoli,Friday,Autostrada,1,0,24
-2024-09-21,Bologna,Saturday,Autostrada,1,0,89
-2024-09-22,Torino,Sunday,Autostrada,2,0,98
-2024-09-23,Napoli,Monday,Autostrada,0,0,47
-2024-09-24,Torino,Tuesday,Strada Statale,0,0,75
-2024-09-25,Roma,Wednesday,Autostrada,1,0,81
-2024-09-26,Milano,Thursday,Strada Statale,2,0,97
-2024-09-27,Torino,Friday,Strada Statale,2,0,80
-2024-09-28,Torino,Saturday,Strada Comunale,0,0,31
-2024-09-29,Bologna,Sunday,Strada Statale,0,0,64
-2024-09-30,Bologna,Monday,Strada Comunale,2,0,86
-2024-10-01,Napoli,Tuesday,Strada Statale,4,0,105
-2024-10-02,Napoli,Wednesday,Strada Statale,0,0,61
-2024-10-03,Torino,Thursday,Strada Statale,0,0,145
-2024-10-04,Napoli,Friday,Strada Comunale,0,0,23
-2024-10-05,Torino,Saturday,Strada Comunale,2,0,63
-2024-10-06,Torino,Sunday,Autostrada,0,0,77
-2024-10-07,Bologna,Monday,Strada Comunale,2,0,73
-2024-10-08,Roma,Tuesday,Strada Comunale,1,1,43
-2024-10-09,Roma,Wednesday,Strada Comunale,0,0,93
-2024-10-10,Milano,Thursday,Strada Comunale,2,0,91
-2024-10-11,Napoli,Friday,Autostrada,3,0,81
-2024-10-12,Milano,Saturday,Strada Comunale,1,0,89
-2024-10-13,Roma,Sunday,Strada Statale,1,0,67
-2024-10-14,Napoli,Monday,Strada Statale,0,0,31
-2024-10-15,Milano,Tuesday,Strada Comunale,1,0,58
-2024-10-16,Napoli,Wednesday,Strada Comunale,0,0,84
-2024-10-17,Milano,Thursday,Strada Statale,2,0,84
-2024-10-18,Milano,Friday,Strada Statale,1,0,81
-2024-10-19,Torino,Saturday,Autostrada,1,0,96
-2024-10-20,Roma,Sunday,Strada Statale,4,0,62
-2024-10-21,Milano,Monday,Strada Statale,3,1,80
-2024-10-22,Napoli,Tuesday,Strada Comunale,3,0,97
-2024-10-23,Torino,Wednesday,Strada Statale,1,0,77
-2024-10-24,Milano,Thursday,Autostrada,1,0,42
-2024-10-25,Napoli,Friday,Strada Statale,2,0,51
-2024-10-26,Milano,Saturday,Strada Comunale,3,0,104
-2024-10-27,Milano,Sunday,Strada Comunale,3,0,121
-2024-10-28,Napoli,Monday,Strada Statale,1,0,115
-2024-10-29,Napoli,Tuesday,Strada Comunale,3,0,86
-2024-10-30,Napoli,Wednesday,Autostrada,1,0,43
-2024-10-31,Torino,Thursday,Autostrada,1,0,79
-2024-11-01,Bologna,Friday,Strada Statale,1,0,126
-2024-11-02,Napoli,Saturday,Strada Statale,1,0,98
-2024-11-03,Roma,Sunday,Strada Statale,1,0,73
-2024-11-04,Torino,Monday,Strada Comunale,0,0,98
-2024-11-05,Milano,Tuesday,Autostrada,1,0,41
-2024-11-06,Roma,Wednesday,Autostrada,0,0,59
-2024-11-07,Milano,Thursday,Strada Comunale,2,0,47
-2024-11-08,Milano,Friday,Autostrada,1,0,94
-2024-11-09,Bologna,Saturday,Strada Statale,2,0,101
-2024-11-10,Torino,Sunday,Strada Statale,0,0,75
-2024-11-11,Napoli,Monday,Strada Statale,1,0,53
-2024-11-12,Roma,Tuesday,Autostrada,1,0,79
-2024-11-13,Milano,Wednesday,Strada Statale,2,0,65
-2024-11-14,Milano,Thursday,Strada Comunale,3,0,56
-2024-11-15,Milano,Friday,Strada Comunale,0,0,90
-2024-11-16,Napoli,Saturday,Autostrada,0,0,57
-2024-11-17,Torino,Sunday,Strada Comunale,2,0,33
-2024-11-18,Napoli,Monday,Strada Comunale,1,0,39
-2024-11-19,Milano,Tuesday,Autostrada,2,0,31
-2024-11-20,Bologna,Wednesday,Strada Statale,1,2,87
-2024-11-21,Torino,Thursday,Strada Statale,0,0,84
-2024-11-22,Napoli,Friday,Strada Statale,1,0,83
-2024-11-23,Napoli,Saturday,Autostrada,1,0,97
-2024-11-24,Roma,Sunday,Strada Comunale,2,0,115
-2024-11-25,Milano,Monday,Strada Statale,1,0,62
-2024-11-26,Roma,Tuesday,Strada Statale,0,0,92
-2024-11-27,Torino,Wednesday,Autostrada,1,0,32
-2024-11-28,Milano,Thursday,Strada Statale,2,0,121
-2024-11-29,Milano,Friday,Autostrada,1,0,42
-2024-11-30,Milano,Saturday,Strada Comunale,3,0,58
-2024-12-01,Milano,Sunday,Autostrada,0,0,62
-2024-12-02,Bologna,Monday,Autostrada,3,0,34
-2024-12-03,Torino,Tuesday,Autostrada,1,0,80
-2024-12-04,Roma,Wednesday,Autostrada,0,0,86
-2024-12-05,Milano,Thursday,Strada Comunale,1,0,74
-2024-12-06,Roma,Friday,Strada Comunale,2,0,33
-2024-12-07,Roma,Saturday,Strada Statale,0,0,139
-2024-12-08,Milano,Sunday,Strada Comunale,1,0,96
-2024-12-09,Roma,Monday,Strada Comunale,2,0,159
-2024-12-10,Roma,Tuesday,Strada Statale,0,0,55
-2024-12-11,Napoli,Wednesday,Strada Comunale,1,0,108
-2024-12-12,Napoli,Thursday,Autostrada,1,0,103
-2024-12-13,Milano,Friday,Autostrada,2,0,71
-2024-12-14,Roma,Saturday,Strada Statale,0,0,122
-2024-12-15,Napoli,Sunday,Strada Statale,0,0,67
-2024-12-16,Napoli,Monday,Strada Statale,2,0,69
-2024-12-17,Bologna,Tuesday,Autostrada,0,0,20
-2024-12-18,Napoli,Wednesday,Strada Comunale,1,0,92
-2024-12-19,Milano,Thursday,Autostrada,2,0,40
-2024-12-20,Milano,Friday,Strada Statale,1,0,63
-2024-12-21,Napoli,Saturday,Strada Comunale,2,0,49
-2024-12-22,Milano,Sunday,Strada Comunale,1,0,69
-2024-12-23,Napoli,Monday,Autostrada,0,0,93
-2024-12-24,Bologna,Tuesday,Strada Statale,2,0,80
-2024-12-25,Napoli,Wednesday,Autostrada,0,0,101
-2024-12-26,Roma,Thursday,Strada Comunale,0,0,117
-2024-12-27,Napoli,Friday,Autostrada,1,0,68
-2024-12-28,Roma,Saturday,Autostrada,1,0,65
-2024-12-29,Napoli,Sunday,Strada Statale,1,0,108
-2024-12-30,Bologna,Monday,Strada Statale,1,0,111
-2024-12-31,Roma,Tuesday,Strada Comunale,1,0,102
-2025-01-01,Bologna,Wednesday,Autostrada,3,0,51
-2025-01-02,Bologna,Thursday,Autostrada,1,1,92
-2025-01-03,Milano,Friday,Autostrada,3,0,83
-2025-01-04,Milano,Saturday,Strada Comunale,2,0,111
-2025-01-05,Milano,Sunday,Strada Comunale,2,0,62
-2025-01-06,Milano,Monday,Strada Statale,1,0,30
-2025-01-07,Milano,Tuesday,Strada Statale,1,0,100
-2025-01-08,Napoli,Wednesday,Strada Statale,2,0,20
-2025-01-09,Milano,Thursday,Autostrada,3,0,58
-2025-01-10,Roma,Friday,Autostrada,1,0,49
-2025-01-11,Torino,Saturday,Strada Statale,4,0,49
-2025-01-12,Milano,Sunday,Autostrada,1,0,57
-2025-01-13,Torino,Monday,Strada Statale,1,0,116
-2025-01-14,Milano,Tuesday,Strada Comunale,3,0,104
-2025-01-15,Milano,Wednesday,Strada Statale,1,0,72
-2025-01-16,Napoli,Thursday,Strada Comunale,1,0,114
-2025-01-17,Napoli,Friday,Autostrada,2,0,48
-2025-01-18,Bologna,Saturday,Strada Statale,1,0,44
-2025-01-19,Torino,Sunday,Autostrada,2,0,105
-2025-01-20,Torino,Monday,Strada Comunale,3,0,97
-2025-01-21,Milano,Tuesday,Strada Comunale,1,0,66
-2025-01-22,Milano,Wednesday,Strada Comunale,2,0,45
-2025-01-23,Torino,Thursday,Autostrada,3,0,123
-2025-01-24,Torino,Friday,Autostrada,0,0,28
-2025-01-25,Bologna,Saturday,Autostrada,1,0,62
-2025-01-26,Roma,Sunday,Autostrada,1,0,86
-2025-01-27,Roma,Monday,Strada Comunale,3,0,134
-2025-01-28,Torino,Tuesday,Strada Comunale,3,0,91
-2025-01-29,Roma,Wednesday,Strada Statale,1,0,94
-2025-01-30,Bologna,Thursday,Strada Statale,1,2,62
-2025-01-31,Bologna,Friday,Autostrada,0,0,97
-2025-02-01,Roma,Saturday,Strada Comunale,1,0,83
-2025-02-02,Torino,Sunday,Strada Comunale,0,0,32
-2025-02-03,Torino,Monday,Strada Comunale,0,0,103
-2025-02-04,Milano,Tuesday,Strada Statale,3,0,109
-2025-02-05,Bologna,Wednesday,Strada Statale,1,0,104
-2025-02-06,Napoli,Thursday,Strada Comunale,1,0,80
-2025-02-07,Torino,Friday,Strada Comunale,1,0,51
-2025-02-08,Roma,Saturday,Strada Comunale,2,0,20
-2025-02-09,Bologna,Sunday,Strada Statale,0,0,84
-2025-02-10,Roma,Monday,Strada Comunale,2,0,112
-2025-02-11,Milano,Tuesday,Strada Comunale,1,0,109
-2025-02-12,Bologna,Wednesday,Autostrada,2,0,104
-2025-02-13,Milano,Thursday,Autostrada,0,0,77
-2025-02-14,Roma,Friday,Strada Statale,0,0,112
-2025-02-15,Bologna,Saturday,Strada Comunale,1,0,107
-2025-02-16,Bologna,Sunday,Strada Comunale,1,0,67
-2025-02-17,Napoli,Monday,Autostrada,3,0,100
-2025-02-18,Napoli,Tuesday,Strada Statale,1,0,63
-2025-02-19,Roma,Wednesday,Autostrada,1,0,96
-2025-02-20,Milano,Thursday,Autostrada,0,0,41
-2025-02-21,Roma,Friday,Autostrada,2,0,43
-2025-02-22,Napoli,Saturday,Autostrada,1,0,111
-2025-02-23,Torino,Sunday,Strada Comunale,3,0,108
-2025-02-24,Torino,Monday,Strada Comunale,1,0,99
-2025-02-25,Torino,Tuesday,Autostrada,0,0,82
-2025-02-26,Milano,Wednesday,Strada Statale,0,0,20
-2025-02-27,Roma,Thursday,Strada Statale,1,0,77
-2025-02-28,Milano,Friday,Strada Statale,1,0,93
-2025-03-01,Napoli,Saturday,Strada Statale,0,0,63
-2025-03-02,Roma,Sunday,Autostrada,0,0,58
-2025-03-03,Bologna,Monday,Strada Comunale,4,0,123
-2025-03-04,Roma,Tuesday,Strada Statale,1,0,78
-2025-03-05,Milano,Wednesday,Autostrada,1,0,93
-2025-03-06,Milano,Thursday,Strada Statale,1,0,103
-2025-03-07,Torino,Friday,Strada Statale,1,0,49
-2025-03-08,Napoli,Saturday,Autostrada,1,0,85
-2025-03-09,Milano,Sunday,Strada Comunale,1,0,119
-2025-03-10,Milano,Monday,Strada Comunale,4,0,134
-2025-03-11,Torino,Tuesday,Autostrada,1,0,81
-2025-03-12,Milano,Wednesday,Strada Comunale,0,0,72
-2025-03-13,Torino,Thursday,Autostrada,1,0,88
-2025-03-14,Torino,Friday,Autostrada,2,0,87
-2025-03-15,Milano,Saturday,Autostrada,3,0,121
-2025-03-16,Milano,Sunday,Strada Comunale,0,0,50
-2025-03-17,Bologna,Monday,Autostrada,1,0,71
-2025-03-18,Roma,Tuesday,Strada Statale,2,0,46
-2025-03-19,Roma,Wednesday,Strada Comunale,0,0,49
-2025-03-20,Torino,Thursday,Strada Comunale,0,0,91
-2025-03-21,Bologna,Friday,Strada Comunale,1,0,104
-2025-03-22,Bologna,Saturday,Strada Comunale,0,0,60
-2025-03-23,Torino,Sunday,Strada Statale,0,0,103
-2025-03-24,Roma,Monday,Strada Comunale,2,0,113
-2025-03-25,Milano,Tuesday,Strada Comunale,0,0,138
-2025-03-26,Torino,Wednesday,Autostrada,1,0,82
-2025-03-27,Napoli,Thursday,Strada Comunale,1,0,60
-2025-03-28,Roma,Friday,Strada Statale,0,0,49
-2025-03-29,Bologna,Saturday,Strada Statale,0,0,46
-2025-03-30,Milano,Sunday,Strada Statale,2,0,117
-2025-03-31,Roma,Monday,Strada Statale,0,0,34
-2025-04-01,Milano,Tuesday,Strada Comunale,0,0,116
-2025-04-02,Roma,Wednesday,Strada Comunale,1,0,53
-2025-04-03,Milano,Thursday,Strada Statale,2,0,59
-2025-04-04,Milano,Friday,Strada Statale,0,0,75
-2025-04-05,Milano,Saturday,Strada Comunale,0,0,58
-2025-04-06,Napoli,Sunday,Strada Statale,3,0,107
-2025-04-07,Torino,Monday,Autostrada,0,0,134
-2025-04-08,Napoli,Tuesday,Strada Statale,2,0,60
-2025-04-09,Bologna,Wednesday,Strada Statale,3,0,67
-2025-04-10,Roma,Thursday,Autostrada,2,0,75
-2025-04-11,Milano,Friday,Autostrada,2,0,96
-2025-04-12,Bologna,Saturday,Strada Comunale,1,0,75
-2025-04-13,Milano,Sunday,Strada Comunale,1,0,121
-2025-04-14,Bologna,Monday,Autostrada,1,0,114
-2025-04-15,Milano,Tuesday,Autostrada,0,0,44
-2025-04-16,Bologna,Wednesday,Strada Comunale,0,0,95
-2025-04-17,Milano,Thursday,Strada Statale,2,0,125
-2025-04-18,Bologna,Friday,Autostrada,4,0,65
-2025-04-19,Napoli,Saturday,Strada Comunale,2,0,71
-2025-04-20,Bologna,Sunday,Strada Statale,3,0,64
-2025-04-21,Milano,Monday,Autostrada,3,0,64
-2025-04-22,Napoli,Tuesday,Strada Statale,0,0,29
-2025-04-23,Bologna,Wednesday,Strada Comunale,0,0,40
-2025-04-24,Napoli,Thursday,Autostrada,2,0,82
-2025-04-25,Napoli,Friday,Strada Statale,3,0,125
-2025-04-26,Napoli,Saturday,Autostrada,1,0,61
-2025-04-27,Roma,Sunday,Strada Statale,0,0,60
-2025-04-28,Napoli,Monday,Strada Comunale,3,0,131
-2025-04-29,Napoli,Tuesday,Strada Comunale,1,0,46
-2025-04-30,Bologna,Wednesday,Autostrada,1,0,30
-2025-05-01,Milano,Thursday,Strada Statale,0,0,55
-2025-05-02,Milano,Friday,Autostrada,2,0,60
-2025-05-03,Bologna,Saturday,Autostrada,2,0,27
-2025-05-04,Bologna,Sunday,Strada Statale,2,1,76
-2025-05-05,Roma,Monday,Strada Statale,0,0,108
-2025-05-06,Napoli,Tuesday,Strada Statale,1,0,41
-2025-05-07,Milano,Wednesday,Strada Comunale,1,0,82
-2025-05-08,Milano,Thursday,Autostrada,1,0,91
-2025-05-09,Roma,Friday,Autostrada,1,0,77
-2025-05-10,Roma,Saturday,Strada Comunale,2,0,85
-2025-05-11,Napoli,Sunday,Strada Statale,0,1,85
-2025-05-12,Milano,Monday,Strada Comunale,1,0,55
-2025-05-13,Bologna,Tuesday,Strada Comunale,2,0,124
-2025-05-14,Bologna,Wednesday,Strada Comunale,3,0,117
+2025-02-16 18:03:29,Venezia,domenica,Extraurbana,9,0,74.8
+2024-07-14 21:34:29,Trieste,domenica,Urbana,9,1,87.5
+2025-06-03 14:35:29,Roma,martedÃ¬,Autostrada,4,0,108.2
+2024-10-28 16:08:29,Roma,lunedÃ¬,Extraurbana,6,0,56.4
+2025-05-22 00:14:29,Palermo,giovedÃ¬,Urbana,9,0,123.3
+2025-03-07 05:38:29,Catania,venerdÃ¬,Extraurbana,4,0,129.9
+2024-07-20 12:55:29,Bologna,sabato,Extraurbana,4,0,134.7
+2024-09-22 13:23:29,Milano,domenica,Extraurbana,0,0,54.6
+2025-02-11 10:17:29,Bologna,martedÃ¬,Urbana,8,0,47.0
+2024-07-09 03:49:29,Napoli,martedÃ¬,Extraurbana,2,0,67.9
+2025-05-21 14:54:29,Torino,mercoledÃ¬,Extraurbana,3,0,92.7
+2025-06-07 10:20:29,Catania,sabato,Autostrada,3,0,112.6
+2024-07-03 10:05:29,Milano,mercoledÃ¬,Urbana,7,2,114.0
+2025-04-26 14:57:29,Bari,sabato,Extraurbana,2,0,67.3
+2025-05-22 12:59:29,Genova,giovedÃ¬,Autostrada,5,0,96.1
+2024-08-25 09:13:29,Roma,domenica,Urbana,4,0,75.6
+2024-09-13 15:13:29,Genova,venerdÃ¬,Autostrada,7,0,73.2
+2025-03-08 18:22:29,Verona,sabato,Autostrada,1,0,115.8
+2025-04-11 08:35:29,Palermo,venerdÃ¬,Extraurbana,2,0,39.1
+2025-01-27 23:53:29,Bari,lunedÃ¬,Autostrada,3,0,78.5
+2024-10-02 10:19:29,Roma,mercoledÃ¬,Autostrada,4,0,48.3
+2025-02-19 02:38:29,Milano,mercoledÃ¬,Urbana,4,0,137.9
+2025-03-05 06:08:29,Milano,mercoledÃ¬,Autostrada,10,1,73.4
+2024-09-29 23:23:29,Bari,domenica,Extraurbana,1,0,138.4
+2024-08-17 14:16:29,Bari,sabato,Urbana,10,0,69.7
+2024-08-30 09:13:29,Bologna,venerdÃ¬,Extraurbana,6,0,89.4
+2024-08-25 09:25:29,Trieste,domenica,Extraurbana,7,0,80.4
+2024-09-25 06:56:29,Milano,mercoledÃ¬,Autostrada,10,0,56.3
+2024-08-05 05:19:29,Bari,lunedÃ¬,Urbana,3,2,121.1
+2025-01-11 15:37:29,Bari,sabato,Autostrada,9,0,104.6
+2025-01-30 04:55:29,Trieste,giovedÃ¬,Urbana,8,0,64.1
+2025-05-13 08:34:29,Verona,martedÃ¬,Extraurbana,9,0,62.6
+2025-01-21 21:10:29,Torino,martedÃ¬,Urbana,1,0,92.7
+2024-11-18 15:54:29,Trieste,lunedÃ¬,Autostrada,5,0,60.5
+2025-01-29 09:54:29,Torino,mercoledÃ¬,Autostrada,8,0,148.7
+2024-07-04 02:31:29,Milano,giovedÃ¬,Urbana,3,0,43.3
+2025-05-13 16:18:29,Torino,martedÃ¬,Extraurbana,2,0,85.0
+2025-03-31 16:30:29,Verona,lunedÃ¬,Extraurbana,7,2,128.1
+2025-06-23 12:45:29,Catania,lunedÃ¬,Urbana,0,0,37.6
+2024-09-05 05:33:29,Palermo,giovedÃ¬,Urbana,9,0,120.0
+2025-03-24 01:59:29,Genova,lunedÃ¬,Urbana,2,1,113.9
+2025-01-16 05:46:29,Roma,giovedÃ¬,Autostrada,3,0,139.8
+2024-12-14 09:35:29,Palermo,sabato,Urbana,5,0,48.6
+2025-02-09 17:04:29,Bologna,domenica,Urbana,4,0,42.7
+2025-04-04 23:04:29,Napoli,venerdÃ¬,Autostrada,2,0,136.9
+2025-01-10 07:28:29,Palermo,venerdÃ¬,Extraurbana,5,0,36.3
+2025-04-19 16:53:29,Roma,sabato,Autostrada,5,0,117.0
+2024-10-28 09:11:29,Trieste,lunedÃ¬,Autostrada,0,1,102.9
+2025-03-15 17:16:29,Napoli,sabato,Urbana,10,0,64.0
+2025-03-04 09:56:29,Genova,martedÃ¬,Extraurbana,8,0,73.3
+2024-10-21 18:55:29,Napoli,lunedÃ¬,Urbana,8,0,98.9
+2024-09-10 05:49:29,Venezia,martedÃ¬,Urbana,8,0,136.8
+2025-05-09 13:53:29,Firenze,venerdÃ¬,Urbana,8,0,35.9
+2025-04-05 13:44:29,Palermo,sabato,Autostrada,2,0,137.5
+2024-09-03 00:26:29,Bari,martedÃ¬,Autostrada,4,0,125.0
+2024-09-02 22:29:29,Napoli,lunedÃ¬,Autostrada,7,0,129.6
+2024-08-11 23:11:29,Palermo,domenica,Autostrada,2,0,93.2
+2025-02-03 13:55:29,Roma,lunedÃ¬,Autostrada,2,0,90.3
+2025-03-19 08:10:29,Napoli,mercoledÃ¬,Autostrada,10,0,113.1
+2025-05-24 12:07:29,Napoli,sabato,Urbana,3,0,113.9
+2024-08-21 12:21:29,Milano,mercoledÃ¬,Autostrada,0,0,60.1
+2025-05-18 15:42:29,Napoli,domenica,Extraurbana,4,0,92.5
+2025-05-15 07:24:29,Roma,giovedÃ¬,Autostrada,4,0,137.9
+2025-03-30 01:38:29,Bari,domenica,Extraurbana,5,0,65.9
+2025-02-21 05:59:29,Roma,venerdÃ¬,Autostrada,4,0,98.5
+2025-02-13 10:00:29,Roma,giovedÃ¬,Urbana,6,0,120.2
+2024-11-11 23:04:29,Firenze,lunedÃ¬,Autostrada,8,1,133.2
+2025-06-13 22:51:29,Verona,venerdÃ¬,Urbana,2,0,77.2
+2025-02-13 04:00:29,Bologna,giovedÃ¬,Extraurbana,6,0,143.3
+2024-11-13 16:58:29,Venezia,mercoledÃ¬,Extraurbana,5,0,124.8
+2025-02-20 16:19:29,Genova,giovedÃ¬,Urbana,4,0,40.8
+2024-08-13 23:02:29,Bari,martedÃ¬,Extraurbana,2,1,112.9
+2025-02-16 23:53:29,Catania,domenica,Extraurbana,1,2,36.5
+2025-04-11 20:35:29,Milano,venerdÃ¬,Autostrada,6,0,60.1
+2024-10-04 12:11:29,Genova,venerdÃ¬,Urbana,4,0,88.7
+2024-07-08 16:42:29,Venezia,lunedÃ¬,Urbana,0,0,128.1
+2024-07-25 07:22:29,Napoli,giovedÃ¬,Autostrada,2,0,96.1
+2025-03-18 20:37:29,Firenze,martedÃ¬,Extraurbana,3,0,90.2
+2025-04-30 05:12:29,Napoli,mercoledÃ¬,Urbana,0,0,105.0
+2025-05-14 22:49:29,Trieste,mercoledÃ¬,Urbana,0,0,139.9
+2025-04-18 01:34:29,Genova,venerdÃ¬,Urbana,8,0,103.3
+2025-05-01 22:15:29,Genova,giovedÃ¬,Urbana,1,0,30.9
+2024-08-29 01:57:29,Firenze,giovedÃ¬,Extraurbana,9,0,61.8
+2024-09-12 19:34:29,Milano,giovedÃ¬,Urbana,0,0,122.2
+2024-09-11 05:22:29,Bologna,mercoledÃ¬,Urbana,0,0,68.6
+2025-01-22 14:38:29,Roma,mercoledÃ¬,Autostrada,5,0,85.4
+2024-10-25 04:28:29,Bari,venerdÃ¬,Autostrada,2,0,55.6
+2024-12-21 01:03:29,Palermo,sabato,Urbana,10,0,65.9
+2025-04-06 04:18:29,Catania,domenica,Urbana,4,0,78.6
+2024-09-01 21:38:29,Bari,domenica,Urbana,1,0,91.3
+2025-05-16 11:54:29,Genova,venerdÃ¬,Urbana,4,1,88.5
+2024-09-25 00:26:29,Firenze,mercoledÃ¬,Autostrada,9,0,61.2
+2025-01-11 21:47:29,Genova,sabato,Extraurbana,6,0,86.8
+2024-08-18 21:55:29,Firenze,domenica,Autostrada,1,0,135.3
+2024-09-28 09:29:29,Milano,sabato,Autostrada,8,0,42.2
+2024-07-18 09:13:29,Catania,giovedÃ¬,Autostrada,0,0,135.2
+2024-11-19 21:58:29,Firenze,martedÃ¬,Autostrada,10,0,126.9
+2025-02-28 02:48:29,Verona,venerdÃ¬,Urbana,6,0,144.2
+2024-07-08 12:32:29,Trieste,lunedÃ¬,Urbana,0,0,66.6
+2024-12-27 01:58:29,Firenze,venerdÃ¬,Autostrada,10,0,61.8
+2025-01-07 10:40:29,Milano,martedÃ¬,Autostrada,5,0,108.1
+2025-04-15 02:07:29,Trieste,martedÃ¬,Extraurbana,9,1,87.3
+2025-04-29 04:22:29,Bologna,martedÃ¬,Urbana,3,0,57.1
+2024-07-20 13:40:29,Torino,sabato,Autostrada,1,0,55.0
+2025-01-02 02:42:29,Verona,giovedÃ¬,Urbana,7,0,143.1
+2025-05-03 15:38:29,Palermo,sabato,Urbana,4,0,115.2
+2025-04-11 02:57:29,Catania,venerdÃ¬,Extraurbana,2,0,116.1
+2024-07-04 03:20:29,Bologna,giovedÃ¬,Urbana,8,0,65.2
+2024-10-11 08:29:29,Bologna,venerdÃ¬,Urbana,8,0,45.9
+2024-12-06 10:34:29,Bologna,venerdÃ¬,Urbana,9,0,68.4
+2025-04-29 11:22:29,Bari,martedÃ¬,Urbana,10,0,119.0
+2024-11-26 21:54:29,Firenze,martedÃ¬,Autostrada,3,0,109.1
+2025-01-17 17:50:29,Bari,venerdÃ¬,Extraurbana,6,0,73.2
+2024-11-29 22:11:29,Venezia,venerdÃ¬,Autostrada,10,0,81.7
+2025-01-14 05:07:29,Napoli,martedÃ¬,Autostrada,8,0,78.7
+2024-12-25 22:29:29,Venezia,mercoledÃ¬,Urbana,6,0,132.3
+2024-09-13 18:52:29,Catania,venerdÃ¬,Extraurbana,2,1,52.9
+2025-04-22 14:20:29,Trieste,martedÃ¬,Extraurbana,0,0,122.5
+2024-08-11 01:10:29,Firenze,domenica,Autostrada,9,0,105.0
+2024-07-17 20:08:29,Milano,mercoledÃ¬,Autostrada,6,0,101.4
+2025-02-10 19:52:29,Bari,lunedÃ¬,Extraurbana,7,0,105.8
+2025-05-07 03:51:29,Trieste,mercoledÃ¬,Extraurbana,3,0,49.8
+2025-05-02 07:45:29,Venezia,venerdÃ¬,Autostrada,1,0,73.7
+2024-07-16 10:37:29,Bologna,martedÃ¬,Autostrada,8,0,64.7
+2025-04-28 02:05:29,Napoli,lunedÃ¬,Extraurbana,6,0,98.9
+2024-06-27 06:44:29,Catania,giovedÃ¬,Urbana,4,0,44.0
+2024-10-07 05:51:29,Verona,lunedÃ¬,Autostrada,8,0,77.0
+2025-05-09 14:23:29,Napoli,venerdÃ¬,Urbana,4,0,131.2
+2025-01-24 01:09:29,Palermo,venerdÃ¬,Autostrada,1,0,138.4
+2024-12-03 14:28:29,Torino,martedÃ¬,Urbana,8,0,40.0
+2024-11-27 15:00:29,Milano,mercoledÃ¬,Urbana,3,0,93.9
+2024-08-20 08:56:29,Torino,martedÃ¬,Extraurbana,10,0,46.4
+2025-02-17 03:43:29,Torino,lunedÃ¬,Urbana,5,0,42.8
+2025-04-08 11:58:29,Milano,martedÃ¬,Urbana,4,0,128.4
+2024-10-04 11:36:29,Venezia,venerdÃ¬,Extraurbana,8,0,90.7
+2024-07-13 17:45:29,Venezia,sabato,Extraurbana,8,0,42.3
+2025-05-20 12:43:29,Catania,martedÃ¬,Autostrada,0,0,116.4
+2025-02-17 01:55:29,Bari,lunedÃ¬,Extraurbana,7,0,67.8
+2024-10-30 19:02:29,Torino,mercoledÃ¬,Urbana,2,0,34.2
+2025-01-04 11:22:29,Bari,sabato,Extraurbana,1,1,138.3
+2025-01-29 09:21:29,Catania,mercoledÃ¬,Autostrada,0,0,75.8
+2024-12-24 04:12:29,Bari,martedÃ¬,Autostrada,10,0,64.7
+2025-06-05 18:53:29,Palermo,giovedÃ¬,Urbana,9,1,31.1
+2025-01-03 07:43:29,Napoli,venerdÃ¬,Extraurbana,9,0,55.8
+2024-10-21 00:09:29,Genova,lunedÃ¬,Autostrada,8,0,54.6
+2025-06-15 16:46:29,Catania,domenica,Extraurbana,5,1,129.7
+2025-04-14 15:38:29,Torino,lunedÃ¬,Extraurbana,8,0,123.6
+2024-09-30 00:13:29,Palermo,lunedÃ¬,Extraurbana,9,0,127.3
+2024-10-23 15:08:29,Genova,mercoledÃ¬,Autostrada,8,0,146.0
+2024-10-23 02:55:29,Trieste,mercoledÃ¬,Urbana,10,0,147.7
+2025-03-24 06:23:29,Bologna,lunedÃ¬,Extraurbana,6,0,124.6
+2025-04-25 13:27:29,Trieste,venerdÃ¬,Autostrada,7,0,134.5
+2025-02-22 04:39:29,Trieste,sabato,Urbana,5,0,132.2
+2024-11-23 08:47:29,Venezia,sabato,Urbana,4,0,48.5
+2024-11-05 22:06:29,Napoli,martedÃ¬,Extraurbana,0,0,136.3
+2025-03-26 18:38:29,Torino,mercoledÃ¬,Extraurbana,1,0,53.3
+2024-12-09 13:13:29,Trieste,lunedÃ¬,Extraurbana,3,0,65.8
+2025-01-14 00:29:29,Milano,martedÃ¬,Urbana,8,0,112.9
+2025-04-20 02:40:29,Firenze,domenica,Urbana,2,0,43.1
+2024-11-08 17:42:29,Venezia,venerdÃ¬,Extraurbana,4,0,54.6
+2025-06-21 03:15:29,Firenze,sabato,Autostrada,1,0,66.5
+2024-08-20 16:22:29,Napoli,martedÃ¬,Extraurbana,0,0,102.3
+2024-09-24 06:51:29,Bari,martedÃ¬,Autostrada,10,0,144.6
+2024-06-24 04:35:29,Venezia,lunedÃ¬,Autostrada,4,0,104.9
+2024-10-25 19:46:29,Trieste,venerdÃ¬,Urbana,4,0,73.9
+2024-11-03 14:24:29,Trieste,domenica,Extraurbana,5,0,44.4
+2024-12-30 00:36:29,Milano,lunedÃ¬,Autostrada,0,0,84.5
+2025-01-13 23:03:29,Genova,lunedÃ¬,Autostrada,6,0,58.0
+2024-07-22 07:29:29,Catania,lunedÃ¬,Extraurbana,8,0,57.8
+2025-05-18 13:01:29,Bari,domenica,Urbana,2,0,98.7
+2025-06-08 16:53:29,Roma,domenica,Autostrada,10,0,138.1
+2025-04-02 19:28:29,Torino,mercoledÃ¬,Extraurbana,2,0,101.4
+2025-03-01 19:03:29,Roma,sabato,Extraurbana,8,0,60.5
+2025-05-14 14:57:29,Verona,mercoledÃ¬,Autostrada,3,0,54.2
+2025-05-22 11:54:29,Trieste,giovedÃ¬,Extraurbana,5,0,88.7
+2024-08-01 18:38:29,Bari,giovedÃ¬,Extraurbana,6,0,115.9
+2025-04-28 20:26:29,Roma,lunedÃ¬,Urbana,1,1,96.9
+2024-06-26 15:49:29,Genova,mercoledÃ¬,Extraurbana,8,2,130.5
+2025-05-25 20:44:29,Roma,domenica,Extraurbana,3,0,97.3
+2025-03-14 04:08:29,Torino,venerdÃ¬,Autostrada,2,0,100.3
+2025-03-20 01:25:29,Venezia,giovedÃ¬,Autostrada,8,0,129.3
+2025-05-13 15:15:29,Bologna,martedÃ¬,Extraurbana,4,0,142.4
+2024-09-21 18:33:29,Genova,sabato,Autostrada,0,0,140.3
+2025-04-18 09:59:29,Bologna,venerdÃ¬,Autostrada,7,0,142.0
+2024-09-30 17:19:29,Napoli,lunedÃ¬,Urbana,7,0,149.1
+2024-11-14 15:30:29,Venezia,giovedÃ¬,Urbana,3,1,122.8
+2024-12-27 09:48:29,Milano,venerdÃ¬,Extraurbana,7,0,63.3
+2025-04-08 20:38:29,Firenze,martedÃ¬,Urbana,7,0,122.1
+2024-10-31 13:53:29,Milano,giovedÃ¬,Extraurbana,2,0,70.7
+2025-06-23 03:21:29,Catania,lunedÃ¬,Extraurbana,1,0,95.4
+2024-11-12 12:21:29,Verona,martedÃ¬,Urbana,5,0,41.2
+2025-03-21 05:54:29,Bari,venerdÃ¬,Urbana,7,1,54.7
+2025-06-09 12:08:29,Firenze,lunedÃ¬,Urbana,8,0,82.2
+2024-07-15 11:34:29,Torino,lunedÃ¬,Urbana,8,0,145.8
+2024-12-24 14:17:29,Venezia,martedÃ¬,Extraurbana,1,0,140.6
+2025-01-10 10:57:29,Roma,venerdÃ¬,Urbana,7,0,42.7
+2025-06-23 13:35:29,Genova,lunedÃ¬,Extraurbana,6,0,65.2
+2025-04-14 21:59:29,Catania,lunedÃ¬,Urbana,1,0,68.3
+2025-03-31 15:45:29,Roma,lunedÃ¬,Autostrada,8,0,85.5
+2025-05-19 00:25:29,Napoli,lunedÃ¬,Urbana,8,0,95.0
+2024-11-18 04:27:29,Catania,lunedÃ¬,Extraurbana,6,0,128.6
+2025-05-07 14:09:29,Firenze,mercoledÃ¬,Urbana,8,0,52.7
+2025-06-06 06:05:29,Trieste,venerdÃ¬,Extraurbana,2,0,53.9
+2024-11-06 16:29:29,Bologna,mercoledÃ¬,Extraurbana,5,0,141.6
+2024-10-13 09:17:29,Napoli,domenica,Extraurbana,3,0,80.6
+2024-10-07 00:30:29,Trieste,lunedÃ¬,Autostrada,10,0,142.6
+2024-10-15 09:50:29,Verona,martedÃ¬,Extraurbana,0,0,121.3
+2025-01-03 17:34:29,Palermo,venerdÃ¬,Autostrada,0,0,130.6
+2024-10-05 07:54:29,Roma,sabato,Urbana,4,0,107.7
+2024-09-27 21:14:29,Bologna,venerdÃ¬,Extraurbana,1,0,85.1
+2025-03-21 04:49:29,Verona,venerdÃ¬,Urbana,3,0,119.4
+2025-03-08 03:50:29,Trieste,sabato,Autostrada,10,0,138.9
+2024-09-01 12:48:29,Palermo,domenica,Extraurbana,8,0,76.5
+2025-05-08 21:36:29,Bari,giovedÃ¬,Urbana,2,0,106.5
+2025-02-22 14:18:29,Catania,sabato,Urbana,4,0,64.2
+2024-10-04 11:20:29,Roma,venerdÃ¬,Urbana,9,0,97.4
+2024-07-15 05:16:29,Palermo,lunedÃ¬,Urbana,5,0,88.6
+2025-02-08 04:40:29,Bologna,sabato,Autostrada,1,1,54.7
+2024-12-31 20:04:29,Milano,martedÃ¬,Urbana,3,0,31.6
+2024-06-29 01:43:29,Palermo,sabato,Urbana,10,1,95.2
+2025-04-28 02:30:29,Napoli,lunedÃ¬,Urbana,3,0,71.0
+2024-12-30 05:30:29,Verona,lunedÃ¬,Autostrada,6,0,52.8
+2025-06-11 13:43:29,Verona,mercoledÃ¬,Extraurbana,3,0,95.6
+2025-05-24 17:26:29,Milano,sabato,Autostrada,3,0,75.6
+2024-09-17 05:19:29,Venezia,martedÃ¬,Extraurbana,7,0,141.0
+2024-12-19 21:47:29,Napoli,giovedÃ¬,Urbana,5,0,59.8
+2024-11-16 16:34:29,Roma,sabato,Extraurbana,3,1,129.5
+2024-10-11 23:07:29,Bari,venerdÃ¬,Urbana,10,0,46.2
+2025-05-20 02:39:29,Bologna,martedÃ¬,Autostrada,0,0,78.2
+2024-08-08 04:57:29,Verona,giovedÃ¬,Autostrada,6,0,134.3
+2024-09-01 05:57:29,Catania,domenica,Autostrada,0,0,82.8
+2025-01-08 07:28:29,Trieste,mercoledÃ¬,Urbana,7,0,128.4
+2024-11-14 14:56:29,Milano,giovedÃ¬,Extraurbana,0,0,78.3
+2024-07-09 16:56:29,Roma,martedÃ¬,Extraurbana,8,0,145.0
+2025-05-14 08:25:29,Trieste,mercoledÃ¬,Autostrada,8,1,121.6
+2025-01-24 16:58:29,Venezia,venerdÃ¬,Extraurbana,8,0,145.1
+2024-12-05 13:08:29,Bologna,giovedÃ¬,Urbana,10,0,68.7
+2024-12-03 23:58:29,Catania,martedÃ¬,Autostrada,7,0,120.7
+2025-03-28 16:52:29,Trieste,venerdÃ¬,Extraurbana,1,0,51.8
+2025-05-17 21:18:29,Palermo,sabato,Autostrada,6,0,105.9
+2025-03-19 01:18:29,Roma,mercoledÃ¬,Urbana,6,0,74.8
+2024-12-01 02:46:29,Venezia,domenica,Urbana,7,0,30.7
+2024-08-04 18:31:29,Napoli,domenica,Extraurbana,6,0,81.8
+2024-07-12 09:43:29,Palermo,venerdÃ¬,Urbana,7,0,56.4
+2025-01-20 11:25:29,Milano,lunedÃ¬,Autostrada,1,0,144.9
+2024-07-30 01:13:29,Palermo,martedÃ¬,Extraurbana,3,0,67.2
+2024-07-02 15:03:29,Genova,martedÃ¬,Extraurbana,9,0,101.1
+2024-12-02 00:57:29,Genova,lunedÃ¬,Urbana,8,0,121.8
+2025-02-26 17:04:29,Palermo,mercoledÃ¬,Extraurbana,3,0,121.5
+2024-10-30 02:43:29,Milano,mercoledÃ¬,Extraurbana,8,0,87.5
+2025-05-16 04:22:29,Roma,venerdÃ¬,Urbana,3,0,39.2
+2025-04-09 05:08:29,Torino,mercoledÃ¬,Urbana,8,1,51.6
+2025-05-28 19:11:29,Genova,mercoledÃ¬,Urbana,2,0,90.4
+2025-04-13 02:20:29,Napoli,domenica,Urbana,1,0,76.9
+2024-10-09 22:25:29,Milano,mercoledÃ¬,Autostrada,10,0,42.4
+2024-10-05 13:30:29,Catania,sabato,Urbana,0,0,87.8
+2025-02-12 06:23:29,Torino,mercoledÃ¬,Extraurbana,7,0,121.8
+2024-08-22 15:25:29,Palermo,giovedÃ¬,Extraurbana,1,0,140.6
+2025-02-12 14:30:29,Palermo,mercoledÃ¬,Autostrada,7,0,46.5
+2024-10-17 12:38:29,Milano,giovedÃ¬,Autostrada,0,0,54.9
+2025-02-28 06:00:29,Palermo,venerdÃ¬,Autostrada,7,0,129.9
+2024-12-28 17:59:29,Trieste,sabato,Urbana,9,0,69.5
+2025-06-22 13:28:29,Catania,domenica,Extraurbana,2,0,60.5
+2025-05-25 01:47:29,Torino,domenica,Urbana,6,0,130.8
+2024-09-21 03:17:29,Catania,sabato,Autostrada,1,0,138.3
+2025-01-27 07:27:29,Milano,lunedÃ¬,Autostrada,6,0,76.7
+2024-10-02 23:16:29,Venezia,mercoledÃ¬,Autostrada,9,0,131.1
+2025-03-04 17:19:29,Trieste,martedÃ¬,Autostrada,9,0,85.4
+2024-12-21 04:09:29,Bari,sabato,Extraurbana,7,0,55.5
+2025-05-18 16:25:29,Palermo,domenica,Urbana,5,0,47.4
+2024-10-24 03:43:29,Palermo,giovedÃ¬,Autostrada,2,0,95.2
+2024-08-08 23:42:29,Torino,giovedÃ¬,Urbana,6,0,42.4
+2024-11-03 19:01:29,Trieste,domenica,Extraurbana,0,0,63.2
+2024-12-30 15:42:29,Trieste,lunedÃ¬,Extraurbana,5,0,100.0
+2024-11-03 23:15:29,Venezia,domenica,Autostrada,0,0,37.8
+2024-11-23 06:36:29,Venezia,sabato,Urbana,8,0,90.7
+2024-12-30 23:42:29,Napoli,lunedÃ¬,Autostrada,5,0,105.6
+2024-12-29 09:18:29,Napoli,domenica,Autostrada,9,0,95.8
+2024-09-05 07:33:29,Catania,giovedÃ¬,Autostrada,6,0,120.5
+2025-04-15 00:14:29,Bologna,martedÃ¬,Autostrada,10,1,61.3
+2024-07-03 22:39:29,Bari,mercoledÃ¬,Autostrada,9,1,36.9
+2024-07-08 09:34:29,Catania,lunedÃ¬,Autostrada,2,0,92.7
+2024-10-21 08:15:29,Catania,lunedÃ¬,Extraurbana,0,0,119.3
+2024-11-18 22:59:29,Venezia,lunedÃ¬,Extraurbana,9,0,148.0
+2025-04-11 13:15:29,Bologna,venerdÃ¬,Extraurbana,4,0,134.2
+2024-07-30 15:40:29,Trieste,martedÃ¬,Autostrada,1,0,44.9
+2024-09-14 18:10:29,Torino,sabato,Extraurbana,7,0,99.3
+2024-08-17 13:42:29,Firenze,sabato,Urbana,5,0,140.3
+2025-04-15 11:47:29,Bologna,martedÃ¬,Extraurbana,3,0,68.2
+2024-12-27 06:27:29,Bologna,venerdÃ¬,Urbana,10,0,145.8
+2025-05-08 19:58:29,Venezia,giovedÃ¬,Autostrada,10,0,57.4
+2025-01-27 20:53:29,Palermo,lunedÃ¬,Urbana,0,0,102.6
+2024-10-28 13:24:29,Milano,lunedÃ¬,Urbana,0,0,58.3
+2024-09-10 19:08:29,Palermo,martedÃ¬,Urbana,3,0,103.7
+2024-10-28 23:35:29,Bari,lunedÃ¬,Autostrada,8,0,79.4
+2025-03-12 14:04:29,Genova,mercoledÃ¬,Autostrada,1,0,84.0
+2025-03-01 03:36:29,Napoli,sabato,Urbana,3,1,135.3
+2025-05-16 15:13:29,Bologna,venerdÃ¬,Extraurbana,1,0,148.4
+2025-03-20 04:00:29,Roma,giovedÃ¬,Urbana,1,0,58.4
+2024-09-26 11:35:29,Bari,giovedÃ¬,Urbana,8,0,41.3
+2024-09-13 10:33:29,Trieste,venerdÃ¬,Urbana,0,0,39.1
+2024-08-19 01:43:29,Napoli,lunedÃ¬,Urbana,1,0,57.2
+2025-01-21 17:18:29,Palermo,martedÃ¬,Urbana,0,0,42.5
+2024-12-22 12:30:29,Milano,domenica,Autostrada,5,0,134.1
+2024-09-22 14:06:29,Torino,domenica,Urbana,3,0,70.2
+2025-03-24 20:42:29,Roma,lunedÃ¬,Urbana,4,0,143.3
+2024-09-10 18:55:29,Firenze,martedÃ¬,Extraurbana,9,0,101.4
+2025-01-08 16:25:29,Trieste,mercoledÃ¬,Extraurbana,5,0,54.5
+2025-05-22 12:16:29,Bari,giovedÃ¬,Urbana,8,0,108.7
+2025-02-28 11:15:29,Genova,venerdÃ¬,Urbana,2,0,37.1
+2024-11-05 18:51:29,Genova,martedÃ¬,Extraurbana,7,0,32.0
+2025-03-17 00:31:29,Catania,lunedÃ¬,Autostrada,1,0,130.5
+2025-04-23 08:21:29,Torino,mercoledÃ¬,Extraurbana,3,1,40.9
+2024-10-05 19:53:29,Trieste,sabato,Autostrada,0,0,70.2
+2025-01-23 14:25:29,Trieste,giovedÃ¬,Extraurbana,2,0,68.6
+2024-11-13 08:29:29,Napoli,mercoledÃ¬,Autostrada,4,0,56.6
+2025-06-18 03:31:29,Firenze,mercoledÃ¬,Extraurbana,1,0,77.7
+2024-10-02 14:48:29,Bari,mercoledÃ¬,Urbana,10,0,83.9
+2025-02-03 22:37:29,Milano,lunedÃ¬,Autostrada,8,0,95.2
+2024-08-14 20:31:29,Trieste,mercoledÃ¬,Extraurbana,6,0,63.7
+2024-07-13 05:58:29,Genova,sabato,Urbana,5,0,70.3
+2024-11-30 07:28:29,Torino,sabato,Extraurbana,3,0,129.9
+2025-02-06 22:53:29,Torino,giovedÃ¬,Autostrada,2,0,107.3
+2025-03-09 13:05:29,Palermo,domenica,Autostrada,7,0,98.4
+2024-07-25 08:43:29,Venezia,giovedÃ¬,Urbana,6,0,54.2
+2025-04-12 10:25:29,Bari,sabato,Extraurbana,4,0,48.5
+2025-01-31 04:59:29,Palermo,venerdÃ¬,Extraurbana,5,0,109.7
+2025-06-05 19:43:29,Venezia,giovedÃ¬,Extraurbana,2,0,145.6
+2024-09-09 13:46:29,Verona,lunedÃ¬,Extraurbana,4,0,96.4
+2025-03-18 14:59:29,Bologna,martedÃ¬,Autostrada,3,0,49.5
+2025-04-15 09:38:29,Milano,martedÃ¬,Extraurbana,4,0,108.5
+2025-01-29 19:09:29,Verona,mercoledÃ¬,Extraurbana,4,0,129.1
+2025-02-02 06:51:29,Genova,domenica,Autostrada,9,0,39.3
+2024-11-02 22:18:29,Firenze,sabato,Autostrada,4,0,31.9
+2025-01-07 04:42:29,Genova,martedÃ¬,Extraurbana,4,0,94.2
+2025-02-20 07:01:29,Palermo,giovedÃ¬,Autostrada,1,0,106.1
+2024-08-03 08:49:29,Napoli,sabato,Autostrada,10,1,91.7
+2025-05-22 22:41:29,Torino,giovedÃ¬,Urbana,9,0,102.5
+2025-03-30 19:39:29,Genova,domenica,Urbana,3,0,100.2
+2025-01-18 12:55:29,Catania,sabato,Autostrada,9,0,139.1
+2024-12-30 18:26:29,Roma,lunedÃ¬,Extraurbana,2,0,119.4
+2024-06-28 06:11:29,Bari,venerdÃ¬,Extraurbana,2,0,39.1
+2025-04-17 21:34:29,Firenze,giovedÃ¬,Autostrada,4,0,31.0
+2025-02-06 23:49:29,Napoli,giovedÃ¬,Extraurbana,7,0,108.2
+2025-04-23 10:13:29,Roma,mercoledÃ¬,Extraurbana,9,0,85.6
+2024-11-06 12:05:29,Bologna,mercoledÃ¬,Extraurbana,5,0,120.5
+2025-02-19 04:37:29,Roma,mercoledÃ¬,Autostrada,1,0,60.5
+2024-10-30 01:12:29,Bologna,mercoledÃ¬,Autostrada,6,0,149.5
+2024-09-23 21:58:29,Genova,lunedÃ¬,Extraurbana,8,0,38.2
+2025-04-06 08:42:29,Roma,domenica,Autostrada,6,0,110.3
+2024-06-27 15:41:29,Catania,giovedÃ¬,Extraurbana,9,0,53.9
+2025-05-22 04:17:29,Bari,giovedÃ¬,Extraurbana,10,0,49.4
+2025-04-03 02:56:29,Firenze,giovedÃ¬,Extraurbana,7,0,133.3
+2025-06-13 23:49:29,Trieste,venerdÃ¬,Urbana,8,0,87.7
+2025-01-27 16:46:29,Roma,lunedÃ¬,Urbana,1,0,125.0
+2025-02-08 14:14:29,Bologna,sabato,Urbana,5,0,132.6
+2025-06-03 02:13:29,Venezia,martedÃ¬,Extraurbana,10,1,84.2
+2024-11-07 00:56:29,Verona,giovedÃ¬,Extraurbana,4,0,49.4
+2024-11-26 18:18:29,Verona,martedÃ¬,Urbana,2,1,118.4
+2024-12-26 11:17:29,Trieste,giovedÃ¬,Extraurbana,3,0,94.1
+2025-03-19 19:13:29,Torino,mercoledÃ¬,Autostrada,2,0,148.6
+2024-08-14 21:32:29,Napoli,mercoledÃ¬,Autostrada,1,0,123.9
+2024-10-14 13:36:29,Venezia,lunedÃ¬,Extraurbana,1,0,149.2
+2025-01-01 22:49:29,Torino,mercoledÃ¬,Urbana,4,0,134.1
+2024-07-29 12:44:29,Bari,lunedÃ¬,Extraurbana,7,0,34.6
+2024-07-24 05:50:29,Torino,mercoledÃ¬,Extraurbana,5,0,75.0
+2025-04-29 06:41:29,Genova,martedÃ¬,Extraurbana,4,0,48.3
+2025-03-05 19:33:29,Bari,mercoledÃ¬,Urbana,3,2,32.0
+2024-07-22 08:57:29,Bari,lunedÃ¬,Urbana,1,0,121.7
+2024-07-11 02:59:29,Catania,giovedÃ¬,Autostrada,1,0,130.8
+2025-05-21 17:32:29,Milano,mercoledÃ¬,Urbana,9,0,91.8
+2025-02-23 01:32:29,Trieste,domenica,Autostrada,8,0,49.0
+2024-09-02 10:05:29,Roma,lunedÃ¬,Autostrada,0,0,121.4
+2024-08-18 18:28:29,Trieste,domenica,Autostrada,9,0,122.6
+2024-09-20 04:51:29,Catania,venerdÃ¬,Urbana,2,0,79.0
+2024-07-08 17:13:29,Verona,lunedÃ¬,Urbana,0,0,45.5
+2025-03-18 17:13:29,Bari,martedÃ¬,Urbana,4,0,121.0
+2025-04-08 08:23:29,Trieste,martedÃ¬,Autostrada,3,0,113.0
+2024-10-30 22:55:29,Bari,mercoledÃ¬,Autostrada,8,0,74.5
+2025-03-27 03:56:29,Bari,giovedÃ¬,Autostrada,8,0,57.5
+2024-07-22 20:38:29,Genova,lunedÃ¬,Extraurbana,5,0,37.0
+2024-10-01 10:48:29,Palermo,martedÃ¬,Urbana,8,0,34.5
+2024-09-19 00:48:29,Trieste,giovedÃ¬,Extraurbana,1,0,33.6
+2024-10-12 06:24:29,Genova,sabato,Extraurbana,9,0,80.6
+2024-12-26 17:55:29,Firenze,giovedÃ¬,Autostrada,2,0,38.7
+2025-02-28 22:27:29,Torino,venerdÃ¬,Autostrada,7,2,141.2
+2024-09-27 22:57:29,Catania,venerdÃ¬,Urbana,4,0,128.7
+2024-07-31 14:40:29,Torino,mercoledÃ¬,Extraurbana,5,0,30.8
+2024-10-08 05:29:29,Verona,martedÃ¬,Extraurbana,2,0,136.4
+2025-05-07 17:21:29,Venezia,mercoledÃ¬,Urbana,2,1,46.8
+2025-05-05 12:32:29,Torino,lunedÃ¬,Urbana,1,1,92.2
+2025-04-15 10:12:29,Roma,martedÃ¬,Urbana,2,0,32.2
+2024-12-30 16:52:29,Firenze,lunedÃ¬,Urbana,1,0,44.6
+2024-10-13 04:10:29,Milano,domenica,Urbana,0,0,50.0
+2025-01-10 21:16:29,Genova,venerdÃ¬,Extraurbana,7,0,45.5
+2024-08-07 18:49:29,Roma,mercoledÃ¬,Urbana,5,0,66.9
+2024-11-28 05:37:29,Bologna,giovedÃ¬,Autostrada,8,0,92.6
+2025-06-03 22:53:29,Bari,martedÃ¬,Urbana,9,0,56.5
+2024-10-19 06:55:29,Palermo,sabato,Autostrada,2,0,67.4
+2025-05-23 22:43:29,Napoli,venerdÃ¬,Autostrada,5,0,102.7
+2024-06-29 00:08:29,Palermo,sabato,Autostrada,5,1,133.7
+2025-04-10 00:49:29,Palermo,giovedÃ¬,Urbana,6,0,129.2
+2024-10-31 22:58:29,Roma,giovedÃ¬,Urbana,6,0,142.2
+2024-11-24 03:42:29,Milano,domenica,Urbana,8,0,85.0
+2025-04-13 14:49:29,Trieste,domenica,Autostrada,7,0,65.1
+2024-06-23 10:20:29,Bari,domenica,Extraurbana,1,3,92.7
+2024-10-19 18:58:29,Torino,sabato,Urbana,4,0,58.5
+2025-05-04 11:01:29,Firenze,domenica,Extraurbana,0,0,76.6
+2024-07-23 17:21:29,Venezia,martedÃ¬,Autostrada,9,0,104.1
+2025-02-10 09:34:29,Verona,lunedÃ¬,Urbana,3,0,111.9
+2025-01-07 07:05:29,Bari,martedÃ¬,Extraurbana,5,0,126.9
+2024-08-24 08:39:29,Roma,sabato,Extraurbana,5,0,133.4
+2024-09-16 02:21:29,Verona,lunedÃ¬,Autostrada,8,3,64.5
+2024-11-05 15:00:29,Catania,martedÃ¬,Autostrada,7,0,37.3
+2024-10-21 14:30:29,Catania,lunedÃ¬,Extraurbana,4,2,64.7
+2025-03-07 09:21:29,Catania,venerdÃ¬,Extraurbana,5,0,76.8
+2024-07-14 14:21:29,Verona,domenica,Extraurbana,6,0,80.4
+2024-10-18 15:38:29,Bari,venerdÃ¬,Urbana,2,2,134.7
+2025-05-13 03:08:29,Venezia,martedÃ¬,Urbana,10,0,100.3
+2024-08-01 21:56:29,Palermo,giovedÃ¬,Autostrada,6,0,38.2
+2025-02-28 23:28:29,Roma,venerdÃ¬,Extraurbana,10,1,71.8
+2025-05-13 19:33:29,Torino,martedÃ¬,Autostrada,3,0,41.5
+2024-12-03 22:25:29,Roma,martedÃ¬,Autostrada,5,1,122.3
+2025-04-04 19:27:29,Firenze,venerdÃ¬,Extraurbana,8,0,120.9
+2024-10-26 08:46:29,Palermo,sabato,Urbana,5,0,50.2
+2024-11-10 08:14:29,Torino,domenica,Extraurbana,8,0,78.0
+2024-09-04 13:01:29,Bari,mercoledÃ¬,Urbana,2,0,144.1
+2025-01-25 04:15:29,Catania,sabato,Extraurbana,10,1,41.6
+2025-01-15 04:42:29,Bologna,mercoledÃ¬,Extraurbana,6,0,62.6
+2025-03-11 12:49:29,Torino,martedÃ¬,Extraurbana,2,0,139.6
+2024-09-21 17:10:29,Napoli,sabato,Extraurbana,10,0,113.3
+2025-04-07 14:34:29,Venezia,lunedÃ¬,Urbana,10,0,90.6
+2024-12-31 11:40:29,Venezia,martedÃ¬,Extraurbana,2,0,139.8
+2025-04-05 04:24:29,Roma,sabato,Extraurbana,7,0,96.2
+2025-03-04 13:15:29,Firenze,martedÃ¬,Autostrada,10,0,42.4
+2024-08-12 13:51:29,Palermo,lunedÃ¬,Extraurbana,3,1,53.4
+2024-08-01 08:44:29,Genova,giovedÃ¬,Autostrada,1,0,56.4
+2025-03-22 21:45:29,Napoli,sabato,Extraurbana,10,0,67.7
+2025-01-21 18:04:29,Firenze,martedÃ¬,Autostrada,2,1,147.8
+2025-01-25 23:17:29,Bari,sabato,Extraurbana,1,0,137.3
+2025-03-26 02:55:29,Firenze,mercoledÃ¬,Extraurbana,5,0,34.0
+2025-03-17 05:31:29,Napoli,lunedÃ¬,Autostrada,1,0,101.3
+2025-05-04 14:39:29,Bari,domenica,Urbana,6,0,114.2
+2024-11-30 16:50:29,Trieste,sabato,Urbana,5,0,106.0
+2024-07-26 21:51:29,Milano,venerdÃ¬,Autostrada,0,0,34.6
+2024-10-15 22:08:29,Venezia,martedÃ¬,Autostrada,2,0,44.9
+2024-09-01 20:59:29,Venezia,domenica,Extraurbana,1,0,149.4
+2025-04-24 01:07:29,Genova,giovedÃ¬,Autostrada,9,0,90.2
+2025-04-29 08:30:29,Genova,martedÃ¬,Urbana,2,0,147.7
+2025-05-13 10:14:29,Venezia,martedÃ¬,Extraurbana,3,0,120.3
+2024-09-15 12:56:29,Napoli,domenica,Urbana,1,1,45.5
+2025-05-28 03:23:29,Genova,mercoledÃ¬,Autostrada,3,0,83.5
+2025-06-01 08:20:29,Milano,domenica,Extraurbana,6,0,83.3
+2024-11-09 02:18:29,Catania,sabato,Urbana,9,2,81.6
+2024-11-11 21:54:29,Roma,lunedÃ¬,Urbana,5,0,37.6
+2024-09-29 06:11:29,Verona,domenica,Urbana,8,0,91.2
+2025-03-30 20:41:29,Bologna,domenica,Urbana,0,0,55.9
+2025-06-01 00:32:29,Venezia,domenica,Urbana,5,1,40.7
+2024-12-12 06:49:29,Bologna,giovedÃ¬,Autostrada,7,0,55.5
+2024-07-29 18:03:29,Bari,lunedÃ¬,Urbana,8,0,84.3
+2024-12-09 10:23:29,Catania,lunedÃ¬,Extraurbana,7,0,59.7
+2024-07-21 19:55:29,Trieste,domenica,Autostrada,6,1,144.3
+2024-11-25 07:26:29,Genova,lunedÃ¬,Urbana,7,0,107.3
+2024-10-23 13:22:29,Milano,mercoledÃ¬,Autostrada,4,0,63.6
+2025-06-14 17:21:29,Trieste,sabato,Autostrada,8,0,60.0
+2024-08-30 06:42:29,Bologna,venerdÃ¬,Extraurbana,7,0,56.8
+2025-06-23 22:32:29,Genova,lunedÃ¬,Extraurbana,5,0,67.5
+2025-03-15 08:25:29,Bari,sabato,Autostrada,3,0,73.4
+2025-05-11 12:05:29,Firenze,domenica,Autostrada,4,0,47.6
+2025-03-22 18:08:29,Verona,sabato,Urbana,9,0,84.0
+2025-05-28 08:18:29,Bologna,mercoledÃ¬,Urbana,8,0,98.3
+2024-08-12 10:10:29,Venezia,lunedÃ¬,Urbana,5,0,128.1
+2024-07-02 06:22:29,Firenze,martedÃ¬,Extraurbana,4,0,70.7
+2024-10-25 12:29:29,Napoli,venerdÃ¬,Extraurbana,3,1,44.8
+2025-01-22 18:23:29,Verona,mercoledÃ¬,Extraurbana,3,0,68.0
+2024-07-06 07:02:29,Catania,sabato,Autostrada,8,0,90.2
+2025-02-23 09:59:29,Catania,domenica,Urbana,6,0,69.0
+2025-03-31 03:29:29,Catania,lunedÃ¬,Urbana,1,0,111.3
+2024-10-20 18:15:29,Torino,domenica,Autostrada,9,0,147.8
+2024-10-20 02:08:29,Torino,domenica,Autostrada,4,0,81.1
+2025-02-06 22:03:29,Roma,giovedÃ¬,Urbana,7,0,52.1
+2024-11-04 05:00:29,Bari,lunedÃ¬,Urbana,7,0,136.2
+2025-05-11 08:58:29,Trieste,domenica,Extraurbana,3,0,128.4
+2025-02-02 21:58:29,Bologna,domenica,Extraurbana,0,0,94.9
+2024-09-16 21:00:29,Trieste,lunedÃ¬,Extraurbana,2,1,102.5
+2024-07-26 20:07:29,Firenze,venerdÃ¬,Urbana,10,0,61.4
+2025-04-27 15:26:29,Venezia,domenica,Autostrada,2,0,71.0
+2025-02-18 09:07:29,Firenze,martedÃ¬,Autostrada,9,0,73.7
+2024-07-19 05:12:29,Verona,venerdÃ¬,Autostrada,7,0,75.9
+2025-02-09 05:00:29,Palermo,domenica,Autostrada,2,0,120.9
+2025-01-09 15:11:29,Napoli,giovedÃ¬,Extraurbana,1,0,54.3
+2025-03-20 21:00:29,Napoli,giovedÃ¬,Autostrada,2,0,110.6
+2024-11-26 10:44:29,Roma,martedÃ¬,Urbana,9,0,34.5
+2024-11-09 11:17:29,Catania,sabato,Autostrada,8,0,88.3
+2024-11-27 20:07:29,Roma,mercoledÃ¬,Extraurbana,3,0,135.4
+2025-02-15 12:36:29,Roma,sabato,Urbana,9,0,143.7
+2024-07-25 00:32:29,Bari,giovedÃ¬,Extraurbana,2,0,74.3
+2024-12-26 09:33:29,Milano,giovedÃ¬,Extraurbana,8,0,82.2
+2025-06-16 06:08:29,Napoli,lunedÃ¬,Extraurbana,4,0,67.9
+2025-01-06 18:40:29,Bologna,lunedÃ¬,Extraurbana,9,0,40.9
+2025-03-06 05:13:29,Bari,giovedÃ¬,Extraurbana,1,0,47.6
+2024-09-13 16:30:29,Torino,venerdÃ¬,Extraurbana,9,0,80.1
+2024-09-12 07:36:29,Verona,giovedÃ¬,Extraurbana,8,0,92.1
+2025-04-29 20:32:29,Genova,martedÃ¬,Urbana,6,0,115.0
+2024-08-23 01:45:29,Verona,venerdÃ¬,Extraurbana,9,0,139.6
+2024-09-24 03:26:29,Roma,martedÃ¬,Urbana,6,0,97.2
+2025-06-02 00:54:29,Roma,lunedÃ¬,Extraurbana,2,0,58.8
+2024-07-05 12:54:29,Napoli,venerdÃ¬,Autostrada,7,0,131.8
+2025-03-12 02:32:29,Verona,mercoledÃ¬,Urbana,10,0,121.8
+2025-02-08 17:35:29,Napoli,sabato,Urbana,10,0,59.3
+2025-02-06 23:01:29,Torino,giovedÃ¬,Urbana,2,0,76.8
+2025-04-12 00:05:29,Firenze,sabato,Urbana,0,0,55.5
+2025-01-23 17:26:29,Catania,giovedÃ¬,Urbana,10,0,36.4
+2025-06-09 05:37:29,Bologna,lunedÃ¬,Urbana,4,0,139.8
+2024-12-13 14:15:29,Firenze,venerdÃ¬,Extraurbana,2,0,76.9
+2025-03-23 00:03:29,Bari,domenica,Extraurbana,9,0,58.4
+2024-06-26 19:47:29,Trieste,mercoledÃ¬,Autostrada,10,0,145.7
+2025-01-15 03:11:29,Napoli,mercoledÃ¬,Extraurbana,1,0,148.2
+2025-03-13 05:52:29,Roma,giovedÃ¬,Autostrada,5,0,126.1
+2024-09-25 21:20:29,Torino,mercoledÃ¬,Urbana,7,0,114.4
+2024-10-21 21:27:29,Bologna,lunedÃ¬,Autostrada,2,0,39.2
+2024-07-31 11:12:29,Torino,mercoledÃ¬,Autostrada,1,0,79.6
+2025-03-26 02:43:29,Genova,mercoledÃ¬,Extraurbana,7,0,63.2
+2025-05-16 17:55:29,Genova,venerdÃ¬,Urbana,1,0,106.2
+2025-05-26 18:15:29,Bologna,lunedÃ¬,Extraurbana,4,0,77.3
+2025-04-12 14:04:29,Catania,sabato,Urbana,5,0,68.1
+2024-09-01 08:53:29,Milano,domenica,Autostrada,1,0,87.0
+2025-03-22 09:15:29,Bari,sabato,Autostrada,0,0,112.7
+2024-10-03 14:51:29,Milano,giovedÃ¬,Urbana,8,1,37.1
+2024-11-29 10:28:29,Torino,venerdÃ¬,Urbana,5,0,94.0
+2024-10-27 15:49:29,Bari,domenica,Extraurbana,6,0,145.1
+2024-11-01 04:15:29,Bologna,venerdÃ¬,Urbana,2,0,111.8
+2024-07-12 18:09:29,Firenze,venerdÃ¬,Autostrada,4,0,62.4
+2024-10-13 02:28:29,Firenze,domenica,Extraurbana,1,1,138.1
+2024-09-02 04:49:29,Bari,lunedÃ¬,Extraurbana,10,0,106.5
+2024-10-29 23:30:29,Milano,martedÃ¬,Autostrada,9,0,71.6
+2024-07-01 16:27:29,Roma,lunedÃ¬,Urbana,2,0,62.3
+2024-12-23 22:33:29,Napoli,lunedÃ¬,Urbana,3,0,105.2
+2024-08-13 16:10:29,Napoli,martedÃ¬,Extraurbana,8,1,129.9
+2024-11-02 20:39:29,Palermo,sabato,Extraurbana,10,0,93.5
+2025-01-10 17:37:29,Napoli,venerdÃ¬,Autostrada,3,0,141.1
+2024-07-10 05:09:29,Genova,mercoledÃ¬,Urbana,3,0,119.3
+2025-01-23 02:52:29,Bari,giovedÃ¬,Autostrada,4,0,76.0
+2025-06-19 00:57:29,Bologna,giovedÃ¬,Urbana,9,0,142.8
+2024-12-04 00:02:29,Torino,mercoledÃ¬,Autostrada,4,0,135.3
+2025-05-11 06:18:29,Catania,domenica,Autostrada,2,0,66.5
+2025-04-22 19:55:29,Genova,martedÃ¬,Autostrada,5,0,139.4
+2024-11-19 13:09:29,Bari,martedÃ¬,Urbana,2,0,75.7
+2024-10-20 16:31:29,Bologna,domenica,Urbana,7,0,62.9
+2025-02-21 22:08:29,Trieste,venerdÃ¬,Autostrada,6,0,96.9
+2025-04-24 06:23:29,Palermo,giovedÃ¬,Extraurbana,0,0,64.2
+2025-06-04 22:45:29,Venezia,mercoledÃ¬,Extraurbana,0,0,122.5
+2025-01-21 17:28:29,Milano,martedÃ¬,Autostrada,1,0,32.0
+2024-08-08 14:02:29,Venezia,giovedÃ¬,Extraurbana,7,0,114.1
+2025-01-11 06:13:29,Bologna,sabato,Urbana,3,0,54.8
+2024-11-01 06:13:29,Catania,venerdÃ¬,Extraurbana,3,0,39.3
+2025-01-19 16:00:29,Catania,domenica,Urbana,3,0,129.5
+2025-03-21 06:04:29,Bologna,venerdÃ¬,Autostrada,2,0,85.3
+2025-05-05 13:09:29,Palermo,lunedÃ¬,Urbana,0,0,99.6
+2024-08-25 21:36:29,Catania,domenica,Extraurbana,2,0,82.4
+2024-12-23 18:33:29,Roma,lunedÃ¬,Urbana,9,0,81.5
+2025-04-23 05:55:29,Torino,mercoledÃ¬,Extraurbana,10,0,33.9
+2025-01-16 03:31:29,Catania,giovedÃ¬,Extraurbana,3,0,130.2
+2025-05-04 09:20:29,Firenze,domenica,Extraurbana,10,0,42.5
+2024-12-24 00:20:29,Catania,martedÃ¬,Urbana,6,0,81.4
+2025-05-28 16:21:29,Palermo,mercoledÃ¬,Urbana,3,0,95.1
+2024-12-14 03:04:29,Venezia,sabato,Autostrada,1,0,105.8
+2024-12-06 20:29:29,Roma,venerdÃ¬,Urbana,1,0,87.5
+2025-02-04 21:03:29,Verona,martedÃ¬,Extraurbana,2,1,117.5
+2024-12-20 22:48:29,Genova,venerdÃ¬,Autostrada,9,0,64.5
+2025-05-28 05:17:29,Milano,mercoledÃ¬,Extraurbana,6,0,109.6
+2024-12-14 19:31:29,Napoli,sabato,Extraurbana,2,0,45.9
+2025-05-24 06:12:29,Roma,sabato,Autostrada,0,0,112.2
+2024-06-30 09:29:29,Torino,domenica,Urbana,0,0,69.7
+2025-03-25 04:27:29,Firenze,martedÃ¬,Extraurbana,4,0,84.4
+2025-04-08 13:15:29,Bologna,martedÃ¬,Extraurbana,3,0,55.9
+2024-08-09 23:56:29,Palermo,venerdÃ¬,Extraurbana,5,0,142.8
+2025-05-01 18:13:29,Catania,giovedÃ¬,Urbana,6,0,130.5
+2024-08-09 03:43:29,Milano,venerdÃ¬,Autostrada,0,0,92.5
+2025-01-16 22:19:29,Genova,giovedÃ¬,Autostrada,7,0,141.3
+2024-07-16 09:16:29,Bologna,martedÃ¬,Extraurbana,4,0,94.6
+2024-12-02 15:16:29,Milano,lunedÃ¬,Autostrada,9,0,97.9
+2025-06-04 19:14:29,Milano,mercoledÃ¬,Autostrada,10,0,65.8
+2024-10-10 05:01:29,Catania,giovedÃ¬,Autostrada,5,0,130.8
+2024-06-26 16:29:29,Trieste,mercoledÃ¬,Autostrada,6,0,116.1
+2025-03-23 18:44:29,Napoli,domenica,Autostrada,5,0,90.0
+2025-04-19 22:49:29,Venezia,sabato,Autostrada,6,0,92.5
+2025-04-06 07:58:29,Firenze,domenica,Urbana,0,0,142.2
+2024-08-21 13:24:29,Milano,mercoledÃ¬,Extraurbana,9,0,103.4
+2025-06-19 20:32:29,Bari,giovedÃ¬,Extraurbana,7,0,98.4
+2025-05-26 11:52:29,Bari,lunedÃ¬,Extraurbana,0,0,128.1
+2024-10-26 20:22:29,Palermo,sabato,Autostrada,10,1,77.3
+2025-04-11 17:56:29,Palermo,venerdÃ¬,Extraurbana,0,0,47.2
+2024-10-30 02:05:29,Verona,mercoledÃ¬,Autostrada,10,0,31.1
+2024-08-28 14:33:29,Firenze,mercoledÃ¬,Extraurbana,7,0,78.6
+2024-09-20 05:31:29,Venezia,venerdÃ¬,Autostrada,3,0,40.4
+2024-09-26 03:32:29,Milano,giovedÃ¬,Extraurbana,3,0,60.4
+2025-03-24 05:34:29,Palermo,lunedÃ¬,Extraurbana,9,0,120.2
+2024-10-03 08:53:29,Torino,giovedÃ¬,Extraurbana,5,0,59.6
+2024-11-10 01:00:29,Firenze,domenica,Urbana,0,0,89.4
+2025-01-21 07:52:29,Verona,martedÃ¬,Urbana,10,0,82.5
+2025-02-28 02:07:29,Roma,venerdÃ¬,Extraurbana,5,0,82.1
+2024-12-02 03:59:29,Bari,lunedÃ¬,Urbana,10,0,106.4
+2025-05-08 19:28:29,Torino,giovedÃ¬,Extraurbana,1,0,40.9
+2025-05-17 07:32:29,Trieste,sabato,Extraurbana,5,0,33.6
+2025-06-01 20:45:29,Roma,domenica,Extraurbana,0,0,98.7
+2025-03-08 17:34:29,Firenze,sabato,Autostrada,0,0,67.2
+2024-08-07 15:20:29,Bari,mercoledÃ¬,Urbana,1,2,92.6
+2025-03-18 05:11:29,Catania,martedÃ¬,Urbana,5,0,148.3
+2024-09-04 11:11:29,Catania,mercoledÃ¬,Extraurbana,7,0,141.2
+2025-01-03 14:27:29,Genova,venerdÃ¬,Autostrada,6,0,53.2
+2024-10-06 23:11:29,Napoli,domenica,Extraurbana,2,0,100.0
+2024-06-27 00:16:29,Trieste,giovedÃ¬,Urbana,3,0,106.6
+2024-07-18 05:25:29,Catania,giovedÃ¬,Extraurbana,9,0,132.4
+2025-06-03 15:14:29,Venezia,martedÃ¬,Urbana,1,0,34.9
+2025-01-03 20:08:29,Bologna,venerdÃ¬,Urbana,5,0,121.3
+2025-02-07 19:17:29,Napoli,venerdÃ¬,Autostrada,10,0,69.0
+2024-12-08 02:31:29,Genova,domenica,Autostrada,8,0,86.4
+2024-11-15 04:00:29,Roma,venerdÃ¬,Extraurbana,3,0,104.1
+2024-08-08 11:17:29,Catania,giovedÃ¬,Urbana,10,0,53.6
+2024-09-01 04:17:29,Torino,domenica,Urbana,1,1,131.4
+2025-01-30 22:10:29,Milano,giovedÃ¬,Urbana,9,0,32.6
+2024-07-28 22:52:29,Bologna,domenica,Autostrada,4,0,58.2
+2024-07-21 17:19:29,Bari,domenica,Extraurbana,7,0,31.2
+2024-09-27 10:07:29,Bologna,venerdÃ¬,Autostrada,3,1,45.2
+2025-05-09 05:51:29,Milano,venerdÃ¬,Extraurbana,9,1,134.9
+2025-01-30 07:02:29,Trieste,giovedÃ¬,Autostrada,0,0,78.1
+2024-11-25 10:07:29,Venezia,lunedÃ¬,Extraurbana,8,0,143.7
+2025-03-09 12:47:29,Milano,domenica,Urbana,7,0,93.3
+2024-10-09 22:50:29,Bari,mercoledÃ¬,Extraurbana,5,0,45.2
+2025-02-24 07:26:29,Bologna,lunedÃ¬,Urbana,9,0,96.9
+2025-04-30 15:27:29,Bologna,mercoledÃ¬,Autostrada,9,0,69.1
+2024-11-09 00:01:29,Venezia,sabato,Extraurbana,4,0,107.0
+2025-05-12 14:55:29,Catania,lunedÃ¬,Autostrada,0,0,114.8
+2025-03-14 21:17:29,Catania,venerdÃ¬,Autostrada,8,0,53.7
+2025-04-07 13:55:29,Trieste,lunedÃ¬,Urbana,6,1,111.5
+2024-08-17 04:27:29,Milano,sabato,Urbana,7,0,57.2
+2025-01-07 03:35:29,Bologna,martedÃ¬,Urbana,5,0,66.0
+2025-04-26 16:07:29,Venezia,sabato,Extraurbana,8,0,127.5
+2024-12-23 12:58:29,Firenze,lunedÃ¬,Autostrada,6,0,76.4
+2024-12-20 05:03:29,Venezia,venerdÃ¬,Extraurbana,9,0,127.8
+2025-01-03 08:45:29,Napoli,venerdÃ¬,Autostrada,7,0,78.4
+2025-04-13 17:42:29,Catania,domenica,Urbana,8,0,74.8
+2024-07-31 21:13:29,Venezia,mercoledÃ¬,Autostrada,5,0,87.0
+2025-01-03 10:33:29,Napoli,venerdÃ¬,Extraurbana,3,0,34.7
+2025-01-14 22:40:29,Venezia,martedÃ¬,Urbana,6,0,117.0
+2025-03-27 09:26:29,Firenze,giovedÃ¬,Urbana,4,1,140.3
+2024-10-05 00:50:29,Venezia,sabato,Extraurbana,7,0,80.5
+2024-12-06 16:28:29,Napoli,venerdÃ¬,Autostrada,2,0,59.6
+2024-11-13 15:58:29,Trieste,mercoledÃ¬,Autostrada,6,0,125.3
+2025-05-09 04:27:29,Firenze,venerdÃ¬,Autostrada,5,0,55.0
+2024-11-24 20:21:29,Trieste,domenica,Urbana,3,0,53.2
+2024-08-26 19:21:29,Palermo,lunedÃ¬,Extraurbana,6,0,128.1
+2024-09-12 23:29:29,Torino,giovedÃ¬,Autostrada,1,0,118.8
+2024-12-22 12:23:29,Venezia,domenica,Extraurbana,3,1,39.0
+2024-11-03 21:08:29,Bari,domenica,Urbana,2,0,51.2
+2025-01-26 12:01:29,Palermo,domenica,Urbana,0,0,78.0
+2024-10-29 20:45:29,Bari,martedÃ¬,Urbana,4,0,37.7
+2025-01-17 05:57:29,Palermo,venerdÃ¬,Extraurbana,6,0,54.7
+2024-10-04 22:08:29,Milano,venerdÃ¬,Extraurbana,8,0,55.6
+2024-08-12 04:24:29,Trieste,lunedÃ¬,Urbana,3,0,92.2
+2024-08-18 10:59:29,Catania,domenica,Extraurbana,3,0,107.8
+2025-04-25 16:02:29,Verona,venerdÃ¬,Autostrada,8,0,116.7
+2025-06-05 10:00:29,Venezia,giovedÃ¬,Autostrada,3,0,143.1
+2025-05-29 17:46:29,Roma,giovedÃ¬,Extraurbana,4,0,36.6
+2024-08-04 10:14:29,Bologna,domenica,Autostrada,1,0,105.9
+2025-01-08 01:44:29,Genova,mercoledÃ¬,Autostrada,8,0,88.1
+2024-11-07 11:04:29,Trieste,giovedÃ¬,Extraurbana,10,0,61.0
+2024-11-07 07:47:29,Palermo,giovedÃ¬,Urbana,3,0,111.6
+2024-12-26 19:42:29,Palermo,giovedÃ¬,Urbana,10,0,55.9
+2024-09-05 23:45:29,Milano,giovedÃ¬,Urbana,3,0,82.5
+2024-08-06 07:20:29,Verona,martedÃ¬,Autostrada,1,0,126.0
+2025-01-24 16:09:29,Catania,venerdÃ¬,Extraurbana,1,0,141.5
+2025-02-23 01:07:29,Bari,domenica,Urbana,7,0,137.0
+2024-11-01 18:31:29,Torino,venerdÃ¬,Extraurbana,2,0,101.2
+2025-01-29 15:47:29,Catania,mercoledÃ¬,Extraurbana,10,0,33.8
+2025-03-18 00:41:29,Bologna,martedÃ¬,Urbana,4,0,70.8
+2024-10-31 09:04:29,Bologna,giovedÃ¬,Urbana,7,0,136.7
+2025-05-04 04:01:29,Bari,domenica,Extraurbana,9,0,141.8
+2024-08-08 01:45:29,Milano,giovedÃ¬,Extraurbana,10,0,115.1
+2024-12-05 22:33:29,Milano,giovedÃ¬,Autostrada,9,1,30.9
+2024-07-27 02:50:29,Bari,sabato,Extraurbana,3,1,114.3
+2024-12-05 23:21:29,Firenze,giovedÃ¬,Autostrada,3,0,64.0
+2025-02-12 14:03:29,Roma,mercoledÃ¬,Extraurbana,4,0,141.8
+2025-06-21 04:24:29,Genova,sabato,Autostrada,5,1,130.7
+2024-07-15 11:04:29,Catania,lunedÃ¬,Urbana,10,0,52.4
+2025-04-04 05:45:29,Palermo,venerdÃ¬,Autostrada,4,0,60.1
+2025-03-28 21:56:29,Bologna,venerdÃ¬,Urbana,0,0,137.0
+2025-01-15 09:27:29,Napoli,mercoledÃ¬,Extraurbana,9,0,55.3
+2024-08-11 15:05:29,Torino,domenica,Urbana,3,0,128.0
+2025-03-29 02:07:29,Verona,sabato,Autostrada,2,0,120.4
+2024-12-12 19:52:29,Napoli,giovedÃ¬,Urbana,9,0,140.0
+2025-06-05 13:51:29,Milano,giovedÃ¬,Urbana,4,0,125.9
+2024-08-18 11:34:29,Torino,domenica,Urbana,9,0,30.9
+2024-07-24 11:44:29,Bologna,mercoledÃ¬,Autostrada,9,0,73.2
+2025-05-18 10:48:29,Venezia,domenica,Urbana,8,1,60.4
+2025-05-14 01:21:29,Genova,mercoledÃ¬,Extraurbana,10,0,56.0
+2025-05-01 01:56:29,Roma,giovedÃ¬,Autostrada,4,2,133.4
+2025-05-01 22:09:29,Trieste,giovedÃ¬,Urbana,5,0,31.5
+2025-01-18 14:38:29,Catania,sabato,Autostrada,1,0,141.3
+2025-06-08 02:49:29,Palermo,domenica,Urbana,6,0,82.7
+2024-12-25 16:45:29,Catania,mercoledÃ¬,Urbana,0,0,127.5
+2024-12-20 03:35:29,Bari,venerdÃ¬,Autostrada,10,0,47.5
+2024-11-23 17:16:29,Roma,sabato,Extraurbana,4,0,43.0
+2025-01-17 02:12:29,Torino,venerdÃ¬,Autostrada,1,1,30.6
+2024-12-11 16:53:29,Roma,mercoledÃ¬,Urbana,10,0,33.5
+2024-10-07 12:24:29,Trieste,lunedÃ¬,Urbana,3,0,131.3
+2024-10-31 23:59:29,Torino,giovedÃ¬,Autostrada,3,0,62.2
+2024-11-10 11:47:29,Torino,domenica,Extraurbana,5,0,81.0
+2025-06-06 19:38:29,Firenze,venerdÃ¬,Autostrada,9,0,89.5
+2024-09-24 08:03:29,Bologna,martedÃ¬,Extraurbana,2,0,121.0
+2025-04-26 09:26:29,Roma,sabato,Autostrada,5,1,74.4
+2024-11-14 20:18:29,Torino,giovedÃ¬,Urbana,5,0,86.1
+2024-08-08 20:26:29,Catania,giovedÃ¬,Extraurbana,8,0,85.0
+2024-08-03 11:15:29,Bologna,sabato,Extraurbana,8,0,102.1
+2025-01-19 08:54:29,Roma,domenica,Autostrada,8,0,67.5
+2024-12-28 23:17:29,Milano,sabato,Urbana,2,0,76.5
+2025-03-02 07:23:29,Milano,domenica,Extraurbana,3,1,62.6
+2024-08-09 07:44:29,Palermo,venerdÃ¬,Extraurbana,6,1,79.8
+2024-10-23 18:00:29,Bologna,mercoledÃ¬,Urbana,6,0,74.5
+2025-01-24 23:20:29,Venezia,venerdÃ¬,Urbana,1,0,110.1
+2024-08-05 22:34:29,Bari,lunedÃ¬,Urbana,6,0,90.9
+2025-02-13 02:27:29,Genova,giovedÃ¬,Extraurbana,6,0,85.6
+2025-04-24 22:23:29,Bologna,giovedÃ¬,Autostrada,4,0,72.3
+2024-10-23 07:35:29,Roma,mercoledÃ¬,Extraurbana,10,0,146.2
+2024-11-03 05:16:29,Milano,domenica,Urbana,7,1,125.6
+2025-04-23 09:01:29,Trieste,mercoledÃ¬,Autostrada,3,0,82.3
+2024-08-03 14:58:29,Genova,sabato,Extraurbana,4,0,113.9
+2024-12-23 07:06:29,Palermo,lunedÃ¬,Urbana,0,0,49.0
+2024-06-28 15:32:29,Venezia,venerdÃ¬,Urbana,4,1,33.7
+2024-09-04 15:54:29,Catania,mercoledÃ¬,Autostrada,0,0,147.7
+2025-01-07 05:47:29,Venezia,martedÃ¬,Extraurbana,4,0,78.0
+2025-06-09 03:53:29,Milano,lunedÃ¬,Autostrada,1,0,77.6
+2025-06-06 05:25:29,Catania,venerdÃ¬,Autostrada,10,0,89.6
+2025-06-17 00:27:29,Firenze,martedÃ¬,Autostrada,8,0,141.8
+2025-03-20 17:12:29,Verona,giovedÃ¬,Autostrada,7,0,134.3
+2025-04-04 14:59:29,Trieste,venerdÃ¬,Urbana,8,1,77.2
+2025-03-14 03:33:29,Trieste,venerdÃ¬,Autostrada,0,0,91.7
+2024-08-23 22:44:29,Firenze,venerdÃ¬,Autostrada,10,1,130.7
+2025-05-04 15:59:29,Milano,domenica,Extraurbana,1,0,126.9
+2025-02-21 06:13:29,Napoli,venerdÃ¬,Extraurbana,8,0,41.5
+2024-08-07 14:03:29,Venezia,mercoledÃ¬,Urbana,4,0,118.0
+2024-09-10 12:50:29,Trieste,martedÃ¬,Autostrada,2,0,74.0
+2024-10-12 11:02:29,Venezia,sabato,Urbana,3,1,32.7
+2025-05-02 15:48:29,Palermo,venerdÃ¬,Autostrada,10,0,46.8
+2025-01-17 13:42:29,Palermo,venerdÃ¬,Urbana,2,0,46.8
+2024-08-10 12:31:29,Venezia,sabato,Extraurbana,10,0,123.6
+2024-10-12 23:40:29,Bologna,sabato,Autostrada,5,0,46.3
+2025-03-23 13:46:29,Bologna,domenica,Autostrada,0,0,78.0
+2025-03-05 12:02:29,Firenze,mercoledÃ¬,Extraurbana,8,0,82.6
+2025-02-08 15:05:29,Trieste,sabato,Autostrada,10,0,93.1
+2025-02-21 01:28:29,Genova,venerdÃ¬,Urbana,1,0,140.5
+2025-04-04 03:28:29,Firenze,venerdÃ¬,Urbana,5,0,115.4
+2025-01-17 13:52:29,Trieste,venerdÃ¬,Urbana,2,0,80.7
+2024-11-19 14:51:29,Bologna,martedÃ¬,Autostrada,3,0,37.8
+2024-07-20 19:36:29,Bari,sabato,Extraurbana,1,0,139.9
+2025-01-17 19:51:29,Venezia,venerdÃ¬,Autostrada,0,0,131.1
+2025-04-08 17:04:29,Torino,martedÃ¬,Autostrada,7,1,73.6
+2024-11-27 21:15:29,Trieste,mercoledÃ¬,Urbana,7,1,120.6
+2025-05-09 03:59:29,Trieste,venerdÃ¬,Autostrada,7,0,32.4
+2025-02-06 18:52:29,Roma,giovedÃ¬,Urbana,9,0,129.0
+2025-03-22 03:59:29,Palermo,sabato,Urbana,6,0,63.8
+2025-02-12 01:22:29,Bologna,mercoledÃ¬,Autostrada,3,0,65.4
+2024-11-16 16:29:29,Milano,sabato,Extraurbana,2,0,129.2
+2025-05-12 04:34:29,Catania,lunedÃ¬,Extraurbana,0,1,72.1
+2025-01-22 06:44:29,Trieste,mercoledÃ¬,Extraurbana,4,0,108.6
+2024-11-01 07:07:29,Napoli,venerdÃ¬,Autostrada,8,0,106.6
+2024-12-06 01:20:29,Milano,venerdÃ¬,Extraurbana,4,0,132.9
+2025-01-31 12:08:29,Firenze,venerdÃ¬,Urbana,7,0,134.9
+2025-04-15 10:00:29,Bologna,martedÃ¬,Autostrada,4,0,133.1
+2025-02-25 20:10:29,Torino,martedÃ¬,Autostrada,5,0,125.8
+2025-01-25 13:13:29,Verona,sabato,Autostrada,4,0,33.1
+2025-01-25 22:16:29,Roma,sabato,Urbana,9,0,138.7
+2025-02-09 20:48:29,Verona,domenica,Extraurbana,6,0,87.8
+2024-09-23 08:43:29,Venezia,lunedÃ¬,Urbana,2,0,43.9
+2024-09-19 15:56:29,Venezia,giovedÃ¬,Autostrada,9,0,57.0
+2025-05-16 03:52:29,Firenze,venerdÃ¬,Autostrada,3,0,34.1
+2024-10-15 21:58:29,Firenze,martedÃ¬,Urbana,3,0,144.0
+2025-06-09 04:48:29,Catania,lunedÃ¬,Urbana,1,0,100.5
+2025-05-28 03:48:29,Milano,mercoledÃ¬,Autostrada,1,0,58.4
+2025-03-18 01:02:29,Firenze,martedÃ¬,Urbana,4,0,88.2
+2025-02-25 01:11:29,Napoli,martedÃ¬,Urbana,8,0,68.0
+2025-02-02 11:03:29,Firenze,domenica,Autostrada,7,0,62.4
+2024-10-15 03:50:29,Trieste,martedÃ¬,Extraurbana,8,3,92.2
+2025-02-02 22:40:29,Catania,domenica,Autostrada,9,0,53.9
+2025-01-13 04:00:29,Bologna,lunedÃ¬,Extraurbana,9,0,149.4
+2024-10-05 01:27:29,Trieste,sabato,Urbana,3,0,110.8
+2024-11-23 04:04:29,Verona,sabato,Autostrada,7,0,62.2
+2024-10-15 11:07:29,Bologna,martedÃ¬,Autostrada,8,0,54.5
+2024-12-27 11:48:29,Bari,venerdÃ¬,Urbana,9,0,80.0
+2024-06-30 09:14:29,Catania,domenica,Urbana,8,0,62.7
+2025-02-03 00:27:29,Venezia,lunedÃ¬,Urbana,2,3,136.0
+2025-02-11 05:25:29,Firenze,martedÃ¬,Urbana,5,0,59.4
+2025-05-24 19:48:29,Torino,sabato,Urbana,4,0,61.7
+2024-11-20 15:40:29,Roma,mercoledÃ¬,Autostrada,4,0,135.4
+2024-12-03 20:50:29,Bologna,martedÃ¬,Urbana,6,0,73.4
+2024-08-30 14:29:29,Palermo,venerdÃ¬,Urbana,2,0,110.7
+2025-03-09 02:56:29,Trieste,domenica,Autostrada,0,0,46.9
+2024-10-25 14:19:29,Torino,venerdÃ¬,Autostrada,0,0,59.2
+2024-08-13 20:20:29,Trieste,martedÃ¬,Autostrada,5,0,95.8
+2024-09-18 07:01:29,Napoli,mercoledÃ¬,Urbana,3,0,70.3
+2025-05-25 02:12:29,Bologna,domenica,Autostrada,10,0,63.1
+2025-01-03 11:17:29,Catania,venerdÃ¬,Extraurbana,0,0,77.8
+2024-09-11 18:08:29,Catania,mercoledÃ¬,Urbana,8,1,46.4
+2024-08-23 08:04:29,Bari,venerdÃ¬,Autostrada,0,0,114.6
+2025-05-07 18:31:29,Bari,mercoledÃ¬,Autostrada,2,0,92.8
+2024-09-09 12:57:29,Palermo,lunedÃ¬,Autostrada,4,0,104.0
+2024-11-13 10:50:29,Roma,mercoledÃ¬,Urbana,3,0,66.6
+2024-09-19 01:19:29,Palermo,giovedÃ¬,Urbana,0,0,137.2
+2025-01-19 15:42:29,Trieste,domenica,Extraurbana,2,0,121.2
+2025-05-30 09:17:29,Genova,venerdÃ¬,Extraurbana,10,0,132.1
+2025-03-06 21:14:29,Torino,giovedÃ¬,Urbana,5,1,142.2
+2025-06-11 13:30:29,Trieste,mercoledÃ¬,Autostrada,0,0,82.4
+2025-04-07 17:55:29,Catania,lunedÃ¬,Autostrada,10,0,117.9
+2024-11-03 22:29:29,Roma,domenica,Extraurbana,2,0,122.7
+2025-03-18 18:21:29,Genova,martedÃ¬,Urbana,7,0,119.6
+2024-11-07 17:19:29,Catania,giovedÃ¬,Extraurbana,2,1,82.0
+2024-10-08 07:37:29,Roma,martedÃ¬,Extraurbana,9,0,60.2
+2024-10-22 03:11:29,Milano,martedÃ¬,Autostrada,3,0,45.2
+2024-12-20 07:52:29,Trieste,venerdÃ¬,Urbana,5,0,60.7
+2025-03-06 01:06:29,Venezia,giovedÃ¬,Extraurbana,3,0,98.6
+2024-08-07 23:09:29,Milano,mercoledÃ¬,Urbana,0,1,140.5
+2025-05-14 10:37:29,Palermo,mercoledÃ¬,Urbana,7,1,65.3
+2025-01-03 09:23:29,Bari,venerdÃ¬,Extraurbana,0,0,80.1
+2025-06-23 16:13:29,Catania,lunedÃ¬,Urbana,6,1,97.5
+2025-04-19 16:12:29,Napoli,sabato,Extraurbana,1,0,40.4
+2024-11-17 15:50:29,Torino,domenica,Urbana,7,0,78.2
+2025-03-01 13:54:29,Torino,sabato,Urbana,2,0,95.7
+2024-11-07 11:42:29,Trieste,giovedÃ¬,Autostrada,7,0,94.6
+2025-01-28 18:29:29,Venezia,martedÃ¬,Urbana,1,0,144.1
+2025-04-11 18:16:29,Verona,venerdÃ¬,Autostrada,1,0,53.6
+2024-08-22 22:33:29,Firenze,giovedÃ¬,Urbana,10,0,135.9
+2024-10-22 10:28:29,Torino,martedÃ¬,Autostrada,7,0,114.5
+2024-11-01 20:33:29,Torino,venerdÃ¬,Autostrada,5,0,79.8
+2024-12-16 19:20:29,Roma,lunedÃ¬,Extraurbana,9,0,96.4
+2025-02-04 14:10:29,Bologna,martedÃ¬,Extraurbana,0,0,73.0
+2025-05-01 02:48:29,Torino,giovedÃ¬,Extraurbana,8,0,67.7
+2025-01-16 00:31:29,Venezia,giovedÃ¬,Urbana,6,1,40.7
+2024-09-20 16:46:29,Bologna,venerdÃ¬,Autostrada,0,0,145.6
+2024-08-27 05:54:29,Palermo,martedÃ¬,Extraurbana,2,3,87.1
+2024-09-12 19:26:29,Torino,giovedÃ¬,Urbana,4,0,58.8
+2024-07-19 15:43:29,Firenze,venerdÃ¬,Autostrada,3,0,118.2
+2025-03-06 09:36:29,Torino,giovedÃ¬,Extraurbana,8,0,124.1
+2024-06-25 17:35:29,Torino,martedÃ¬,Urbana,0,0,132.1
+2024-08-10 23:18:29,Napoli,sabato,Autostrada,6,0,61.8
+2024-11-13 20:23:29,Bari,mercoledÃ¬,Urbana,4,0,126.4
+2024-12-18 03:51:29,Torino,mercoledÃ¬,Extraurbana,3,0,49.5
+2025-06-02 11:52:29,Venezia,lunedÃ¬,Urbana,10,0,90.9
+2024-07-12 04:42:29,Palermo,venerdÃ¬,Autostrada,1,0,117.1
+2025-03-14 14:52:29,Torino,venerdÃ¬,Urbana,8,0,144.3
+2025-04-24 18:28:29,Roma,giovedÃ¬,Extraurbana,1,0,73.7
+2025-01-23 17:57:29,Torino,giovedÃ¬,Urbana,10,1,141.8
+2025-06-22 19:36:29,Venezia,domenica,Extraurbana,1,0,73.6
+2024-07-05 21:13:29,Trieste,venerdÃ¬,Urbana,4,0,102.1
+2025-02-02 21:36:29,Trieste,domenica,Autostrada,4,1,39.0
+2025-05-27 15:41:29,Bari,martedÃ¬,Urbana,1,0,106.4
+2024-10-19 23:58:29,Genova,sabato,Autostrada,9,0,69.2
+2024-09-06 05:28:29,Firenze,venerdÃ¬,Extraurbana,5,0,57.7
+2024-09-20 15:58:29,Roma,venerdÃ¬,Autostrada,4,1,80.1
+2025-03-29 18:50:29,Roma,sabato,Autostrada,8,0,140.9
+2024-11-11 23:30:29,Verona,lunedÃ¬,Autostrada,4,0,105.3
+2025-04-12 01:15:29,Trieste,sabato,Urbana,7,0,112.3
+2024-11-28 15:53:29,Verona,giovedÃ¬,Autostrada,6,0,112.9
+2025-01-21 16:22:29,Milano,martedÃ¬,Urbana,2,0,37.7
+2025-06-13 22:16:29,Bologna,venerdÃ¬,Urbana,3,0,30.0
+2024-12-01 16:31:29,Catania,domenica,Urbana,7,0,47.9
+2024-08-28 10:01:29,Bari,mercoledÃ¬,Extraurbana,8,0,77.0
+2025-02-13 13:33:29,Trieste,giovedÃ¬,Urbana,4,0,146.3
+2024-12-29 21:28:29,Genova,domenica,Extraurbana,10,0,34.3
+2024-07-11 19:59:29,Torino,giovedÃ¬,Extraurbana,2,0,61.2
+2024-08-22 04:26:29,Bologna,giovedÃ¬,Autostrada,5,0,75.9
+2024-12-12 10:18:29,Milano,giovedÃ¬,Autostrada,5,0,31.2
+2025-04-25 11:33:29,Trieste,venerdÃ¬,Urbana,7,0,67.7
+2024-11-18 06:51:29,Verona,lunedÃ¬,Urbana,10,0,89.0
+2025-04-24 06:40:29,Venezia,giovedÃ¬,Autostrada,1,0,67.1
+2025-05-28 07:50:29,Milano,mercoledÃ¬,Autostrada,7,0,32.4
+2024-11-02 18:54:29,Milano,sabato,Urbana,10,0,85.5
+2025-03-30 15:42:29,Verona,domenica,Urbana,10,0,74.7
+2025-03-11 23:44:29,Bologna,martedÃ¬,Urbana,1,0,108.2
+2025-03-19 10:53:29,Roma,mercoledÃ¬,Autostrada,2,0,62.7
+2025-06-13 17:27:29,Bologna,venerdÃ¬,Autostrada,5,0,144.6
+2024-10-01 14:38:29,Torino,martedÃ¬,Urbana,5,0,38.1
+2024-10-05 02:42:29,Genova,sabato,Urbana,8,0,91.0
+2024-07-07 23:18:29,Bari,domenica,Autostrada,1,0,96.4
+2024-09-07 23:24:29,Verona,sabato,Extraurbana,10,0,94.7
+2025-05-30 22:42:29,Trieste,venerdÃ¬,Autostrada,1,1,87.9
+2024-09-22 19:39:29,Torino,domenica,Autostrada,3,0,76.4
+2024-09-21 10:22:29,Torino,sabato,Urbana,0,0,100.1
+2024-12-11 13:55:29,Verona,mercoledÃ¬,Urbana,10,0,31.3
+2024-12-10 18:19:29,Genova,martedÃ¬,Urbana,7,0,88.6
+2025-02-16 10:03:29,Bari,domenica,Autostrada,7,0,81.9
+2024-10-19 03:55:29,Napoli,sabato,Autostrada,7,0,127.1
+2024-10-29 12:35:29,Genova,martedÃ¬,Extraurbana,4,0,145.0
+2025-04-24 03:27:29,Bologna,giovedÃ¬,Urbana,9,1,134.8
+2025-01-06 12:21:29,Palermo,lunedÃ¬,Autostrada,5,0,53.4
+2025-04-21 08:15:29,Palermo,lunedÃ¬,Urbana,10,0,134.3
+2024-10-18 23:10:29,Torino,venerdÃ¬,Autostrada,4,0,34.6
+2025-04-01 01:46:29,Genova,martedÃ¬,Urbana,4,0,104.9
+2025-01-05 15:13:29,Torino,domenica,Urbana,10,0,141.0
+2024-09-24 16:59:29,Napoli,martedÃ¬,Autostrada,6,0,71.9
+2024-12-07 02:26:29,Catania,sabato,Urbana,2,0,92.9
+2024-08-31 20:10:29,Roma,sabato,Extraurbana,0,0,67.3
+2025-06-04 07:15:29,Palermo,mercoledÃ¬,Autostrada,3,0,149.7
+2024-07-07 13:27:29,Venezia,domenica,Urbana,9,0,147.7
+2025-06-06 01:12:29,Bologna,venerdÃ¬,Autostrada,7,0,97.8
+2024-07-31 05:25:29,Trieste,mercoledÃ¬,Urbana,1,0,109.2
+2025-03-07 20:30:29,Bari,venerdÃ¬,Autostrada,1,0,81.4
+2024-07-18 07:12:29,Catania,giovedÃ¬,Extraurbana,10,0,133.9
+2025-01-17 17:26:29,Roma,venerdÃ¬,Autostrada,9,1,76.0
+2025-05-02 02:10:29,Torino,venerdÃ¬,Urbana,5,0,37.2
+2024-11-18 16:51:29,Catania,lunedÃ¬,Extraurbana,7,1,105.1
+2025-03-14 04:35:29,Roma,venerdÃ¬,Urbana,10,0,117.3
+2024-12-30 16:41:29,Venezia,lunedÃ¬,Autostrada,9,0,79.5
+2024-08-17 07:17:29,Palermo,sabato,Urbana,4,2,141.3
+2024-12-28 19:22:29,Firenze,sabato,Autostrada,4,0,114.7
+2025-04-07 12:45:29,Palermo,lunedÃ¬,Urbana,4,1,100.9
+2024-08-14 10:18:29,Catania,mercoledÃ¬,Urbana,4,0,85.8
+2024-11-26 11:48:29,Milano,martedÃ¬,Autostrada,2,0,30.1
+2024-09-28 04:31:29,Trieste,sabato,Urbana,7,0,39.5
+2024-07-01 01:14:29,Napoli,lunedÃ¬,Autostrada,4,0,40.0
+2025-01-30 11:48:29,Genova,giovedÃ¬,Extraurbana,7,0,130.7
+2024-07-18 21:39:29,Verona,giovedÃ¬,Autostrada,7,0,66.8
+2024-09-11 04:39:29,Bari,mercoledÃ¬,Urbana,4,0,58.4
+2024-12-19 14:34:29,Torino,giovedÃ¬,Extraurbana,3,0,110.4
+2024-07-18 15:19:29,Trieste,giovedÃ¬,Extraurbana,9,1,100.0
+2025-02-21 01:15:29,Bologna,venerdÃ¬,Urbana,4,1,102.5
+2025-06-04 08:48:29,Venezia,mercoledÃ¬,Autostrada,8,0,114.4
+2025-03-20 19:56:29,Napoli,giovedÃ¬,Extraurbana,5,0,115.7
+2025-05-08 10:28:29,Roma,giovedÃ¬,Autostrada,7,0,125.6
+2024-11-17 07:59:29,Trieste,domenica,Autostrada,5,0,139.6
+2025-06-18 01:29:29,Roma,mercoledÃ¬,Urbana,7,0,104.9
+2025-05-03 07:04:29,Roma,sabato,Autostrada,10,0,89.1
+2025-01-14 10:16:29,Bologna,martedÃ¬,Urbana,4,0,115.8
+2025-01-12 22:34:29,Genova,domenica,Autostrada,2,0,74.8
+2025-03-16 00:17:29,Palermo,domenica,Extraurbana,10,0,65.2
+2024-08-09 18:35:29,Trieste,venerdÃ¬,Autostrada,5,0,102.6
+2024-09-06 10:41:29,Napoli,venerdÃ¬,Extraurbana,8,0,71.9
+2025-03-25 20:42:29,Milano,martedÃ¬,Urbana,2,0,32.0
+2025-05-15 14:34:29,Napoli,giovedÃ¬,Urbana,4,0,78.2
+2025-06-22 03:12:29,Torino,domenica,Urbana,4,0,68.0
+2025-01-29 23:05:29,Milano,mercoledÃ¬,Extraurbana,2,0,79.0
+2025-05-14 17:12:29,Torino,mercoledÃ¬,Urbana,10,0,105.5
+2024-12-24 13:00:29,Bologna,martedÃ¬,Autostrada,8,0,143.3
+2025-05-14 15:32:29,Palermo,mercoledÃ¬,Extraurbana,1,0,68.3
+2024-10-02 02:02:29,Catania,mercoledÃ¬,Autostrada,6,0,76.4
+2024-11-25 21:02:29,Napoli,lunedÃ¬,Extraurbana,3,0,118.7
+2024-08-21 18:18:29,Catania,mercoledÃ¬,Extraurbana,6,0,88.5
+2025-06-19 09:37:29,Genova,giovedÃ¬,Extraurbana,7,0,52.8
+2024-12-07 01:53:29,Verona,sabato,Autostrada,6,0,51.9
+2024-09-24 16:09:29,Torino,martedÃ¬,Autostrada,6,0,96.0
+2025-03-04 21:09:29,Roma,martedÃ¬,Autostrada,9,0,129.4
+2025-01-02 06:04:29,Milano,giovedÃ¬,Extraurbana,6,0,145.1
+2025-04-12 22:55:29,Milano,sabato,Extraurbana,4,0,63.4
+2024-12-26 08:43:29,Venezia,giovedÃ¬,Urbana,4,0,35.1
+2024-06-26 10:30:29,Genova,mercoledÃ¬,Autostrada,3,0,83.3
+2025-02-17 02:34:29,Venezia,lunedÃ¬,Autostrada,5,0,132.8
+2024-10-26 09:06:29,Firenze,sabato,Extraurbana,2,0,80.1
+2024-11-11 10:59:29,Palermo,lunedÃ¬,Urbana,3,0,49.8
+2024-10-17 21:58:29,Genova,giovedÃ¬,Autostrada,1,0,146.7
+2024-09-19 05:01:29,Napoli,giovedÃ¬,Extraurbana,5,0,66.6
+2025-06-18 07:04:29,Palermo,mercoledÃ¬,Autostrada,4,0,33.4
+2025-02-18 08:23:29,Catania,martedÃ¬,Extraurbana,5,0,39.1
+2024-07-19 22:48:29,Venezia,venerdÃ¬,Urbana,0,1,110.9
+2025-06-02 03:16:29,Bari,lunedÃ¬,Autostrada,2,0,110.4
+2025-03-07 03:57:29,Venezia,venerdÃ¬,Extraurbana,9,1,72.8
+2024-10-28 17:15:29,Napoli,lunedÃ¬,Urbana,6,0,141.2
+2025-01-10 14:53:29,Roma,venerdÃ¬,Urbana,0,0,133.3
+2024-09-02 09:52:29,Milano,lunedÃ¬,Urbana,2,0,33.4
+2024-10-02 00:20:29,Torino,mercoledÃ¬,Extraurbana,3,0,138.1
+2024-08-10 07:01:29,Napoli,sabato,Urbana,1,0,69.7
+2024-08-07 03:52:29,Bologna,mercoledÃ¬,Urbana,3,0,88.3
+2025-03-26 13:35:29,Milano,mercoledÃ¬,Autostrada,2,0,95.8
+2025-05-10 13:17:29,Trieste,sabato,Autostrada,1,0,101.9
+2025-03-19 19:49:29,Roma,mercoledÃ¬,Autostrada,7,0,132.1
+2025-01-30 08:06:29,Venezia,giovedÃ¬,Autostrada,5,0,66.9
+2024-10-13 23:46:29,Bologna,domenica,Extraurbana,7,0,41.3
+2024-07-16 07:56:29,Catania,martedÃ¬,Autostrada,3,0,130.7
+2025-01-14 15:48:29,Milano,martedÃ¬,Autostrada,7,0,122.5
+2024-11-22 12:22:29,Genova,venerdÃ¬,Urbana,5,0,124.7
+2025-06-17 18:33:29,Bologna,martedÃ¬,Autostrada,4,0,69.9
+2024-06-26 17:52:29,Bologna,mercoledÃ¬,Urbana,10,0,71.4
+2025-01-01 23:34:29,Roma,mercoledÃ¬,Urbana,6,1,40.4
+2024-07-26 09:02:29,Bari,venerdÃ¬,Urbana,0,2,132.8
+2025-01-22 07:50:29,Trieste,mercoledÃ¬,Urbana,3,0,80.3
+2024-12-21 05:19:29,Genova,sabato,Extraurbana,3,0,64.4
+2024-07-20 20:05:29,Palermo,sabato,Urbana,9,0,85.0
+2024-09-19 16:27:29,Palermo,giovedÃ¬,Extraurbana,0,0,116.9
+2024-10-10 10:37:29,Roma,giovedÃ¬,Extraurbana,8,0,36.7
+2025-01-29 00:22:29,Catania,mercoledÃ¬,Extraurbana,8,0,87.1
+2025-02-26 11:16:29,Roma,mercoledÃ¬,Extraurbana,2,0,126.2
+2024-08-11 10:41:29,Venezia,domenica,Extraurbana,9,0,95.0
+2025-03-27 19:14:29,Venezia,giovedÃ¬,Extraurbana,9,0,68.8
+2024-11-17 08:47:29,Firenze,domenica,Autostrada,0,0,40.5
+2025-06-19 08:58:29,Napoli,giovedÃ¬,Extraurbana,3,0,113.3
+2025-05-15 23:22:29,Trieste,giovedÃ¬,Autostrada,10,0,89.1
+2025-01-30 20:01:29,Catania,giovedÃ¬,Urbana,2,0,109.6
+2024-07-24 13:45:29,Verona,mercoledÃ¬,Autostrada,7,0,80.7
+2024-12-29 10:44:29,Genova,domenica,Extraurbana,2,0,99.4
+2024-10-27 09:32:29,Bologna,domenica,Extraurbana,4,0,71.6
+2024-07-10 16:38:29,Trieste,mercoledÃ¬,Urbana,8,0,106.6

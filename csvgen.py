@@ -2,6 +2,9 @@ import random
 import csv
 from datetime import datetime, timedelta
 import pandas as pd
+import locale
+
+locale.setlocale(locale.LC_TIME, 'it_IT.UTF-8')  # Imposta la lingua italiana
 
 def genera_dati_incidenti(n, output_csv="incidenti_generati.csv"):
     province_italiane = [
@@ -14,7 +17,7 @@ def genera_dati_incidenti(n, output_csv="incidenti_generati.csv"):
     for _ in range(n):
         data_ora = datetime.now() - timedelta(days=random.randint(0, 365), hours=random.randint(0, 23), minutes=random.randint(0, 59))
         provincia = random.choice(province_italiane)
-        giorno_settimana = data_ora.strftime('%A')
+        giorno_settimana = data_ora.strftime('%A')  # Ora sarà in italiano
         tipo_strada = random.choice(tipi_strada)
         numero_feriti = random.randint(0, 10)
         numero_morti = random.choices([0, 1, 2, 3], weights=[90, 8, 1.5, 0.5])[0]
@@ -30,7 +33,6 @@ def genera_dati_incidenti(n, output_csv="incidenti_generati.csv"):
             velocita_media
         ])
     
-    # Salvataggio in CSV
     intestazioni = ["Data_Ora_Incidente", "Provincia", "Giorno_Settimana", "Tipo_Strada", "Numero_Feriti", "Numero_Morti", "Velocita_Media_Stimata"]
     with open(output_csv, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
@@ -40,4 +42,4 @@ def genera_dati_incidenti(n, output_csv="incidenti_generati.csv"):
     print(f"{n} entry generate e salvate in '{output_csv}'.")
 
 # ESEMPIO USO
-genera_dati_incidenti(5000)
+genera_dati_incidenti(1000)
