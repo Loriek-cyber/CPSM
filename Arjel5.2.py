@@ -752,11 +752,11 @@ class App(customtkinter.CTk):
                 else: ax.text(0.5, 0.5, 'Box Plot non applicabile a dati non numerici', ha='center')
             else:
                 freq_data = data.value_counts()
-                limite_categorie = 10 if tipo_grafico == 'Torta' else 20
-                if len(freq_data) > limite_categorie:
-                    is_aggregated = True; top_data = freq_data.head(limite_categorie - 1); other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
-                    other_series = pd.Series({'Altro': other_sum}); freq_data = pd.concat([top_data, other_series])
-                    plot_title += f" (Top {limite_categorie-1} + Altro)"
+                #limite_categorie = 10 if tipo_grafico == 'Torta' else 20
+                #if len(freq_data) > limite_categorie:
+                #    is_aggregated = True; top_data = freq_data.head(limite_categorie - 1); other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
+                #    other_series = pd.Series({'Altro': other_sum}); freq_data = pd.concat([top_data, other_series])
+                #    plot_title += f" (Top {limite_categorie-1} + Altro)"
 
                 plot_data = freq_data
                 if is_numeric and tipo_grafico != 'Torta':
