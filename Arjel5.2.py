@@ -147,10 +147,8 @@ class App(customtkinter.CTk):
         numeric_columns = self.df.select_dtypes(include=np.number).columns.tolist()
         object_columns = self.df.select_dtypes(include=['object', 'category']).columns.tolist()
         datetime_cols = self.df.select_dtypes(include=['datetime64[ns]']).columns.tolist()
-        all_columns = datetime_cols + object_columns + numeric_columns
-        
-        if 'Giorno' not in all_columns and 'Giorno' in self.df.columns:
-            all_columns.insert(1, 'Giorno')
+        # Costruisce la lista di colonne per l'analisi descrittiva escludendo 'Giorno'
+        all_columns = [col for col in datetime_cols + object_columns + numeric_columns if col != 'Giorno']
 
         province_uniche = sorted(self.df['Provincia'].unique().tolist()) if 'Provincia' in self.df.columns else []
         
