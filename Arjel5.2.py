@@ -759,7 +759,9 @@ class App(customtkinter.CTk):
                     plot_title += f" (Top {limite_categorie-1} + Altro)"
 
                 plot_data = freq_data
-                if is_numeric and tipo_grafico != 'Torta': plot_data = plot_data.sort_index()
+                if is_numeric and tipo_grafico != 'Torta':
+                    plot_data.index = plot_data.index.astype(str) 
+                    plot_data = plot_data.sort_index()
 
                 ax.set_xlabel('Categorie'); ax.set_ylabel('Frequenza')
                 if tipo_grafico == 'Barre': plot_data.plot(kind='bar', ax=ax)

@@ -19,7 +19,7 @@ def main():
     print("Traffic Incident Data Generator")
     print("=" * 35)
     
-    # Get user inputs
+    
     num_records = get_integer_input("Number of incidents to generate: ")
     max_injured = get_integer_input("Max injured per incident: ", 0)
     max_deaths = get_integer_input("Max deaths per incident: ", 0)
