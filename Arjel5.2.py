@@ -697,30 +697,52 @@ class App(customtkinter.CTk):
         tipo_grafico = self.selettore_grafico_descrittiva.get()
         data = self.df[variable].dropna()
         if data.empty:
-            customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato disponibile.").pack(); return
-
+            customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato disponibile.").pack();return
         container = self.frame_risultati_descrittiva
+        if variable == "Velocita_Media_Stimata":
+            #creami gli intervalli
+            bins = list(range(0,int(data.max())+20,10))
+            labels = [f"{i}-{i+9} km/h" for i in range(0, int(data.max()) + 10, 10)]
+
+            #correzione: assicurati che il numero di labels sia corretto
+            required_labels = len(bins) - 1 if len(bins) > 1 else 0
+            if required_labels > 0 and len(labels) >= required_labels:
+                labels_to_use = labels[:required_labels]
+            else:
+                labels_to_use = None
+
+            try:
+                if labels_to_use:
+                    data = pd.cut(data, bins=bins, labels=labels_to_use, include_lowest=True)
+                else:
+                    data = pd.cut(data, bins=bins, include_lowest=True)
+            except ValueError:
+                # Fallback: usa pd.cut senza labels personalizzate
+                data = pd.cut(data, bins=bins, include_lowest=True)
+
+            is_numeric = False
+        else:
+            is_numeric = pd.api.types.is_numeric_dtype(data)
         
         info = ("L'analisi descrittiva univariata esplora una singola variabile alla volta per riassumerne le caratteristiche principali attraverso indici numerici e rappresentazioni grafiche. È il primo passo fondamentale per comprendere la struttura dei dati.")
         guida = ("**Indici Numerici (se applicabili):**\n"
-                 "- **Media, Mediana, Moda:** Indicano il 'centro' della distribuzione. Confrontarli aiuta a capirne la simmetria.\n"
-                 "- **Dev. Std, Varianza:** Misurano la dispersione dei dati attorno alla media. Valori alti indicano maggiore variabilità.\n"
-                 "- **Asimmetria (Skewness):** > 0 coda a destra; < 0 coda a sinistra; ≈ 0 simmetrica.\n"
-                 "- **Curtosi:** Misura la 'pesantezza' delle code. > 0 code più pesanti (distribuzione leptocurtica); < 0 code più leggere (platicurtica).\n\n"
-                 "**Grafici:**\n"
-                 "- **Istogramma/Barre:** Mostra la frequenza di ogni valore o classe.\n"
-                 "- **Box Plot:** Visualizza i quartili (il box centrale contiene il 50% dei dati), la mediana (linea nel box) e gli outlier (punti esterni).\n"
-                 "- **Torta:** Mostra la proporzione di ogni categoria sul totale. Efficace per un numero limitato di categorie.")
-        
+             "- **Media, Mediana, Moda:** Indicano il 'centro' della distribuzione. Confrontarli aiuta a capirne la simmetria.\n"
+             "- **Dev. Std, Varianza:** Misurano la dispersione dei dati attorno alla media. Valori alti indicano maggiore variabilità.\n"
+             "- **Asimmetria (Skewness):** > 0 coda a destra; < 0 coda a sinistra; ≈ 0 simmetrica.\n"
+             "- **Curtosi:** Misura la 'pesantezza' delle code. > 0 code più pesanti (distribuzione leptocurtica); < 0 code più leggere (platicurtica).\n\n"
+             "**Grafici:**\n"
+             "- **Istogramma/Barre:** Mostra la frequenza di ogni valore o classe.\n"
+             "- **Box Plot:** Visualizza i quartili (il box centrale contiene il 50% dei dati), la mediana (linea nel box) e gli outlier (punti esterni).\n"
+             "- **Torta:** Mostra la proporzione di ogni categoria sul totale. Efficace per un numero limitato di categorie.")
+    
         self._crea_titolo_sezione(container, f"Analisi Descrittiva: '{variable}'", info, guida)
-
         plot_container = customtkinter.CTkFrame(container, fg_color="transparent")
         plot_container.pack(fill="both", expand=True, padx=5, pady=5)
         plot_container.grid_rowconfigure(1, weight=1)
         plot_container.grid_columnconfigure(0, weight=1)
 
         is_numeric = pd.api.types.is_numeric_dtype(data)
-        
+
         if is_numeric:
             frame_indici = customtkinter.CTkFrame(plot_container)
             frame_indici.grid(row=0, column=0, sticky='ew', pady=(0, 10))
@@ -737,12 +759,11 @@ class App(customtkinter.CTk):
                 if col == 0: row += 1
 
         frame_grafico = customtkinter.CTkFrame(plot_container)
-        frame_grafico.grid(row=1, column=0, sticky='nsew')
-        
+        frame_grafico.grid(row=1, column=0, sticky='nsew') 
+
         fig, ax = plt.subplots(figsize=(8, 5))
         try:
             plot_title = f"{tipo_grafico} di '{variable}'"
-            is_aggregated = False
 
             if tipo_grafico == 'Istogramma':
                 if is_numeric: ax.hist(data, bins='auto', edgecolor='black'); ax.set_xlabel(variable); ax.set_ylabel('Frequenza')
@@ -752,16 +773,33 @@ class App(customtkinter.CTk):
                 else: ax.text(0.5, 0.5, 'Box Plot non applicabile a dati non numerici', ha='center')
             else:
                 freq_data = data.value_counts()
-                #limite_categorie = 10 if tipo_grafico == 'Torta' else 20
-                #if len(freq_data) > limite_categorie:
-                #    is_aggregated = True; top_data = freq_data.head(limite_categorie - 1); other_sum = freq_data.tail(len(freq_data) - (limite_categorie - 1)).sum()
-                #    other_series = pd.Series({'Altro': other_sum}); freq_data = pd.concat([top_data, other_series])
-                #    plot_title += f" (Top {limite_categorie-1} + Altro)"
-
                 plot_data = freq_data
-                if is_numeric and tipo_grafico != 'Torta':
-                    plot_data.index = plot_data.index.astype(str) 
-                    plot_data = plot_data.sort_index()
+                
+                # Ordinamento intelligente basato sul tipo di dati
+                if tipo_grafico != 'Torta':
+                    try:
+                        if is_numeric:
+                            # Per dati numerici, ordina numericamente
+                            plot_data = plot_data.sort_index()
+                        else:
+                            # Per dati categorici, prova prima ordinamento naturale
+                            # Se l'indice contiene numeri come stringhe, li converte per l'ordinamento
+                            if all(str(idx).replace('-', '').replace('.', '').replace(' ', '').replace('km/h', '').isdigit() 
+                                   for idx in plot_data.index if str(idx) != 'nan'):
+                                # Estrai il primo numero da ogni categoria per l'ordinamento
+                                def extract_number(x):
+                                    import re
+                                    match = re.search(r'\d+', str(x))
+                                    return int(match.group()) if match else float('inf')
+                                
+                                plot_data = plot_data.reindex(sorted(plot_data.index, key=extract_number))
+                            else:
+                                # Ordinamento alfabetico standard
+                                plot_data = plot_data.sort_index()
+                    except (TypeError, ValueError):
+                        # Se ci sono tipi misti o altri problemi, converte tutto a stringa
+                        plot_data.index = plot_data.index.astype(str)
+                        plot_data = plot_data.sort_index()
 
                 ax.set_xlabel('Categorie'); ax.set_ylabel('Frequenza')
                 if tipo_grafico == 'Barre': plot_data.plot(kind='bar', ax=ax)
