@@ -139,7 +139,6 @@ class App(customtkinter.CTk):
             return
         self.df['Ora'] = self.df['Data_Ora_Incidente'].dt.hour
         self.df['Giorno'] = self.df['Data_Ora_Incidente'].dt.date
-        if 'Numero_Morti' in self.df.columns: self.df['Mortale'] = (self.df['Numero_Morti'] > 0).astype(int)
         self.popola_tabella_dati()
         self.aggiorna_selettori(variabile_da_mantenere)
 

@@ -130,7 +130,7 @@ Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_M
 2023-03-07 22:00:00,Bologna,Martedì,Autostrada,5,1,130
 2023-03-08 07:45:00,Palermo,Mercoledì,Urbana,1,0,40
 2023-03-08 16:30:00,Bari,Mercoledì,Statale,2,0,60
-2023-03-09 10:20:00,Roma,Giovedì,Urbana,0,0,35
+2023-03-09 10:20:00,Roma,Giovedì,Urbana,0,20,35
 2023-03-09 19:10:00,Milano,Giovedì,Extraurbana,3,0,90
 2023-03-10 15:00:00,Napoli,Venerdì,Autostrada,1,0,110
 2023-03-10 23:50:00,Torino,Venerdì,Urbana,0,0,45
