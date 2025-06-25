@@ -525,7 +525,7 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_var, text=f"Varianza: {variance:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_var, text=f"Dev. Std: {std_dev:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_var, text=f"Scarto Medio Assoluto: {mad:.4f}").pack(anchor="w", padx=10)
-        customtkinter.CTkLabel(frame_var, text=f"Range: {range_val:.4f}").pack(anchor="w", padx=10)
+        customtkinter.CTkLabel(frame_var, text=f"Ampiezza del campo di variazione(Range): {range_val:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_var, text=f"Coeff. Variazione: {cv:.4f}").pack(anchor="w", padx=10, pady=(0,5))
 
         frame_form = customtkinter.CTkFrame(frame_indici_main)
@@ -609,7 +609,7 @@ class App(customtkinter.CTk):
             self.selettore_andamento.grid_forget()
             self.label_tipo_grafico.grid(row=0, column=0, padx=(10,5), pady=5)
             self.selettore_grafico_descrittiva.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
-            opzioni_standard = ['Istogramma', 'Barre', 'Torta', 'Aste']
+            opzioni_standard = ['Barre', 'Torta', 'Aste']
             if self.selettore_grafico_descrittiva.get() not in opzioni_standard:
                  self.selettore_grafico_descrittiva.set('Barre')
             self.selettore_grafico_descrittiva.configure(values=opzioni_standard)
@@ -619,7 +619,7 @@ class App(customtkinter.CTk):
             self.selettore_andamento.grid_forget()
             self.label_tipo_grafico.grid(row=0, column=0, padx=(10,5), pady=5)
             self.selettore_grafico_descrittiva.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
-            opzioni_standard = ['Istogramma', 'Barre', 'Linee' ,'Torta', 'Aste']
+            opzioni_standard = ['Barre', 'Linee' ,'Torta', 'Aste']
             if self.selettore_grafico_descrittiva.get() not in opzioni_standard:
                  self.selettore_grafico_descrittiva.set('Barre')
             self.selettore_grafico_descrittiva.configure(values=opzioni_standard)
@@ -716,14 +716,23 @@ class App(customtkinter.CTk):
         tipo_grafico = self.selettore_grafico_descrittiva.get()
         data = self.df[variable].dropna()
         if data.empty:
-            customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato disponibile.").pack();return
+            customtkinter.CTkLabel(self.frame_risultati_descrittiva, text="Nessun dato disponibile.").pack()
+            return
+        
         container = self.frame_risultati_descrittiva
-        if variable == "Velocita_Media_Stimata":
-            #creami gli intervalli
-            bins = list(range(0,int(data.max())+20,10))
+        
+        # Lista di possibili nomi per la variabile velocità (gestisce variazioni di nome)
+        velocity_variations = ["Velocita_Media_Stimata", "Velocità_media_Stimata", "Velocità_Media_Stimata", "velocita_media_stimata"]
+        
+        if variable in velocity_variations or "velocit" in variable.lower():
+            # Mantieni i dati originali numerici per i calcoli statistici
+            original_data = data.copy()
+            
+            # Crea gli intervalli per la visualizzazione
+            bins = list(range(0, int(data.max()) + 20, 10))
             labels = [f"{i}-{i+9} km/h" for i in range(0, int(data.max()) + 10, 10)]
 
-            #correzione: assicurati che il numero di labels sia corretto
+            # Correzione: assicurati che il numero di labels sia corretto
             required_labels = len(bins) - 1 if len(bins) > 1 else 0
             if required_labels > 0 and len(labels) >= required_labels:
                 labels_to_use = labels[:required_labels]
@@ -732,50 +741,75 @@ class App(customtkinter.CTk):
 
             try:
                 if labels_to_use:
-                    data = pd.cut(data, bins=bins, labels=labels_to_use, include_lowest=True)
+                    categorized_data = pd.cut(data, bins=bins, labels=labels_to_use, include_lowest=True)
                 else:
-                    data = pd.cut(data, bins=bins, include_lowest=True)
+                    categorized_data = pd.cut(data, bins=bins, include_lowest=True)
             except ValueError:
                 # Fallback: usa pd.cut senza labels personalizzate
-                data = pd.cut(data, bins=bins, include_lowest=True)
+                categorized_data = pd.cut(data, bins=bins, include_lowest=True)
 
-            is_numeric = False
+            # Per i grafici categorici usa i dati categorizzati, per numerici usa gli originali
+            is_numeric = True  # La velocità è sempre numerica
+            display_data = categorized_data  # Per grafici a barre/torta
+            numeric_data = original_data     # Per istogramma/boxplot
         else:
             is_numeric = pd.api.types.is_numeric_dtype(data)
+            display_data = data
+            numeric_data = data
         
         info = ("L'analisi descrittiva univariata esplora una singola variabile alla volta per riassumerne le caratteristiche principali attraverso indici numerici e rappresentazioni grafiche. È il primo passo fondamentale per comprendere la struttura dei dati.")
         guida = ("**Indici Numerici (se applicabili):**\n"
-             "- **Media, Mediana, Moda:** Indicano il 'centro' della distribuzione. Confrontarli aiuta a capirne la simmetria.\n"
-             "- **Dev. Std, Varianza:** Misurano la dispersione dei dati attorno alla media. Valori alti indicano maggiore variabilità.\n"
-             "- **Asimmetria (Skewness):** > 0 coda a destra; < 0 coda a sinistra; ≈ 0 simmetrica.\n"
-             "- **Curtosi:** Misura la 'pesantezza' delle code. > 0 code più pesanti (distribuzione leptocurtica); < 0 code più leggere (platicurtica).\n\n"
-             "**Grafici:**\n"
-             "- **Istogramma/Barre:** Mostra la frequenza di ogni valore o classe.\n"
-             "- **Box Plot:** Visualizza i quartili (il box centrale contiene il 50% dei dati), la mediana (linea nel box) e gli outlier (punti esterni).\n"
-             "- **Torta:** Mostra la proporzione di ogni categoria sul totale. Efficace per un numero limitato di categorie.")
-    
+            "- **Media, Mediana, Moda:** Indicano il 'centro' della distribuzione. Confrontarli aiuta a capirne la simmetria.\n"
+            "- **Dev. Std, Varianza:** Misurano la dispersione dei dati attorno alla media. Valori alti indicano maggiore variabilità.\n"
+            "- **Asimmetria (Skewness):** > 0 coda a destra; < 0 coda a sinistra; ≈ 0 simmetrica.\n"
+            "- **Curtosi:** Misura la 'pesantezza' delle code. > 0 code più pesanti (distribuzione leptocurtica); < 0 code più leggere (platicurtica).\n\n"
+            "**Grafici:**\n"
+            "- **Istogramma/Barre:** Mostra la frequenza di ogni valore o classe.\n"
+            "- **Box Plot:** Visualizza i quartili (il box centrale contiene il 50% dei dati), la mediana (linea nel box) e gli outlier (punti esterni).\n"
+            "- **Torta:** Mostra la proporzione di ogni categoria sul totale. Efficace per un numero limitato di categorie.")
+
         self._crea_titolo_sezione(container, f"Analisi Descrittiva: '{variable}'", info, guida)
         plot_container = customtkinter.CTkFrame(container, fg_color="transparent")
         plot_container.pack(fill="both", expand=True, padx=5, pady=5)
         plot_container.grid_rowconfigure(1, weight=1)
         plot_container.grid_columnconfigure(0, weight=1)
 
-        is_numeric = pd.api.types.is_numeric_dtype(data)
-
+        # Usa sempre i dati numerici originali per gli indici statistici
         if is_numeric:
+            # Per le statistiche usa sempre i dati numerici originali
+            stats_data = numeric_data if variable in velocity_variations or "velocit" in variable.lower() else data
+            
             frame_indici = customtkinter.CTkFrame(plot_container)
             frame_indici.grid(row=0, column=0, sticky='ew', pady=(0, 10))
             frame_indici.grid_columnconfigure((0,1,2,3), weight=1)
-            mean, median, mode = data.mean(), data.median(), data.mode().iloc[0] if not data.mode().empty else 'N/A'
-            variance, std_dev = data.var(ddof=1), data.std(ddof=1)
-            skew, kurt = data.skew(), data.kurtosis()
-            indici = {'Media': mean, 'Mediana': median, 'Moda': mode, 'Varianza': variance, 'Dev. Std': std_dev, 'Asimmetria': skew, 'Curtosi': kurt}
+            
+            mean = stats_data.mean()
+            median = stats_data.median()
+            mode = stats_data.mode().iloc[0] if not stats_data.mode().empty else 'N/A'
+            variance = stats_data.var(ddof=1)
+            std_dev = stats_data.std(ddof=1)
+            skew = stats_data.skew()
+            kurt = stats_data.kurtosis()
+            
+            indici = {
+                'Media': mean, 
+                'Mediana': median, 
+                'Moda': mode, 
+                'Varianza': variance, 
+                'Dev. Std': std_dev, 
+                'Asimmetria': skew, 
+                'Curtosi': kurt
+            }
+            
             row, col = 0, 0
             for key, val in indici.items():
                 text = f"{key}\n{val:.3f}" if isinstance(val, (int, float)) else f"{key}\n{val}"
-                customtkinter.CTkLabel(frame_indici, text=text, justify="center").grid(row=row, column=col, padx=5, pady=5, sticky="ew")
+                customtkinter.CTkLabel(frame_indici, text=text, justify="center").grid(
+                    row=row, column=col, padx=5, pady=5, sticky="ew"
+                )
                 col = (col + 1) % 4
-                if col == 0: row += 1
+                if col == 0: 
+                    row += 1
 
         frame_grafico = customtkinter.CTkFrame(plot_container)
         frame_grafico.grid(row=1, column=0, sticky='nsew') 
@@ -785,26 +819,41 @@ class App(customtkinter.CTk):
             plot_title = f"{tipo_grafico} di '{variable}'"
 
             if tipo_grafico == 'Istogramma':
-                if is_numeric: ax.hist(data, bins='auto', edgecolor='black'); ax.set_xlabel(variable); ax.set_ylabel('Frequenza')
-                else: ax.text(0.5, 0.5, 'Istogramma non applicabile a dati non numerici', ha='center')
+                if is_numeric: 
+                    # Per istogramma usa sempre i dati numerici originali
+                    plot_data = numeric_data if variable in velocity_variations or "velocit" in variable.lower() else data
+                    ax.hist(plot_data, bins='auto', edgecolor='black')
+                    ax.set_xlabel(variable)
+                    ax.set_ylabel('Frequenza')
+                else: 
+                    ax.text(0.5, 0.5, 'Istogramma non applicabile a dati non numerici', 
+                        ha='center', va='center', transform=ax.transAxes)
+                    
             elif tipo_grafico == 'Box Plot':
-                if is_numeric: ax.boxplot(data, vert=False, showfliers=True); ax.set_yticklabels([variable]); ax.set_xlabel('Valore')
-                else: ax.text(0.5, 0.5, 'Box Plot non applicabile a dati non numerici', ha='center')
+                if is_numeric: 
+                    # Per box plot usa sempre i dati numerici originali
+                    plot_data = numeric_data if variable in velocity_variations or "velocit" in variable.lower() else data
+                    ax.boxplot(plot_data, vert=False, showfliers=True)
+                    ax.set_yticklabels([variable])
+                    ax.set_xlabel('Valore')
+                else: 
+                    ax.text(0.5, 0.5, 'Box Plot non applicabile a dati non numerici', 
+                        ha='center', va='center', transform=ax.transAxes)
             else:
-                freq_data = data.value_counts()
+                # Per altri grafici usa i dati categorizzati se appropriato
+                freq_data = display_data.value_counts()
                 plot_data = freq_data
                 
                 # Ordinamento intelligente basato sul tipo di dati
                 if tipo_grafico != 'Torta':
                     try:
-                        if is_numeric:
-                            # Per dati numerici, ordina numericamente
+                        if is_numeric and not (variable in velocity_variations or "velocit" in variable.lower()):
+                            # Per dati numerici normali, ordina numericamente
                             plot_data = plot_data.sort_index()
                         else:
-                            # Per dati categorici, prova prima ordinamento naturale
-                            # Se l'indice contiene numeri come stringhe, li converte per l'ordinamento
+                            # Per dati categorici o velocità categorizzata, prova ordinamento naturale
                             if all(str(idx).replace('-', '').replace('.', '').replace(' ', '').replace('km/h', '').isdigit() 
-                                   for idx in plot_data.index if str(idx) != 'nan'):
+                                for idx in plot_data.index if str(idx) != 'nan'):
                                 # Estrai il primo numero da ogni categoria per l'ordinamento
                                 def extract_number(x):
                                     import re
@@ -820,19 +869,32 @@ class App(customtkinter.CTk):
                         plot_data.index = plot_data.index.astype(str)
                         plot_data = plot_data.sort_index()
 
-                ax.set_xlabel('Categorie'); ax.set_ylabel('Frequenza')
-                if tipo_grafico == 'Barre': plot_data.plot(kind='bar', ax=ax)
-                elif tipo_grafico == 'Linee': plot_data.plot(kind='line', ax=ax, marker='o')
+                ax.set_xlabel('Categorie')
+                ax.set_ylabel('Frequenza')
+                
+                if tipo_grafico == 'Barre': 
+                    plot_data.plot(kind='bar', ax=ax)
+                elif tipo_grafico == 'Linee': 
+                    plot_data.plot(kind='line', ax=ax, marker='o')
                 elif tipo_grafico == 'Torta': 
-                    ax.pie(plot_data, labels=plot_data.index, autopct=lambda p: f'{p:.1f}%' if p > 3 else '', textprops={'fontsize': 10})
+                    ax.pie(plot_data, labels=plot_data.index, 
+                        autopct=lambda p: f'{p:.1f}%' if p > 3 else '', 
+                        textprops={'fontsize': 10})
                     ax.set_ylabel('')
-                elif tipo_grafico == 'Aste': ax.stem(plot_data.index.astype(str), plot_data.values)
+                elif tipo_grafico == 'Aste': 
+                    ax.stem(plot_data.index.astype(str), plot_data.values)
+                    
                 ax.tick_params(axis='x', rotation=45, labelsize=9)
             
-            ax.set_title(plot_title); ax.grid(True, linestyle='--', alpha=0.6); fig.tight_layout()
-            canvas = FigureCanvasTkAgg(fig, master=frame_grafico); canvas.draw()
+            ax.set_title(plot_title)
+            ax.grid(True, linestyle='--', alpha=0.6)
+            fig.tight_layout()
+            
+            canvas = FigureCanvasTkAgg(fig, master=frame_grafico)
+            canvas.draw()
             canvas.get_tk_widget().pack(fill='both', expand=True)
             self.matplotlib_widgets.append(canvas)
+            
         finally:
             plt.close(fig)
 
