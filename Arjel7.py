@@ -138,7 +138,7 @@ class App(customtkinter.CTk):
             self.df = None
             return
         self.df['Ora'] = self.df['Data_Ora_Incidente'].dt.hour
-        self.df['Giorno'] = self.df['Data_Ora_Incidente'].dt.date
+        #self.df['Giorno'] = self.df['Data_Ora_Incidente'].dt.date
         self.popola_tabella_dati()
         self.aggiorna_selettori(variabile_da_mantenere)
 
@@ -368,7 +368,7 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_controlli, text="Variabile Y:").grid(row=0, column=2, padx=(10,5), pady=5)
         self.selettore_var_biv_y = customtkinter.CTkComboBox(frame_controlli, values=[], command=self.esegui_analisi_bivariata)
         self.selettore_var_biv_y.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
-        self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔄", command=self.esegui_analisi_bivariata, width=35, height=35)
+        self.bottone_refresh_bivariata = customtkinter.CTkButton(frame_controlli, text="🔂", command=self.esegui_analisi_bivariata, width=35, height=35)
         self.bottone_refresh_bivariata.grid(row=0, column=4, padx=(5,10), pady=5)
         self.frame_risultati_bivariata = customtkinter.CTkFrame(tab)
         self.frame_risultati_bivariata.grid(row=1, column=0, padx=10, pady=10, sticky="nsew"); self.frame_risultati_bivariata.grid_columnconfigure(0, weight=1)
