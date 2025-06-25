@@ -343,7 +343,7 @@ class App(customtkinter.CTk):
 
         self.label_andamento = customtkinter.CTkLabel(self.frame_controlli_contestuali, text="Aggregazione:")
         self.selettore_andamento = customtkinter.CTkComboBox(self.frame_controlli_contestuali, 
-                                                             values=['Mensile', 'Giornaliero', 'Annuale', 'Distribuzione Oraria', 'Distribuzione Settimanale'], 
+                                                             values=['Mensile', 'Giornaliero', 'Annuale', ], # 'Distribuzione Oraria', 'Distribuzione Settimanale' 
                                                              command=self.esegui_analisi_descrittiva)
         self.selettore_andamento.set('Mensile')
 
@@ -604,6 +604,27 @@ class App(customtkinter.CTk):
             self.selettore_grafico_descrittiva.configure(values=opzioni_grafico)
             
             self.analisi_speciale_data_ora()
+        elif variable == 'Tipo_Strada' or  variable == 'Provincia':
+            self.label_andamento.grid_forget()
+            self.selettore_andamento.grid_forget()
+            self.label_tipo_grafico.grid(row=0, column=0, padx=(10,5), pady=5)
+            self.selettore_grafico_descrittiva.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+            opzioni_standard = ['Istogramma', 'Barre', 'Torta', 'Linee', 'Aste']
+            if self.selettore_grafico_descrittiva.get() not in opzioni_standard:
+                 self.selettore_grafico_descrittiva.set('Barre')
+            self.selettore_grafico_descrittiva.configure(values=opzioni_standard)
+            self.analisi_generica(variable)
+        elif variable == 'Giorno_Settimana':
+            self.label_andamento.grid_forget()
+            self.selettore_andamento.grid_forget()
+            self.label_tipo_grafico.grid(row=0, column=0, padx=(10,5), pady=5)
+            self.selettore_grafico_descrittiva.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+            opzioni_standard = ['Istogramma', 'Barre', 'Linee' ,'Torta', 'Aste']
+            if self.selettore_grafico_descrittiva.get() not in opzioni_standard:
+                 self.selettore_grafico_descrittiva.set('Barre')
+            self.selettore_grafico_descrittiva.configure(values=opzioni_standard)
+            self.analisi_generica(variable)
+            
         else:
             self.label_andamento.grid_forget()
             self.selettore_andamento.grid_forget()
