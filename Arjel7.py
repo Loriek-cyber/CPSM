@@ -395,7 +395,7 @@ class App(customtkinter.CTk):
         scroll_frame.grid_columnconfigure(0, weight=1)
         
         info_poisson = ("Il Modello di Poisson è un modello di probabilità discreta utilizzato per descrivere il numero di eventi che si verificano in un intervallo fisso di tempo o spazio, data una frequenza media nota e costante (λ, lambda) e assumendo che gli eventi siano indipendenti l'uno dall'altro.\n\n"
-                        "**Applicazione Pratica:**\n"
+                        "Applicazione Pratica:\n"
                         "Questo strumento permette di stimare la probabilità di osservare un numero esatto 'k' di incidenti (es. 0, 1, 2...) in un determinato periodo (es. un giorno) e in una specifica area (es. una provincia), basandosi sulla media storica degli incidenti per quella stessa area e periodo. È fondamentale per la valutazione del rischio e l'allocazione predittiva delle risorse.")
         
         frame_poisson = customtkinter.CTkFrame(scroll_frame, border_width=1)
@@ -417,10 +417,10 @@ class App(customtkinter.CTk):
         self.risultato_poisson_textbox.configure(state="disabled")
 
         info_ttest = ("Il Test T per Campioni Indipendenti è un test di ipotesi inferenziale utilizzato per determinare se esiste una differenza statisticamente significativa tra le medie di due gruppi indipendenti e non correlati.\n\n"
-                      "**Ipotesi del Test:**\n"
-                      "1. **Ipotesi Nulla (H₀):** Non c'è differenza tra le medie dei due gruppi (μ₁ = μ₂). La differenza osservata è dovuta puramente al caso.\n"
-                      "2. **Ipotesi Alternativa (H₁):** Esiste una differenza tra le medie (μ₁ ≠ μ₂).\n\n"
-                      "**Interpretazione (p-value):**\n"
+                      "Ipotesi del Test:\n"
+                      "1. Ipotesi Nulla (H₀): Non c'è differenza tra le medie dei due gruppi (μ₁ = μ₂). La differenza osservata è dovuta puramente al caso.\n"
+                      "2. Ipotesi Alternativa (H₁): Esiste una differenza tra le medie (μ₁ ≠ μ₂).\n\n"
+                      "Interpretazione (p-value):\n"
                       "Il p-value indica la probabilità di osservare una differenza grande come quella campionaria (o più grande) se l'ipotesi nulla fosse vera. Un p-value basso (convenzionalmente < 0.05) fornisce l'evidenza per rigettare H₀, suggerendo che la differenza tra i gruppi è 'statisticamente significativa'.")
         
         frame_ttest = customtkinter.CTkFrame(scroll_frame, border_width=1)
@@ -434,9 +434,9 @@ class App(customtkinter.CTk):
         self.risultato_ttest_textbox.configure(state="disabled")
 
         info_ci = ("Un Intervallo di Confidenza (IC) è un range di valori, calcolato a partire da dati campionari, che si stima possa contenere il vero valore di un parametro della popolazione (es. la media reale, μ) con un determinato livello di fiducia.\n\n"
-                   "**Cosa significa 'Fiducia al 95%'?**\n"
+                   "Cosa significa 'Fiducia al 95%'?\n"
                    "Non significa che c'è una probabilità del 95% che il vero valore della media cada in *questo specifico* intervallo. Significa che, se ripetessimo l'esperimento di campionamento molte volte, il 95% degli intervalli di confidenza così calcolati conterrebbe il vero parametro della popolazione.\n\n"
-                   "**Utilità:**\n"
+                   "Utilità:\n"
                    "Fornisce una misura della precisione della stima puntuale (la media campionaria). Un intervallo stretto indica una stima precisa, mentre un intervallo ampio riflette una maggiore incertezza dovuta alla variabilità dei dati o alla ridotta dimensione del campione.")
         
         frame_ci = customtkinter.CTkFrame(scroll_frame, border_width=1)
@@ -475,11 +475,11 @@ class App(customtkinter.CTk):
             return
         
         title = "Analisi sulla Popolazione"
-        info = ("Questa sezione esegue un'analisi statistica descrittiva sull'**intera popolazione** dei dati caricati per la variabile selezionata. I valori calcolati (media, varianza, ecc.) sono considerati i **parametri reali** del dataset fornito.")
-        guida = ("**Interpretazione:**\nI risultati mostrati rappresentano le caratteristiche esatte dell'insieme di dati a tua disposizione. Utilizza questi valori per ottenere una comprensione completa e accurata della distribuzione della variabile scelta all'interno del tuo dataset specifico.\n\n"
-                 "- **Tabelle di Frequenza:** Mostrano come si distribuiscono esattamente i valori.\n"
-                 "- **Indici:** Descrivono le proprietà matematiche (tendenza centrale, variabilità, forma) dell'intero set di dati.\n"
-                 "- **Grafici:** Offrono una visualizzazione completa della distribuzione della popolazione.")
+        info = ("Questa sezione esegue un'analisi statistica descrittiva sull'intera popolazione dei dati caricati per la variabile selezionata. I valori calcolati (media, varianza, ecc.) sono considerati i parametri reali del dataset fornito.")
+        guida = ("Interpretazione:\nI risultati mostrati rappresentano le caratteristiche esatte dell'insieme di dati a tua disposizione. Utilizza questi valori per ottenere una comprensione completa e accurata della distribuzione della variabile scelta all'interno del tuo dataset specifico.\n\n"
+                 "- Tabelle di Frequenza: Mostrano come si distribuiscono esattamente i valori.\n"
+                 "- Indici: Descrivono le proprietà matematiche (tendenza centrale, variabilità, forma) dell'intero set di dati.\n"
+                 "- Grafici: Offrono una visualizzazione completa della distribuzione della popolazione.")
         
         self._esegui_analisi_numerica_dettagliata(self.frame_risultati_calcolo, data, variable, title, info, guida)
 
@@ -507,10 +507,10 @@ class App(customtkinter.CTk):
         
         campione = data.sample(n=n, random_state=None) 
         title = f"Analisi su un Campione Casuale (n={n})"
-        info = ("Questa sezione esegue un'analisi statistica su un **campione casuale** di dimensione 'n' estratto dalla popolazione dei dati. I valori calcolati (media campionaria, varianza campionaria, ecc.) sono **stime** (o statistiche) dei veri parametri della popolazione. L'obiettivo è fare **inferenza**, ovvero dedurre le caratteristiche della popolazione partendo da un suo sottoinsieme.")
-        guida = ("**Interpretazione:**\nI risultati di un campione sono soggetti a **variabilità campionaria**: ogni estrazione produrrà risultati leggermente diversi. Questi valori sono stime dei parametri della popolazione.\n\n"
-                 "- **Confronto:** Confronta la media del campione con la media della popolazione (calcolata nella scheda 'Calcolo Dati') per osservare l'effetto del campionamento.\n"
-                 "- **Legge dei Grandi Numeri:** Aumentando la dimensione del campione 'n', le statistiche calcolate tenderanno a convergere verso i veri parametri della popolazione.")
+        info = ("Questa sezione esegue un'analisi statistica su un campione casuale di dimensione 'n' estratto dalla popolazione dei dati. I valori calcolati (media campionaria, varianza campionaria, ecc.) sono stime (o statistiche) dei veri parametri della popolazione. L'obiettivo è fare inferenza, ovvero dedurre le caratteristiche della popolazione partendo da un suo sottoinsieme.")
+        guida = ("Interpretazione:\nI risultati di un campione sono soggetti a variabilità campionaria: ogni estrazione produrrà risultati leggermente diversi. Questi valori sono stime dei parametri della popolazione.\n\n"
+                 "- Confronto: Confronta la media del campione con la media della popolazione (calcolata nella scheda 'Calcolo Dati') per osservare l'effetto del campionamento.\n"
+                 "- Legge dei Grandi Numeri: Aumentando la dimensione del campione 'n', le statistiche calcolate tenderanno a convergere verso i veri parametri della popolazione.")
 
         self._esegui_analisi_numerica_dettagliata(self.frame_risultati_campionatura, campione, variable, title, info, guida)
 
@@ -785,15 +785,15 @@ class App(customtkinter.CTk):
             numeric_data = data
         
         info = ("L'analisi descrittiva univariata esplora una singola variabile alla volta per riassumerne le caratteristiche principali attraverso indici numerici e rappresentazioni grafiche. È il primo passo fondamentale per comprendere la struttura dei dati.")
-        guida = ("**Indici Numerici (se applicabili):**\n"
-            "- **Media, Mediana, Moda:** Indicano il 'centro' della distribuzione. Confrontarli aiuta a capirne la simmetria.\n"
-            "- **Dev. Std, Varianza:** Misurano la dispersione dei dati attorno alla media. Valori alti indicano maggiore variabilità.\n"
-            "- **Asimmetria (Skewness):** > 0 coda a destra; < 0 coda a sinistra; ≈ 0 simmetrica.\n"
-            "- **Curtosi:** Misura la 'pesantezza' delle code. > 0 code più pesanti (distribuzione leptocurtica); < 0 code più leggere (platicurtica).\n\n"
-            "**Grafici:**\n"
-            "- **Istogramma/Barre:** Mostra la frequenza di ogni valore o classe.\n"
-            "- **Box Plot:** Visualizza i quartili (il box centrale contiene il 50% dei dati), la mediana (linea nel box) e gli outlier (punti esterni).\n"
-            "- **Torta:** Mostra la proporzione di ogni categoria sul totale. Efficace per un numero limitato di categorie.")
+        guida = ("Indici Numerici (se applicabili):\n"
+            "- Media, Mediana, Moda: Indicano il 'centro' della distribuzione. Confrontarli aiuta a capirne la simmetria.\n"
+            "- Dev. Std, Varianza: Misurano la dispersione dei dati attorno alla media. Valori alti indicano maggiore variabilità.\n"
+            "- Asimmetria (Skewness): > 0 coda a destra; < 0 coda a sinistra; ≈ 0 simmetrica.\n"
+            "- Curtosi: Misura la 'pesantezza' delle code. > 0 code più pesanti (distribuzione leptocurtica); < 0 code più leggere (platicurtica).\n\n"
+            "Grafici:\n"
+            "- Istogramma/Barre: Mostra la frequenza di ogni valore o classe.\n"
+            "- Box Plot: Visualizza i quartili (il box centrale contiene il 50% dei dati), la mediana (linea nel box) e gli outlier (punti esterni).\n"
+            "- Torta: Mostra la proporzione di ogni categoria sul totale. Efficace per un numero limitato di categorie.")
 
         self._crea_titolo_sezione(container, f"Analisi Descrittiva: '{variable}'", info, guida)
         plot_container = customtkinter.CTkFrame(container, fg_color="transparent")
@@ -953,13 +953,13 @@ class App(customtkinter.CTk):
             if x_is_numeric and y_is_numeric:
                 # ANALISI NUMERICA vs NUMERICA (codice originale)
                 info = ("L'analisi bivariata esamina la relazione tra due variabili numeriche. Gli strumenti principali sono il coefficiente di correlazione, che misura la forza e la direzione del legame lineare, e il modello di regressione lineare, che descrive tale legame tramite un'equazione matematica.")
-                guida = ("- **Diagramma a Dispersione (Scatter Plot):** Ogni punto rappresenta un'osservazione (un incidente). La disposizione dei punti suggerisce visivamente la natura della relazione (lineare, non lineare, assente).\n\n"
-                        "- **Coefficiente di Correlazione (r):** Varia da -1 a +1.\n"
+                guida = ("- Diagramma a Dispersione (Scatter Plot): Ogni punto rappresenta un'osservazione (un incidente). La disposizione dei punti suggerisce visivamente la natura della relazione (lineare, non lineare, assente).\n\n"
+                        "- Coefficiente di Correlazione (r): Varia da -1 a +1.\n"
                         "  - Vicino a +1: Forte correlazione lineare positiva (al crescere di X, cresce Y).\n"
                         "  - Vicino a -1: Forte correlazione lineare negativa (al crescere di X, decresce Y).\n"
                         "  - Vicino a 0: Scarsa o nulla correlazione lineare.\n"
-                        "  Il **p-value** associato testa se la correlazione osservata è statisticamente significativa o se potrebbe essere dovuta al caso.\n\n"
-                        "- **Retta di Regressione:** È la linea che 'meglio si adatta' ai dati, minimizzando la distanza verticale totale dei punti dalla linea stessa. La sua equazione (y = mx + q) può essere usata per prevedere il valore di Y dato un valore di X.")
+                        "  Il p-value associato testa se la correlazione osservata è statisticamente significativa o se potrebbe essere dovuta al caso.\n\n"
+                        "- Retta di Regressione: È la linea che 'meglio si adatta' ai dati, minimizzando la distanza verticale totale dei punti dalla linea stessa. La sua equazione (y = mx + q) può essere usata per prevedere il valore di Y dato un valore di X.")
                 
                 frame_info_biv = customtkinter.CTkFrame(container)
                 frame_info_biv.pack(fill="x", padx=10, pady=10)
@@ -1005,9 +1005,9 @@ class App(customtkinter.CTk):
                     cat_data, num_data = y_data, x_data
                     
                 info = ("L'analisi bivariata tra una variabile categorica e una numerica esamina come i valori della variabile numerica si distribuiscono tra le diverse categorie. Si utilizzano confronti tra gruppi per identificare differenze significative.")
-                guida = ("- **Box Plot:** Mostra la distribuzione della variabile numerica per ogni categoria, evidenziando mediana, quartili e valori anomali.\n\n"
-                        "- **Statistiche Descrittive:** Media, deviazione standard, mediana per ogni gruppo.\n\n"
-                        "- **Test ANOVA:** Verifica se esistono differenze significative tra i gruppi (p-value < 0.05 indica differenze statisticamente significative).")
+                guida = ("- Box Plot: Mostra la distribuzione della variabile numerica per ogni categoria, evidenziando mediana, quartili e valori anomali.\n\n"
+                        "- Statistiche Descrittive: Media, deviazione standard, mediana per ogni gruppo.\n\n"
+                        "- Test ANOVA: Verifica se esistono differenze significative tra i gruppi (p-value < 0.05 indica differenze statisticamente significative).")
                 
                 frame_info_biv = customtkinter.CTkFrame(container)
                 frame_info_biv.pack(fill="x", padx=10, pady=10)
@@ -1057,9 +1057,9 @@ class App(customtkinter.CTk):
             else:
                 # ANALISI CATEGORICA vs CATEGORICA
                 info = ("L'analisi bivariata tra due variabili categoriche esamina la relazione tra le categorie attraverso tabelle di contingenza. Si verifica se le categorie sono indipendenti o se esiste un'associazione significativa.")
-                guida = ("- **Tabella di Contingenza:** Mostra la frequenza di ogni combinazione di categorie.\n\n"
-                        "- **Test Chi-quadrato:** Verifica l'indipendenza tra le variabili (p-value < 0.05 indica associazione significativa).\n\n"
-                        "- **Heatmap:** Visualizzazione grafica delle frequenze nella tabella di contingenza.")
+                guida = ("- Tabella di Contingenza: Mostra la frequenza di ogni combinazione di categorie.\n\n"
+                        "- Test Chi-quadrato: Verifica l'indipendenza tra le variabili (p-value < 0.05 indica associazione significativa).\n\n"
+                        "- Heatmap: Visualizzazione grafica delle frequenze nella tabella di contingenza.")
                 
                 frame_info_biv = customtkinter.CTkFrame(container)
                 frame_info_biv.pack(fill="x", padx=10, pady=10)
