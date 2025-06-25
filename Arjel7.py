@@ -676,9 +676,7 @@ class App(customtkinter.CTk):
         info = ("L'analisi della variabile temporale è fondamentale per identificare pattern e tendenze nel verificarsi degli incidenti. Permette di capire 'quando' gli incidenti sono più frequenti, supportando decisioni strategiche su sorveglianza e prevenzione.")
         guida = ("- **Annuale (Barre):** Mostra il numero totale di incidenti per ogni anno. Utile per identificare trend di lungo periodo.\n\n"
                  "- **Mensile (Linee):** Mostra l'evoluzione del numero di incidenti mese per mese. Ottimo per individuare cicli stagionali o l'impatto di interventi specifici.\n\n"
-                 "- **Giornaliero (Linee):** Mostra l'evoluzione del numero di incidenti giorno per giorno. Utile per analisi dettagliate su brevi periodi.\n\n"
-                 "- **Distribuzione Oraria (Barre):** Aggrega gli incidenti per ora del giorno. Cruciale per individuare le fasce orarie a maggior rischio.\n\n"
-                 "- **Distribuzione Settimanale (Barre):** Aggrega gli incidenti per giorno della settimana. Evidenzia le differenze tra giorni feriali e weekend.")
+                 "- **Giornaliero (Linee):** Mostra l'evoluzione del numero di incidenti giorno per giorno. Utile per analisi dettagliate su brevi periodi.\n\n")
         
         container = self.frame_risultati_descrittiva
         self._crea_titolo_sezione(container, f"Analisi Temporale: {tipo_aggregazione}", info, guida)
