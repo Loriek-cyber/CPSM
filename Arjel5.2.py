@@ -832,48 +832,169 @@ class App(customtkinter.CTk):
             container.grid_columnconfigure(0, weight=1)
             
             x_data, y_data = df_subset[var_x], df_subset[var_y]
-
-            info = ("L'analisi bivariata esamina la relazione tra due variabili numeriche. Gli strumenti principali sono il coefficiente di correlazione, che misura la forza e la direzione del legame lineare, e il modello di regressione lineare, che descrive tale legame tramite un'equazione matematica.")
-            guida = ("- **Diagramma a Dispersione (Scatter Plot):** Ogni punto rappresenta un'osservazione (un incidente). La disposizione dei punti suggerisce visivamente la natura della relazione (lineare, non lineare, assente).\n\n"
-                     "- **Coefficiente di Correlazione (r):** Varia da -1 a +1.\n"
-                     "  - Vicino a +1: Forte correlazione lineare positiva (al crescere di X, cresce Y).\n"
-                     "  - Vicino a -1: Forte correlazione lineare negativa (al crescere di X, decresce Y).\n"
-                     "  - Vicino a 0: Scarsa o nulla correlazione lineare.\n"
-                     "  Il **p-value** associato testa se la correlazione osservata è statisticamente significativa o se potrebbe essere dovuta al caso.\n\n"
-                     "- **Retta di Regressione:** È la linea che 'meglio si adatta' ai dati, minimizzando la distanza verticale totale dei punti dalla linea stessa. La sua equazione (y = mx + q) può essere usata per prevedere il valore di Y dato un valore di X.")
             
-            frame_info_biv = customtkinter.CTkFrame(container)
-            frame_info_biv.pack(fill="x", padx=10, pady=10)
-            self._crea_titolo_sezione(frame_info_biv, "Analisi Correlazione e Regressione", info, guida)
+            # Determina il tipo di variabili
+            x_is_numeric = pd.api.types.is_numeric_dtype(x_data)
+            y_is_numeric = pd.api.types.is_numeric_dtype(y_data)
+            
+            if x_is_numeric and y_is_numeric:
+                # ANALISI NUMERICA vs NUMERICA (codice originale)
+                info = ("L'analisi bivariata esamina la relazione tra due variabili numeriche. Gli strumenti principali sono il coefficiente di correlazione, che misura la forza e la direzione del legame lineare, e il modello di regressione lineare, che descrive tale legame tramite un'equazione matematica.")
+                guida = ("- **Diagramma a Dispersione (Scatter Plot):** Ogni punto rappresenta un'osservazione (un incidente). La disposizione dei punti suggerisce visivamente la natura della relazione (lineare, non lineare, assente).\n\n"
+                        "- **Coefficiente di Correlazione (r):** Varia da -1 a +1.\n"
+                        "  - Vicino a +1: Forte correlazione lineare positiva (al crescere di X, cresce Y).\n"
+                        "  - Vicino a -1: Forte correlazione lineare negativa (al crescere di X, decresce Y).\n"
+                        "  - Vicino a 0: Scarsa o nulla correlazione lineare.\n"
+                        "  Il **p-value** associato testa se la correlazione osservata è statisticamente significativa o se potrebbe essere dovuta al caso.\n\n"
+                        "- **Retta di Regressione:** È la linea che 'meglio si adatta' ai dati, minimizzando la distanza verticale totale dei punti dalla linea stessa. La sua equazione (y = mx + q) può essere usata per prevedere il valore di Y dato un valore di X.")
+                
+                frame_info_biv = customtkinter.CTkFrame(container)
+                frame_info_biv.pack(fill="x", padx=10, pady=10)
+                self._crea_titolo_sezione(frame_info_biv, "Analisi Correlazione e Regressione", info, guida)
 
-            if var_x == var_y:
-                correlation, p_value, slope, intercept = 1.0, 0.0, 1.0, 0.0
+                if var_x == var_y:
+                    correlation, p_value, slope, intercept = 1.0, 0.0, 1.0, 0.0
+                else:
+                    regression = stats.linregress(x=x_data, y=y_data)
+                    slope, intercept, correlation, p_value = regression.slope, regression.intercept, regression.rvalue, regression.pvalue
+
+                risultati = (f"Coefficiente di Correlazione (r): {correlation:.4f} (p-value: {p_value:.3g})\n"
+                            f"Equazione Retta di Regressione: Y = {slope:.4f}X + {intercept:.4f}")
+                customtkinter.CTkLabel(frame_info_biv, text=risultati, justify="left").pack(pady=5, padx=10, anchor="w")
+                
+                frame_grafico = customtkinter.CTkFrame(container)
+                frame_grafico.pack(fill="both", expand=True, padx=10, pady=10)
+
+                fig, ax = plt.subplots()
+                num_points = len(x_data)
+                point_size = max(2, 40 / np.log10(num_points)) if num_points > 100 else 20
+                alpha_value = max(0.1, 0.7 / np.log10(num_points)) if num_points > 100 else 0.6
+                
+                ax.scatter(x_data, y_data, alpha=alpha_value, s=point_size, label='Dati Osservati')
+                line_x = np.array(ax.get_xlim()); line_y = slope * line_x + intercept
+                ax.plot(line_x, line_y, color='red', label='Retta di Regressione')
+                ax.set_title(f'Diagramma a Dispersione: {var_x} vs {var_y}'); ax.set_xlabel(var_x); ax.set_ylabel(var_y)
+                ax.legend(); ax.grid(True, linestyle='--', alpha=0.6); fig.tight_layout()
+
+                canvas = FigureCanvasTkAgg(fig, master=frame_grafico)
+                canvas.get_tk_widget().pack(fill='both', expand=True)
+                self.matplotlib_widgets.append(canvas)
+                plt.close(fig)
+                
+            elif (x_is_numeric and not y_is_numeric) or (not x_is_numeric and y_is_numeric):
+                # ANALISI CATEGORICA vs NUMERICA
+                if not x_is_numeric:
+                    cat_var, num_var = var_x, var_y
+                    cat_data, num_data = x_data, y_data
+                else:
+                    cat_var, num_var = var_y, var_x
+                    cat_data, num_data = y_data, x_data
+                    
+                info = ("L'analisi bivariata tra una variabile categorica e una numerica esamina come i valori della variabile numerica si distribuiscono tra le diverse categorie. Si utilizzano confronti tra gruppi per identificare differenze significative.")
+                guida = ("- **Box Plot:** Mostra la distribuzione della variabile numerica per ogni categoria, evidenziando mediana, quartili e valori anomali.\n\n"
+                        "- **Statistiche Descrittive:** Media, deviazione standard, mediana per ogni gruppo.\n\n"
+                        "- **Test ANOVA:** Verifica se esistono differenze significative tra i gruppi (p-value < 0.05 indica differenze statisticamente significative).")
+                
+                frame_info_biv = customtkinter.CTkFrame(container)
+                frame_info_biv.pack(fill="x", padx=10, pady=10)
+                self._crea_titolo_sezione(frame_info_biv, "Analisi Categorica vs Numerica", info, guida)
+                
+                # Statistiche per gruppo
+                gruppi = df_subset.groupby(cat_data)[num_data]
+                stats_text = "Statistiche per gruppo:\n"
+                for nome_gruppo, gruppo in gruppi:
+                    media = gruppo.mean()
+                    std = gruppo.std()
+                    mediana = gruppo.median()
+                    n = len(gruppo)
+                    stats_text += f"• {nome_gruppo}: Media={media:.2f}, Std={std:.2f}, Mediana={mediana:.2f}, N={n}\n"
+                
+                # Test ANOVA
+                try:
+                    gruppi_valori = [gruppo.values for nome, gruppo in gruppi]
+                    f_stat, p_value_anova = stats.f_oneway(*gruppi_valori)
+                    stats_text += f"\nTest ANOVA: F={f_stat:.3f}, p-value={p_value_anova:.3g}"
+                except:
+                    stats_text += "\nTest ANOVA: Non calcolabile"
+                
+                customtkinter.CTkLabel(frame_info_biv, text=stats_text, justify="left").pack(pady=5, padx=10, anchor="w")
+                
+                # Grafico Box Plot
+                frame_grafico = customtkinter.CTkFrame(container)
+                frame_grafico.pack(fill="both", expand=True, padx=10, pady=10)
+                
+                fig, ax = plt.subplots()
+                categories = df_subset[cat_var].unique()
+                box_data = [df_subset[df_subset[cat_var] == cat][num_var].values for cat in categories]
+                
+                ax.boxplot(box_data, labels=categories)
+                ax.set_title(f'Distribuzione di {num_var} per {cat_var}')
+                ax.set_xlabel(cat_var)
+                ax.set_ylabel(num_var)
+                ax.grid(True, linestyle='--', alpha=0.6)
+                plt.xticks(rotation=45)
+                fig.tight_layout()
+                
+                canvas = FigureCanvasTkAgg(fig, master=frame_grafico)
+                canvas.get_tk_widget().pack(fill='both', expand=True)
+                self.matplotlib_widgets.append(canvas)
+                plt.close(fig)
+                
             else:
-                regression = stats.linregress(x=x_data, y=y_data)
-                slope, intercept, correlation, p_value = regression.slope, regression.intercept, regression.rvalue, regression.pvalue
-
-            risultati = (f"Coefficiente di Correlazione (r): {correlation:.4f} (p-value: {p_value:.3g})\n"
-                         f"Equazione Retta di Regressione: Y = {slope:.4f}X + {intercept:.4f}")
-            customtkinter.CTkLabel(frame_info_biv, text=risultati, justify="left").pack(pady=5, padx=10, anchor="w")
-            
-            frame_grafico = customtkinter.CTkFrame(container)
-            frame_grafico.pack(fill="both", expand=True, padx=10, pady=10)
-
-            fig, ax = plt.subplots()
-            num_points = len(x_data)
-            point_size = max(2, 40 / np.log10(num_points)) if num_points > 100 else 20
-            alpha_value = max(0.1, 0.7 / np.log10(num_points)) if num_points > 100 else 0.6
-            
-            ax.scatter(x_data, y_data, alpha=alpha_value, s=point_size, label='Dati Osservati')
-            line_x = np.array(ax.get_xlim()); line_y = slope * line_x + intercept
-            ax.plot(line_x, line_y, color='red', label='Retta di Regressione')
-            ax.set_title(f'Diagramma a Dispersione: {var_x} vs {var_y}'); ax.set_xlabel(var_x); ax.set_ylabel(var_y)
-            ax.legend(); ax.grid(True, linestyle='--', alpha=0.6); fig.tight_layout()
-
-            canvas = FigureCanvasTkAgg(fig, master=frame_grafico)
-            canvas.get_tk_widget().pack(fill='both', expand=True)
-            self.matplotlib_widgets.append(canvas)
-            plt.close(fig)
+                # ANALISI CATEGORICA vs CATEGORICA
+                info = ("L'analisi bivariata tra due variabili categoriche esamina la relazione tra le categorie attraverso tabelle di contingenza. Si verifica se le categorie sono indipendenti o se esiste un'associazione significativa.")
+                guida = ("- **Tabella di Contingenza:** Mostra la frequenza di ogni combinazione di categorie.\n\n"
+                        "- **Test Chi-quadrato:** Verifica l'indipendenza tra le variabili (p-value < 0.05 indica associazione significativa).\n\n"
+                        "- **Heatmap:** Visualizzazione grafica delle frequenze nella tabella di contingenza.")
+                
+                frame_info_biv = customtkinter.CTkFrame(container)
+                frame_info_biv.pack(fill="x", padx=10, pady=10)
+                self._crea_titolo_sezione(frame_info_biv, "Analisi Categorica vs Categorica", info, guida)
+                
+                # Tabella di contingenza
+                crosstab = pd.crosstab(x_data, y_data)
+                
+                # Test Chi-quadrato
+                try:
+                    chi2, p_value_chi2, dof, expected = stats.chi2_contingency(crosstab)
+                    stats_text = f"Test Chi-quadrato: χ² = {chi2:.3f}, p-value = {p_value_chi2:.3g}, df = {dof}"
+                except:
+                    stats_text = "Test Chi-quadrato: Non calcolabile"
+                
+                customtkinter.CTkLabel(frame_info_biv, text=stats_text, justify="left").pack(pady=5, padx=10, anchor="w")
+                
+                # Tabella di contingenza come testo
+                table_text = "Tabella di Contingenza:\n" + str(crosstab)
+                customtkinter.CTkLabel(frame_info_biv, text=table_text, justify="left", font=("Courier", 10)).pack(pady=5, padx=10, anchor="w")
+                
+                # Heatmap
+                frame_grafico = customtkinter.CTkFrame(container)
+                frame_grafico.pack(fill="both", expand=True, padx=10, pady=10)
+                
+                fig, ax = plt.subplots()
+                im = ax.imshow(crosstab.values, cmap='Blues', aspect='auto')
+                
+                # Imposta etichette
+                ax.set_xticks(range(len(crosstab.columns)))
+                ax.set_yticks(range(len(crosstab.index)))
+                ax.set_xticklabels(crosstab.columns, rotation=45)
+                ax.set_yticklabels(crosstab.index)
+                
+                # Aggiungi valori nelle celle
+                for i in range(len(crosstab.index)):
+                    for j in range(len(crosstab.columns)):
+                        ax.text(j, i, crosstab.iloc[i, j], ha='center', va='center')
+                
+                ax.set_title(f'Tabella di Contingenza: {var_x} vs {var_y}')
+                ax.set_xlabel(var_y)
+                ax.set_ylabel(var_x)
+                plt.colorbar(im, ax=ax)
+                fig.tight_layout()
+                
+                canvas = FigureCanvasTkAgg(fig, master=frame_grafico)
+                canvas.get_tk_widget().pack(fill='both', expand=True)
+                self.matplotlib_widgets.append(canvas)
+                plt.close(fig)
 
         except Exception as e:
             error_label = customtkinter.CTkLabel(self.frame_risultati_bivariata, text=f"Si è verificato un errore: {e}\nControlla le variabili selezionate.", text_color="orange")
