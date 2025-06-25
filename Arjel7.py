@@ -37,6 +37,7 @@ class App(customtkinter.CTk):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.df = None
+        self.k_val_sheby = 2.0 # Valore predefinito per k di Chebyshev
         self.matplotlib_widgets = []
 
         self.setup_loading_frame()
@@ -138,7 +139,6 @@ class App(customtkinter.CTk):
             self.df = None
             return
         self.df['Ora'] = self.df['Data_Ora_Incidente'].dt.hour
-        #self.df['Giorno'] = self.df['Data_Ora_Incidente'].dt.date
         self.popola_tabella_dati()
         self.aggiorna_selettori(variabile_da_mantenere)
 
@@ -260,6 +260,19 @@ class App(customtkinter.CTk):
         close_button = customtkinter.CTkButton(info_window, text="Chiudi", command=info_window.destroy)
         close_button.pack(padx=20, pady=10, side="bottom")
 
+    def _update_chebyshev_k_and_recalculate(self, entry_widget, container, data_series, variable_name, title, info_text, guide_text):
+        """Aggiorna il valore di k per Chebyshev e ricalcola l'analisi numerica."""
+        try:
+            new_k = float(entry_widget.get())
+            if new_k < 1:
+                raise ValueError("Il valore di k deve essere maggiore o uguale a 1.")
+            self.k_val_sheby = new_k
+            self.pulisci_frame(container) # Pulisce i risultati precedenti
+            self._esegui_analisi_numerica_dettagliata(container, data_series, variable_name, title, info_text, guide_text)
+        except ValueError as e:
+            error_label = customtkinter.CTkLabel(container, text=f"Errore: {e}", text_color="red")
+            error_label.pack(pady=5)
+            # Non ricalcola, lascia l'errore visibile e il vecchio k
 
     def pulisci_frame(self, frame):
         for widget in self.matplotlib_widgets:
@@ -533,12 +546,27 @@ class App(customtkinter.CTk):
         customtkinter.CTkLabel(frame_form, text="Forma e Quartili", font=customtkinter.CTkFont(size=13, weight="bold")).pack(pady=5)
         skew, kurt = data_series.skew(), data_series.kurtosis()
         q1, q3, iqr = data_series.quantile(0.25), data_series.quantile(0.75), data_series.quantile(0.75) - data_series.quantile(0.25)
-        cheb_low, cheb_high = mean - 2 * std_dev, mean + 2 * std_dev
+        
+        cheb_low = mean - self.k_val_sheby * std_dev  # cheby inferiore
+        cheb_high = mean + self.k_val_sheby * std_dev  # cheby superiore
+
         customtkinter.CTkLabel(frame_form, text=f"Asimmetria (Skew): {skew:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_form, text=f"Curtosi: {kurt:.4f}").pack(anchor="w", padx=10)
         customtkinter.CTkLabel(frame_form, text=f"Q1: {q1:.4f} | Q3: {q3:.4f} | IQR: {iqr:.4f}").pack(anchor="w", padx=10, pady=(10,0))
-        customtkinter.CTkLabel(frame_form, text=f"Interv. Chebyshev (k=2): [{cheb_low:.2f}, {cheb_high:.2f}]", font=customtkinter.CTkFont(size=11)).pack(anchor="w", padx=10, pady=(5,5))
+        
+        # Nuovo frame per l'input di k e il bottone
+        k_input_frame = customtkinter.CTkFrame(frame_form, fg_color="transparent")
+        k_input_frame.pack(anchor="w", padx=10, pady=(0,5))
+        k_input_frame.grid_columnconfigure(0, weight=1)
 
+        customtkinter.CTkLabel(k_input_frame, text="Valore di k per Chebyshev:").grid(row=0, column=0, sticky="w")
+        entry_k_chebyshev = customtkinter.CTkEntry(k_input_frame, placeholder_text="es. 2.0", width=80)
+        entry_k_chebyshev.insert(0, str(self.k_val_sheby)) # Imposta il valore corrente di k
+        entry_k_chebyshev.grid(row=0, column=1, padx=(5,0))
+        customtkinter.CTkButton(k_input_frame, text="Aggiorna", command=lambda: self._update_chebyshev_k_and_recalculate(entry_k_chebyshev, container, data_series, variable_name, title, info_text, guide_text)).grid(row=0, column=2, padx=(5,0))
+        
+        customtkinter.CTkLabel(frame_form, text=f"Interv. Chebyshev (k={self.k_val_sheby:.1f}): [{cheb_low:.f}, {cheb_high:.3f}]", font=customtkinter.CTkFont(size=13)).pack(anchor="w", padx=10, pady=(5,5))
+        
         num_unique = data_series.nunique()
         if num_unique > 25 and pd.api.types.is_float_dtype(data_series):
             bins = min(num_unique, 15)
@@ -585,6 +613,7 @@ class App(customtkinter.CTk):
         canvas_box.get_tk_widget().pack(fill='both', expand=True, padx=5, pady=5)
         self.matplotlib_widgets.append(canvas_box)
         plt.close(fig_box)
+        
 
     def esegui_analisi_descrittiva(self, *args):
         if self.df is None: return
@@ -863,7 +892,10 @@ class App(customtkinter.CTk):
                                 plot_data = plot_data.reindex(sorted(plot_data.index, key=extract_number))
                             else:
                                 # Ordinamento alfabetico standard
-                                plot_data = plot_data.sort_index()
+                                if(variable=='Giorno_Settimana'):
+                                    plot_data = plot_data.reindex(['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'])
+                                else:
+                                    plot_data = plot_data.sort_index()
                     except (TypeError, ValueError):
                         # Se ci sono tipi misti o altri problemi, converte tutto a stringa
                         plot_data.index = plot_data.index.astype(str)
@@ -941,7 +973,8 @@ class App(customtkinter.CTk):
                     regression = stats.linregress(x=x_data, y=y_data)
                     slope, intercept, correlation, p_value = regression.slope, regression.intercept, regression.rvalue, regression.pvalue
 
-                risultati = (f"Coefficiente di Correlazione (r): {correlation:.4f} (p-value: {p_value:.3g})\n"
+                risultati = (f"Coefficiente di Correlazione (Coeff. Pearson) (R): {correlation:.4f} (p-value: {p_value:.3g})\n"
+                             f"Coefficente di Determinazione (R²): {correlation**2:.4f}\n"
                             f"Equazione Retta di Regressione: Y = {slope:.4f}X + {intercept:.4f}")
                 customtkinter.CTkLabel(frame_info_biv, text=risultati, justify="left").pack(pady=5, padx=10, anchor="w")
                 
