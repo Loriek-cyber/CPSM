@@ -1,0 +1,21 @@
+Data_Ora_Incidente,Provincia,Giorno_Settimana,Tipo_Strada,Numero_Feriti,Numero_Morti,Velocita_Media_Stimata
+2023-05-12 08:35:00,Roma,Venerdì,Strada Urbana,2,0,45
+2023-07-22 18:10:00,Milano,Sabato,Autostrada,3,1,120
+2023-09-05 14:20:00,Napoli,Martedì,Strada Extraurbana,1,0,75
+2023-11-30 19:00:00,Torino,Giovedì,Strada Urbana,1,0,50
+2023-06-15 22:45:00,Palermo,Giovedì,Strada Extraurbana,4,0,80
+2023-08-01 11:05:00,Genova,Martedì,Autostrada,2,0,110
+2023-04-19 17:50:00,Bologna,Mercoledì,Strada Urbana,1,0,40
+2023-10-02 07:15:00,Firenze,Lunedì,Strada Extraurbana,2,1,85
+2023-03-25 23:30:00,Bari,Sabato,Strada Urbana,3,0,55
+2023-12-24 12:00:00,Catania,Domenica,Strada Extraurbana,1,1,90
+2023-01-10 09:20:00,Venezia,Martedì,Strada Urbana,1,0,35
+2023-02-18 21:00:00,Verona,Sabato,Autostrada,5,0,130
+2023-07-07 16:40:00,Messina,Venerdì,Strada Extraurbana,2,0,70
+2023-09-14 13:15:00,Padova,Giovedì,Strada Urbana,1,0,50
+2023-05-29 06:55:00,Trieste,Lunedì,Strada Extraurbana,1,0,65
+2023-08-15 15:30:00,Brescia,Martedì,Autostrada,3,1,125
+2023-11-01 10:40:00,Prato,Mercoledì,Strada Urbana,2,0,45
+2023-06-20 19:25:00,Modena,Martedì,Strada Extraurbana,1,0,75
+2023-04-03 20:05:00,Cagliari,Lunedì,Strada Urbana,2,0,50
+2023-10-11 11:50:00,Salerno,Mercoledì,Autostrada,4,0,115
